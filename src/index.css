@@ -8,41 +8,46 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 0 0% 10%;
+    --background: 0 0% 95%; /* Ice White #F2F2F2 */
+    --foreground: 0 0% 0%; /* Deep Black #000000 */
 
     --card: 0 0% 98%;
-    --card-foreground: 0 0% 10%;
+    --card-foreground: 0 0% 5%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 10%;
+    --popover-foreground: 0 0% 0%;
 
-    --primary: 0 0% 8%;
-    --primary-foreground: 0 0% 98%;
+    --primary: 0 0% 0%; /* Deep Black */
+    --primary-foreground: 0 0% 95%; /* Ice White */
 
-    --secondary: 0 0% 95%;
-    --secondary-foreground: 0 0% 10%;
+    --secondary: 0 0% 90%;
+    --secondary-foreground: 0 0% 0%;
 
-    --muted: 0 0% 94%;
-    --muted-foreground: 0 0% 45%;
+    --muted: 0 0% 88%;
+    --muted-foreground: 0 0% 40%;
 
-    --accent: 38 70% 55%;
-    --accent-foreground: 0 0% 98%;
+    --accent: 199 100% 50%; /* Electric Blue #00A3FF */
+    --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 0 0% 90%;
-    --input: 0 0% 90%;
-    --ring: 0 0% 20%;
+    --border: 0 0% 85%;
+    --input: 0 0% 85%;
+    --ring: 199 100% 50%; /* Electric Blue */
 
     --radius: 0.5rem;
 
-    /* Custom photography portfolio tokens */
+    /* Custom hybrid portfolio tokens */
+    --electric-blue: 199 100% 50%; /* #00A3FF */
+    --vibrant-purple: 260 100% 62%; /* #7A3FFF */
+    --deep-black: 0 0% 0%; /* #000000 */
+    --ice-white: 0 0% 95%; /* #F2F2F2 */
+    
     --photo-overlay: 0 0% 0%;
-    --photo-glow: 38 70% 55%;
+    --photo-glow: 199 100% 50%;
     --hero-gradient-start: 0 0% 5%;
-    --hero-gradient-end: 0 0% 15%;
+    --hero-gradient-end: 260 100% 62%;
     
     /* Transitions */
     --transition-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -50,33 +55,33 @@ All colors MUST be HSL.
   }
 
   .dark {
-    --background: 0 0% 8%;
-    --foreground: 0 0% 95%;
+    --background: 0 0% 0%; /* Deep Black #000000 */
+    --foreground: 0 0% 95%; /* Ice White #F2F2F2 */
 
-    --card: 0 0% 10%;
+    --card: 0 0% 5%;
     --card-foreground: 0 0% 95%;
 
-    --popover: 0 0% 8%;
+    --popover: 0 0% 5%;
     --popover-foreground: 0 0% 95%;
 
-    --primary: 0 0% 95%;
-    --primary-foreground: 0 0% 10%;
+    --primary: 0 0% 95%; /* Ice White */
+    --primary-foreground: 0 0% 0%; /* Deep Black */
 
-    --secondary: 0 0% 15%;
+    --secondary: 0 0% 10%;
     --secondary-foreground: 0 0% 95%;
 
-    --muted: 0 0% 15%;
-    --muted-foreground: 0 0% 60%;
+    --muted: 0 0% 12%;
+    --muted-foreground: 0 0% 65%;
 
-    --accent: 38 70% 55%;
-    --accent-foreground: 0 0% 10%;
+    --accent: 199 100% 50%; /* Electric Blue */
+    --accent-foreground: 0 0% 0%;
 
     --destructive: 0 62.8% 50%;
     --destructive-foreground: 0 0% 95%;
 
-    --border: 0 0% 20%;
-    --input: 0 0% 20%;
-    --ring: 0 0% 80%;
+    --border: 0 0% 15%;
+    --input: 0 0% 15%;
+    --ring: 199 100% 50%;
   }
 }
 

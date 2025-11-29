@@ -1,25 +1,8 @@
 import { ArrowDown } from "lucide-react";
-import { useEffect, useState } from "react";
-import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
-import Autoplay from "embla-carousel-autoplay";
-import Fade from "embla-carousel-fade";
-import gallery1 from "@/assets/gallery-1.jpg";
-import gallery2 from "@/assets/gallery-2.jpg";
-import gallery3 from "@/assets/gallery-3.jpg";
-import gallery4 from "@/assets/gallery-4.jpg";
-import gallery5 from "@/assets/gallery-5.jpg";
-import gallery6 from "@/assets/gallery-6.jpg";
-import gallery7 from "@/assets/gallery-7.jpg";
-import gallery8 from "@/assets/gallery-8.jpg";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const Hero = () => {
-  const [shuffledImages, setShuffledImages] = useState<string[]>([]);
-
-  useEffect(() => {
-    const images = [gallery1, gallery2, gallery3, gallery4, gallery5, gallery6, gallery7, gallery8];
-    const shuffled = [...images].sort(() => Math.random() - 0.5);
-    setShuffledImages(shuffled);
-  }, []);
+  const { t } = useLanguage();
 
   const scrollToGallery = () => {
     const gallery = document.getElementById('gallery');
@@ -27,39 +10,36 @@ const Hero = () => {
   };
 
   return (
-    <section className="relative h-screen w-full overflow-hidden">
-      <Carousel
-        opts={{ loop: true }}
-        plugins={[
-          Fade(),
-          Autoplay({
-            delay: 4000,
-          }),
-        ]}
-        className="absolute inset-0"
-      >
-        <CarouselContent className="h-screen -ml-0">
-          {shuffledImages.map((image, index) => (
-            <CarouselItem key={index} className="h-screen pl-0">
-              <div 
-                className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-opacity duration-1000"
-                style={{ backgroundImage: `url(${image})` }}
-              >
-                <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/60" />
-              </div>
-            </CarouselItem>
-          ))}
-        </CarouselContent>
-      </Carousel>
-      
+    <section className="relative h-screen w-full overflow-hidden bg-gradient-to-br from-black via-purple-900/20 to-black">
+      {/* Animated gradient overlay */}
+      <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/60" />
+
       <div className="relative h-full flex flex-col items-center justify-center text-center px-4">
-        <h1 className="text-5xl md:text-7xl lg:text-8xl font-light tracking-tight text-white mb-4 animate-fade-in">
-          Visual Stories
+        <h1 className="text-4xl md:text-6xl lg:text-7xl font-display font-bold tracking-tight text-white mb-4 animate-fade-in">
+          {t('hero.title')}
         </h1>
-        <p className="text-lg md:text-xl text-white/90 max-w-2xl mb-12 animate-fade-in font-light tracking-wide">
-          Capturando momentos únicos através das lentes
+        <p className="text-xl md:text-2xl text-white/90 font-light mb-3 animate-fade-in">
+          {t('hero.subtitle')}
         </p>
-        
+        <p className="text-base md:text-lg text-white/80 max-w-3xl mb-10 animate-fade-in font-light tracking-wide">
+          {t('hero.description')}
+        </p>
+
+        <div className="flex flex-col sm:flex-row gap-4 animate-fade-in">
+          <a
+            href="#portfolio"
+            className="px-8 py-3 bg-accent text-accent-foreground rounded-full font-medium hover:bg-accent/90 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-accent/50"
+          >
+            {t('hero.viewPortfolio')}
+          </a>
+          <a
+            href="/contact"
+            className="px-8 py-3 border-2 border-white text-white rounded-full font-medium hover:bg-white hover:text-foreground transition-all duration-300 hover:scale-105"
+          >
+            {t('hero.requestQuote')}
+          </a>
+        </div>
+
         <button
           onClick={scrollToGallery}
           className="absolute bottom-12 left-1/2 -translate-x-1/2 text-white/80 hover:text-white transition-all duration-300 animate-bounce"

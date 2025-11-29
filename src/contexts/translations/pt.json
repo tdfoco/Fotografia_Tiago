@@ -1,0 +1,241 @@
+{
+    "nav": {
+        "home": "Home",
+        "photography": "Fotografia",
+        "graphicDesign": "Design Gráfico",
+        "about": "Sobre",
+        "services": "Serviços",
+        "contact": "Contato"
+    },
+    "hero": {
+        "title": "Tiago Damasceno",
+        "subtitle": "Fotógrafo & Designer Gráfico",
+        "description": "Retratos, arte, urbano, natureza, eventos & identidades visuais modernas",
+        "viewPortfolio": "Ver Portfólio",
+        "requestQuote": "Solicitar Orçamento"
+    },
+    "portfolio": {
+        "title": "Portfólio",
+        "description": "Uma coleção de momentos capturados através de diferentes perspectivas",
+        "categories": {
+            "all": "Todos",
+            "portraits": "Retratos",
+            "urban": "Urbano",
+            "nature": "Natureza",
+            "art": "Arte",
+            "events": "Eventos"
+        },
+        "loading": "Carregando fotos...",
+        "noPhotos": "Nenhuma foto encontrada. Use o painel admin para adicionar suas fotos!",
+        "goToAdmin": "Ir para Admin"
+    },
+    "design": {
+        "title": "Design Gráfico",
+        "description": "Identidades visuais modernas, branding e peças de design que criam forte impacto visual e experiências memoráveis de marca",
+        "categories": {
+            "all": "Todos",
+            "logos": "Logos",
+            "visualIdentity": "Identidade Visual",
+            "socialMedia": "Redes Sociais",
+            "posters": "Pôsteres",
+            "special": "Projetos Especiais"
+        }
+    },
+    "about": {
+        "title": "Sobre Mim",
+        "workTitle": "Sobre o Trabalho",
+        "vision": {
+            "title": "Visão Única",
+            "description": "Cada imagem conta uma história através de uma perspectiva autêntica e pessoal"
+        },
+        "technique": {
+            "title": "Técnica Refinada",
+            "description": "Domínio técnico combinado com sensibilidade artística"
+        },
+        "passion": {
+            "title": "Paixão Genuína",
+            "description": "Dedicação em capturar momentos que tocam emocionalmente"
+        },
+        "paragraph1": "Fotografia é mais do que apenas capturar imagens. É sobre contar histórias, preservar momentos e criar conexões emocionais através da arte visual.",
+        "paragraph2": "Cada projeto é abordado com dedicação, buscando sempre entregar trabalhos que superem expectativas e resistam ao teste do tempo.",
+        "intro": "Sou Tiago Damasceno, fotógrafo e designer gráfico.",
+        "description1": "Trabalho com retratos, fotografia urbana, natureza, arte e documentação de eventos, além de criar identidades visuais modernas e peças de design para marcas, empresas e projetos pessoais.",
+        "description2": "Meu objetivo é entregar trabalhos com estilo, sensibilidade artística e forte impacto visual — tanto na fotografia quanto no design gráfico.",
+        "expertise": "Expertise",
+        "photography": "Fotografia",
+        "photographyDesc": "Retratos, Urbano, Natureza, Arte e Documentação de Eventos",
+        "graphicDesign": "Design Gráfico",
+        "graphicDesignDesc": "Logos, Identidades Visuais, Redes Sociais e Branding",
+        "quality": "Qualidade",
+        "qualityDesc": "Comprometido em entregar trabalhos que excedem expectativas e resistem ao teste do tempo",
+        "collaboration": "Colaboração",
+        "collaborationDesc": "Trabalhando de perto com clientes para dar vida à sua visão",
+        "creativity": "Criatividade",
+        "creativityDesc": "Combinando maestria técnica com sensibilidade artística e inovação"
+    },
+    "services": {
+        "title": "Serviços",
+        "description": "Serviços profissionais de fotografia e design gráfico adaptados às suas necessidades",
+        "photographyServices": "Serviços de Fotografia",
+        "photographyDesc": "Capturando momentos com visão artística e excelência técnica",
+        "designServices": "Serviços de Design Gráfico",
+        "designDesc": "Identidades visuais modernas e design que criam impressões duradouras",
+        "readyToWork": "Pronto para Trabalhar Juntos?",
+        "readyDesc": "Vamos dar vida à sua visão com serviços profissionais de fotografia e design",
+        "getInTouch": "Entre em Contato",
+        "photography": {
+            "portraits": {
+                "title": "Retratos",
+                "description": "Sessões profissionais de retratos capturando personalidade e emoção",
+                "features": [
+                    "Retratos individuais",
+                    "Sessões em família",
+                    "Fotos profissionais",
+                    "Retratos criativos"
+                ]
+            },
+            "events": {
+                "title": "Eventos",
+                "description": "Cobertura completa de eventos com documentação artística",
+                "features": [
+                    "Casamentos",
+                    "Eventos corporativos",
+                    "Celebrações",
+                    "Cobertura de conferências"
+                ]
+            },
+            "urban": {
+                "title": "Urbano & Arquitetura",
+                "description": "Capturando a essência de paisagens urbanas e beleza arquitetônica",
+                "features": [
+                    "Paisagens urbanas",
+                    "Fotografia de arquitetura",
+                    "Imóveis",
+                    "Fotografia de rua"
+                ]
+            },
+            "nature": {
+                "title": "Arte & Natureza",
+                "description": "Fotografia artística e de natureza com visão criativa",
+                "features": [
+                    "Fotografia fine art",
+                    "Fotografia de paisagem",
+                    "Documentação da natureza",
+                    "Projetos criativos"
+                ]
+            }
+        },
+        "design": {
+            "identity": {
+                "title": "Identidade Visual",
+                "description": "Sistemas completos de identidade de marca que causam impacto",
+                "features": [
+                    "Design de logo",
+                    "Manual de marca",
+                    "Paletas de cores",
+                    "Sistemas tipográficos"
+                ]
+            },
+            "branding": {
+                "title": "Branding & Embalagens",
+                "description": "Soluções coesas de branding para produtos e serviços",
+                "features": [
+                    "Design de embalagens",
+                    "Estratégia de marca",
+                    "Materiais de marketing",
+                    "Design para impressão"
+                ]
+            },
+            "social": {
+                "title": "Design para Redes Sociais",
+                "description": "Conteúdo visual envolvente para plataformas digitais",
+                "features": [
+                    "Templates para redes sociais",
+                    "Design de posts",
+                    "Gráficos para stories",
+                    "Calendários de conteúdo"
+                ]
+            },
+            "special": {
+                "title": "Projetos Especiais",
+                "description": "Soluções de design personalizadas para necessidades únicas",
+                "features": [
+                    "Design de pôsteres",
+                    "Design editorial",
+                    "Ilustração",
+                    "Gráficos personalizados"
+                ]
+            }
+        },
+        "serviceOptions": {
+            "select": "Selecione um serviço...",
+            "portrait": "Fotografia de Retratos",
+            "event": "Fotografia de Eventos",
+            "urban": "Fotografia Urbana",
+            "nature": "Fotografia de Natureza",
+            "logo": "Design de Logo",
+            "branding": "Identidade Visual & Branding",
+            "social": "Design para Redes Sociais",
+            "other": "Outro"
+        }
+    },
+    "contact": {
+        "title": "Entre em Contato",
+        "description": "Tem um projeto em mente? Vamos trabalhar juntos para criar algo incrível",
+        "sendMessage": "Enviar Mensagem",
+        "name": "Nome",
+        "email": "Email",
+        "phone": "Telefone",
+        "serviceInterest": "Interesse em Serviço",
+        "selectService": "Selecione um serviço...",
+        "message": "Mensagem",
+        "yourName": "Seu nome",
+        "yourEmail": "seu.email@exemplo.com",
+        "tellAboutProject": "Conte-me sobre seu projeto...",
+        "sending": "Enviando...",
+        "send": "Enviar Mensagem",
+        "contactInfo": "Informações de Contato",
+        "contactDesc": "Sinta-se à vontade para entrar em contato através de qualquer um destes canais. Eu normalmente respondo dentro de 24-48 horas.",
+        "location": "Localização",
+        "locationValue": "São Paulo, Brasil",
+        "followMe": "Siga-me",
+        "messageSent": "Mensagem Enviada!",
+        "thankYou": "Obrigado por entrar em contato. Entrarei em contato em breve."
+    },
+    "admin": {
+        "panelTitle": "Painel Admin",
+        "login": "Login do Admin",
+        "loginDesc": "Digite suas credenciais para gerenciar o portfólio",
+        "password": "Senha",
+        "loggingIn": "Entrando...",
+        "logout": "Sair",
+        "photography": "Fotografia",
+        "designProjects": "Projetos de Design",
+        "addNew": "Adicionar Novo",
+        "uploadNew": "Fazer Upload Novo",
+        "delete": "Excluir",
+        "uploading": "Fazendo upload...",
+        "upload": "Upload",
+        "cancel": "Cancelar",
+        "category": "Categoria",
+        "titleField": "Título",
+        "descriptionField": "Descrição",
+        "year": "Ano",
+        "client": "Cliente",
+        "imageFile": "Arquivo de Imagem",
+        "images": "Imagens",
+        "optional": "opcional"
+    },
+    "footer": {
+        "brand": "Portfolio",
+        "tagline": "Capturando histórias visuais que inspiram e emocionam",
+        "contactTitle": "Contato",
+        "servicesTitle": "Serviços",
+        "portraitPhotography": "Fotografia de Retratos",
+        "urbanPhotography": "Fotografia Urbana",
+        "naturePhotography": "Fotografia de Natureza",
+        "events": "Eventos",
+        "commercialProjects": "Projetos Comerciais",
+        "allRightsReserved": "Todos os direitos reservados"
+    }
+}

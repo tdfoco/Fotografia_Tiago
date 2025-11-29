@@ -1,0 +1,207 @@
+{
+    "nav": {
+        "home": "Home",
+        "photography": "Photography",
+        "graphicDesign": "Graphic Design",
+        "about": "About",
+        "services": "Services",
+        "contact": "Contact"
+    },
+    "hero": {
+        "title": "Tiago Damasceno",
+        "subtitle": "Photographer & Graphic Designer",
+        "description": "Portraits, art, urban, nature, events & modern visual identities",
+        "viewPortfolio": "View Portfolio",
+        "requestQuote": "Request a Quote"
+    },
+    "portfolio": {
+        "title": "Portfolio",
+        "description": "A collection of moments captured through different perspectives",
+        "categories": {
+            "all": "All",
+            "portraits": "Portraits",
+            "urban": "Urban",
+            "nature": "Nature",
+            "art": "Art",
+            "events": "Events"
+        },
+        "loading": "Loading photos...",
+        "noPhotos": "No photos found. Use the admin panel to add your photos!",
+        "goToAdmin": "Go to Admin"
+    },
+    "design": {
+        "title": "Graphic Design",
+        "description": "Modern visual identities, branding, and design pieces that create strong visual impact and memorable brand experiences",
+        "categories": {
+            "all": "All",
+            "logos": "Logos",
+            "visualIdentity": "Visual Identity",
+            "socialMedia": "Social Media",
+            "posters": "Posters",
+            "special": "Special Projects"
+        }
+    },
+    "about": {
+        "title": "About Me",
+        "workTitle": "About the Work",
+        "vision": {
+            "title": "Unique Vision",
+            "description": "Each image tells a story through an authentic and personal perspective"
+        },
+        "technique": {
+            "title": "Refined Technique",
+            "description": "Technical mastery combined with artistic sensitivity"
+        },
+        "passion": {
+            "title": "Genuine Passion",
+            "description": "Dedication to capturing emotionally touching moments"
+        },
+        "paragraph1": "Photography is more than just capturing images. It's about storytelling, preserving moments, and creating emotional connections through visual art.",
+        "paragraph2": "Each project is approached with dedication, always seeking to deliver work that exceeds expectations and stands the test of time.",
+        "intro": "I'm Tiago Damasceno, a photographer and graphic designer.",
+        "description1": "I work with portraits, urban photography, nature, art, and event documentation, as well as creating modern visual identities and design pieces for brands, companies, and personal projects.",
+        "description2": "My goal is to deliver work with style, artistic sensibility, and strong visual impact — both in photography and graphic design.",
+        "expertise": "Expertise",
+        "photography": "Photography",
+        "photographyDesc": "Portraits, Urban, Nature, Art, and Event Documentation",
+        "graphicDesign": "Graphic Design",
+        "graphicDesignDesc": "Logos, Visual Identities, Social Media, and Branding",
+        "quality": "Quality",
+        "qualityDesc": "Committed to delivering work that exceeds expectations and stands the test of time",
+        "collaboration": "Collaboration",
+        "collaborationDesc": "Working closely with clients to bring their vision to life",
+        "creativity": "Creativity",
+        "creativityDesc": "Combining technical mastery with artistic sensitivity and innovation"
+    },
+    "services": {
+        "title": "Services",
+        "description": "Professional photography and graphic design services tailored to your needs",
+        "photographyServices": "Photography Services",
+        "photographyDesc": "Capturing moments with artistic vision and technical excellence",
+        "designServices": "Graphic Design Services",
+        "designDesc": "Modern visual identities and design that create lasting impressions",
+        "readyToWork": "Ready to Work Together?",
+        "readyDesc": "Let's bring your vision to life with professional photography and design services",
+        "getInTouch": "Get in Touch",
+        "photography": {
+            "portraits": {
+                "title": "Portraits",
+                "description": "Professional portrait sessions capturing personality and emotion",
+                "features": [
+                    "Individual portraits",
+                    "Family sessions",
+                    "Professional headshots",
+                    "Creative portraits"
+                ]
+            },
+            "events": {
+                "title": "Events",
+                "description": "Comprehensive event coverage with artistic documentation",
+                "features": [
+                    "Weddings",
+                    "Corporate events",
+                    "Celebrations",
+                    "Conference coverage"
+                ]
+            },
+            "urban": {
+                "title": "Urban & Architecture",
+                "description": "Capturing the essence of cityscapes and architectural beauty",
+                "features": [
+                    "Urban landscapes",
+                    "Architectural photography",
+                    "Real estate",
+                    "Street photography"
+                ]
+            },
+            "nature": {
+                "title": "Art & Nature",
+                "description": "Artistic and natural photography with creative vision",
+                "features": [
+                    "Fine art photography",
+                    "Landscape photography",
+                    "Nature documentation",
+                    "Creative projects"
+                ]
+            }
+        },
+        "design": {
+            "identity": {
+                "title": "Visual Identity",
+                "description": "Complete brand identity systems that make an impact",
+                "features": [
+                    "Logo design",
+                    "Brand guidelines",
+                    "Color palettes",
+                    "Typography systems"
+                ]
+            },
+            "branding": {
+                "title": "Branding & Packaging",
+                "description": "Cohesive branding solutions for products and services",
+                "features": [
+                    "Packaging design",
+                    "Brand strategy",
+                    "Marketing materials",
+                    "Print design"
+                ]
+            },
+            "social": {
+                "title": "Social Media Design",
+                "description": "Engaging visual content for digital platforms",
+                "features": [
+                    "Social media templates",
+                    "Post design",
+                    "Story graphics",
+                    "Content calendars"
+                ]
+            },
+            "special": {
+                "title": "Special Projects",
+                "description": "Custom design solutions for unique needs",
+                "features": [
+                    "Poster design",
+                    "Editorial design",
+                    "Illustration",
+                    "Custom graphics"
+                ]
+            }
+        },
+        "serviceOptions": {
+            "select": "Select a service...",
+            "portrait": "Portrait Photography",
+            "event": "Event Photography",
+            "urban": "Urban Photography",
+            "nature": "Nature Photography",
+            "logo": "Logo Design",
+            "branding": "Visual Identity & Branding",
+            "social": "Social Media Design",
+            "other": "Other"
+        }
+    },
+    "contact": {
+        "title": "Get in Touch",
+        "description": "Have a project in mind? Let's work together to create something amazing",
+        "sendMessage": "Send a Message",
+        "name": "Name",
+        "email": "Email",
+        "phone": "Phone",
+        "serviceInterest": "Service Interest",
+        "selectService": "Select a service...",
+        "message": "Message",
+        "yourName": "Your name",
+        "yourEmail": "your.email@example.com",
+        "tellAboutProject": "Tell me about your project...",
+        "sending": "Sending...",
+        "send": "Send Message",
+        "contactInfo": "Contact Information",
+        "contactDesc": "Feel free to reach out through any of these channels. I typically respond within 24-48 hours.",
+        "location": "Location",
+        "portraitPhotography": "Portrait Photography",
+        "urbanPhotography": "Urban Photography",
+        "naturePhotography": "Nature Photography",
+        "events": "Events",
+        "commercialProjects": "Commercial Projects",
+        "allRightsReserved": "All rights reserved"
+    }
+}

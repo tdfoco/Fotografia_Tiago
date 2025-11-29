@@ -1,0 +1,227 @@
+{
+    "nav": {
+        "home": "Startseite",
+        "photography": "Fotografie",
+        "graphicDesign": "Grafikdesign",
+        "about": "Über",
+        "services": "Dienstleistungen",
+        "contact": "Kontakt"
+    },
+    "hero": {
+        "title": "Tiago Damasceno",
+        "subtitle": "Fotograf & Grafikdesigner",
+        "description": "Porträts, Kunst, Urban, Natur, Events & moderne visuelle Identitäten",
+        "viewPortfolio": "Portfolio ansehen",
+        "requestQuote": "Angebot anfordern"
+    },
+    "portfolio": {
+        "title": "Portfolio",
+        "description": "Eine Sammlung von Momenten, aus verschiedenen Perspektiven eingefangen",
+        "categories": {
+            "all": "Alle",
+            "portraits": "Porträts",
+            "urban": "Urban",
+            "nature": "Natur",
+            "art": "Kunst",
+            "events": "Events"
+        },
+        "loading": "Fotos werden geladen...",
+        "noPhotos": "Keine Fotos gefunden. Verwenden Sie das Admin-Panel, um Ihre Fotos hinzuzufügen!",
+        "goToAdmin": "Zu Admin"
+    },
+    "design": {
+        "title": "Grafikdesign",
+        "description": "Moderne visuelle Identitäten, Branding und Designstücke, die starke visuelle Wirkung und unvergessliche Markenerlebnisse schaffen",
+        "categories": {
+            "all": "Alle",
+            "logos": "Logos",
+            "visualIdentity": "Visuelle Identität",
+            "socialMedia": "Social Media",
+            "posters": "Poster",
+            "special": "Spezielle Projekte"
+        }
+    },
+    "about": {
+        "title": "Über Mich",
+        "workTitle": "Über die Arbeit",
+        "vision": {
+            "title": "Einzigartige Vision",
+            "description": "Jedes Bild erzählt eine Geschichte durch eine authentische und persönliche Perspektive"
+        },
+        "technique": {
+            "title": "Verfeinerte Technik",
+            "graphicDesign": "Grafikdesign",
+            "graphicDesignDesc": "Logos, Visuelle Identitäten, Social Media und Branding",
+            "quality": "Qualität",
+            "qualityDesc": "Verpflichtet, Arbeiten zu liefern, die Erwartungen übertreffen und dem Test der Zeit standhalten",
+            "collaboration": "Zusammenarbeit",
+            "collaborationDesc": "Eng mit Kunden zusammenarbeiten, um ihre Vision zum Leben zu erwecken",
+            "creativity": "Kreativität",
+            "creativityDesc": "Technische Meisterschaft mit künstlerischer Sensibilität und Innovation kombinieren"
+        },
+        "services": {
+            "title": "Dienstleistungen",
+            "description": "Professionelle Fotografie- und Grafikdesign-Dienstleistungen, maßgeschneidert auf Ihre Bedürfnisse",
+            "photographyServices": "Fotografie-Dienstleistungen",
+            "photographyDesc": "Momente mit künstlerischer Vision und technischer Exzellenz einfangen",
+            "designServices": "Grafikdesign-Dienstleistungen",
+            "designDesc": "Moderne visuelle Identitäten und Design, das bleibende Eindrücke schafft",
+            "readyToWork": "Bereit zusammenzuarbeiten?",
+            "readyDesc": "Lassen Sie uns Ihre Vision mit professionellen Fotografie- und Design-Dienstleistungen zum Leben erwecken",
+            "getInTouch": "Kontakt aufnehmen",
+            "photography": {
+                "portraits": {
+                    "title": "Porträts",
+                    "description": "Professionelle Porträtsitzungen, die Persönlichkeit und Emotion einfangen",
+                    "features": [
+                        "Individuelle Porträts",
+                        "Familiensitzungen",
+                        "Professionelle Headshots",
+                        "Kreative Porträts"
+                    ]
+                },
+                "events": {
+                    "title": "Events",
+                    "description": "Umfassende Event-Berichterstattung mit künstlerischer Dokumentation",
+                    "features": [
+                        "Hochzeiten",
+                        "Firmenevents",
+                        "Feiern",
+                        "Konferenz-Coverage"
+                    ]
+                },
+                "urban": {
+                    "title": "Urban & Architektur",
+                    "description": "Die Essenz von Stadtlandschaften und architektonischer Schönheit einfangen",
+                    "features": [
+                        "Stadtlandschaften",
+                        "Architekturfotografie",
+                        "Immobilien",
+                        "Straßenfotografie"
+                    ]
+                },
+                "nature": {
+                    "title": "Kunst & Natur",
+                    "description": "Künstlerische und Naturfotografie mit kreativer Vision",
+                    "features": [
+                        "Fine Art Fotografie",
+                        "Landschaftsfotografie",
+                        "Naturdokumentation",
+                        "Kreative Projekte"
+                    ]
+                }
+            },
+            "design": {
+                "identity": {
+                    "title": "Visuelle Identität",
+                    "description": "Komplette Markenidentitätssysteme, die Wirkung erzielen",
+                    "features": [
+                        "Logo-Design",
+                        "Markenrichtlinien",
+                        "Farbpaletten",
+                        "Typografie-Systeme"
+                    ]
+                },
+                "branding": {
+                    "title": "Branding & Verpackung",
+                    "description": "Kohäsive Branding-Lösungen für Produkte und Dienstleistungen",
+                    "features": [
+                        "Verpackungsdesign",
+                        "Markenstrategie",
+                        "Marketingmaterialien",
+                        "Druckdesign"
+                    ]
+                },
+                "social": {
+                    "title": "Social Media Design",
+                    "description": "Ansprechende visuelle Inhalte für digitale Plattformen",
+                    "features": [
+                        "Social Media Vorlagen",
+                        "Post-Design",
+                        "Story-Grafiken",
+                        "Content-Kalender"
+                    ]
+                },
+                "special": {
+                    "title": "Spezielle Projekte",
+                    "description": "Maßgeschneiderte Design-Lösungen für einzigartige Bedürfnisse",
+                    "features": [
+                        "Poster-Design",
+                        "Editorial Design",
+                        "Illustration",
+                        "Maßgeschneiderte Grafiken"
+                    ]
+                }
+            },
+            "serviceOptions": {
+                "select": "Wählen Sie eine Dienstleistung...",
+                "portrait": "Porträtfotografie",
+                "event": "Eventfotografie",
+                "urban": "Urban-Fotografie",
+                "nature": "Naturfotografie",
+                "logo": "Logo-Design",
+                "branding": "Visuelle Identität & Branding",
+                "social": "Social Media Design",
+                "other": "Andere"
+            }
+        },
+        "contact": {
+            "title": "Kontakt aufnehmen",
+            "description": "Haben Sie ein Projekt im Sinn? Lassen Sie uns zusammenarbeiten, um etwas Erstaunliches zu schaffen",
+            "sendMessage": "Nachricht senden",
+            "name": "Name",
+            "email": "E-Mail",
+            "phone": "Telefon",
+            "serviceInterest": "Service-Interesse",
+            "selectService": "Wählen Sie eine Dienstleistung...",
+            "message": "Nachricht",
+            "yourName": "Ihr Name",
+            "yourEmail": "ihre.email@beispiel.de",
+            "tellAboutProject": "Erzählen Sie mir von Ihrem Projekt...",
+            "sending": "Wird gesendet...",
+            "send": "Nachricht senden",
+            "contactInfo": "Kontaktinformationen",
+            "contactDesc": "Zögern Sie nicht, über einen dieser Kanäle Kontakt aufzunehmen. Ich antworte normalerweise innerhalb von 24-48 Stunden.",
+            "location": "Standort",
+            "locationValue": "São Paulo, Brasilien",
+            "followMe": "Folgen Sie mir",
+            "messageSent": "Nachricht gesendet!",
+            "thankYou": "Vielen Dank für Ihre Kontaktaufnahme. Ich werde mich bald bei Ihnen melden."
+        },
+        "admin": {
+            "panelTitle": "Admin-Panel",
+            "login": "Admin-Anmeldung",
+            "loginDesc": "Geben Sie Ihre Anmeldedaten ein, um das Portfolio zu verwalten",
+            "password": "Passwort",
+            "loggingIn": "Anmeldung...",
+            "logout": "Abmelden",
+            "photography": "Fotografie",
+            "designProjects": "Design-Projekte",
+            "addNew": "Neu hinzufügen",
+            "uploadNew": "Neu hochladen",
+            "delete": "Löschen",
+            "uploading": "Wird hochgeladen...",
+            "upload": "Hochladen",
+            "cancel": "Abbrechen",
+            "category": "Kategorie",
+            "titleField": "Titel",
+            "descriptionField": "Beschreibung",
+            "year": "Jahr",
+            "client": "Kunde",
+            "imageFile": "Bilddatei",
+            "images": "Bilder",
+            "optional": "optional"
+        },
+        "footer": {
+            "brand": "Portfolio",
+            "tagline": "Visuelle Geschichten einfangen, die inspirieren und bewegen",
+            "contactTitle": "Kontakt",
+            "servicesTitle": "Dienstleistungen",
+            "portraitPhotography": "Porträtfotografie",
+            "urbanPhotography": "Urban-Fotografie",
+            "naturePhotography": "Naturfotografie",
+            "events": "Events",
+            "commercialProjects": "Kommerzielle Projekte",
+            "allRightsReserved": "Alle Rechte vorbehalten"
+        }
+    }

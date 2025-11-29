@@ -1,51 +1,52 @@
 import { useState } from "react";
-import gallery1 from "@/assets/gallery-1.jpg";
-import gallery2 from "@/assets/gallery-2.jpg";
-import gallery3 from "@/assets/gallery-3.jpg";
-import gallery4 from "@/assets/gallery-4.jpg";
-import gallery5 from "@/assets/gallery-5.jpg";
-import gallery6 from "@/assets/gallery-6.jpg";
-import gallery7 from "@/assets/gallery-7.jpg";
-import gallery8 from "@/assets/gallery-8.jpg";
+import { usePhotography } from "@/hooks/useSupabaseData";
+import { useLanguage } from "@/contexts/LanguageContext";
 import Lightbox from "./Lightbox";
 
 export interface Photo {
-  id: number;
+  id: string;
   src: string;
   alt: string;
   category: string;
 }
 
-const photos: Photo[] = [
-  { id: 1, src: gallery1, alt: "Portrait photography", category: "Retratos" },
-  { id: 2, src: gallery2, alt: "Architecture photography", category: "Urbano" },
-  { id: 3, src: gallery3, alt: "Nature photography", category: "Natureza" },
-  { id: 4, src: gallery4, alt: "Street photography", category: "Urbano" },
-  { id: 5, src: gallery5, alt: "Abstract photography", category: "Arte" },
-  { id: 6, src: gallery6, alt: "Seascape photography", category: "Natureza" },
-  { id: 7, src: gallery7, alt: "Wedding event photography", category: "Eventos" },
-  { id: 8, src: gallery8, alt: "Corporate event photography", category: "Eventos" },
-];
-
 const PhotoGrid = () => {
+  const { t } = useLanguage();
   const [selectedPhoto, setSelectedPhoto] = useState<Photo | null>(null);
-  const [filter, setFilter] = useState<string>("Todos");
+  const [filter, setFilter] = useState<string>("all");
 
-  const categories = ["Todos", "Retratos", "Urbano", "Natureza", "Arte", "Eventos"];
-  
-  const filteredPhotos = filter === "Todos" 
-    ? photos 
-    : photos.filter(photo => photo.category === filter);
+  const { photos: supabasePhotos, loading } = usePhotography(filter === "all" ? undefined : filter);
+
+  const categories = [
+    { key: "all", label: t('portfolio.categories.all') },
+    { key: "portraits", label: t('portfolio.categories.portraits') },
+    { key: "urban", label: t('portfolio.categories.urban') },
+    { key: "nature", label: t('portfolio.categories.nature') },
+    { key: "art", label: t('portfolio.categories.art') },
+    { key: "events", label: t('portfolio.categories.events') }
+  ];
+
+  // Transform Supabase photos to Photo format
+  const photos: Photo[] = supabasePhotos.map(photo => ({
+    id: photo.id,
+    src: photo.url,
+    alt: photo.title,
+    category: photo.category.charAt(0).toUpperCase() + photo.category.slice(1)
+  }));
+
+  const filteredPhotos = filter === "all"
+    ? photos
+    : photos.filter(photo => photo.category.toLowerCase() === filter);
 
   return (
     <section id="gallery" className="min-h-screen bg-background py-20 px-4 md:px-8">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-light tracking-tight mb-6">
-            Portfolio
+            {t('portfolio.title')}
           </h2>
           <p className="text-muted-foreground text-lg font-light max-w-2xl mx-auto">
-            Uma coleção de momentos capturados através de diferentes perspectivas
+            {t('portfolio.description')}
           </p>
         </div>
 
@@ -53,41 +54,55 @@ const PhotoGrid = () => {
         <div className="flex flex-wrap justify-center gap-4 mb-12">
           {categories.map((category) => (
             <button
-              key={category}
-              onClick={() => setFilter(category)}
-              className={`px-6 py-2 rounded-full text-sm font-light tracking-wide transition-all duration-300 ${
-                filter === category
-                  ? "bg-accent text-accent-foreground"
-                  : "bg-secondary text-secondary-foreground hover:bg-accent/20"
-              }`}
+              key={category.key}
+              onClick={() => setFilter(category.key)}
+              className={`px-6 py-2 rounded-full text-sm font-light tracking-wide transition-all duration-300 ${filter === category.key
+                ? "bg-accent text-accent-foreground"
+                : "bg-secondary text-secondary-foreground hover:bg-accent/20"
+                }`}
             >
-              {category}
+              {category.label}
             </button>
           ))}
         </div>
 
         {/* Photo Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredPhotos.map((photo, index) => (
-            <div
-              key={photo.id}
-              className="group relative aspect-[4/5] md:aspect-square overflow-hidden rounded-lg cursor-pointer animate-fade-in"
-              style={{ animationDelay: `${index * 100}ms` }}
-              onClick={() => setSelectedPhoto(photo)}
-            >
-              <img
-                src={photo.src}
-                alt={photo.alt}
-                className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
-              />
-              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-all duration-500 flex items-center justify-center">
-                <span className="text-white opacity-0 group-hover:opacity-100 transition-opacity duration-500 text-sm tracking-wider font-light">
-                  {photo.category}
-                </span>
+        {loading ? (
+          <div className="text-center py-20">
+            <p className="text-muted-foreground">{t('portfolio.loading')}</p>
+          </div>
+        ) : filteredPhotos.length === 0 ? (
+          <div className="text-center py-20">
+            <p className="text-muted-foreground">
+              {t('portfolio.noPhotos')}
+            </p>
+            <a href="/admin" className="inline-block mt-4 px-6 py-2 bg-accent text-accent-foreground rounded-full hover:bg-accent/90 transition-colors">
+              {t('portfolio.goToAdmin')}
+            </a>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredPhotos.map((photo, index) => (
+              <div
+                key={photo.id}
+                className="group relative aspect-[4/5] md:aspect-square overflow-hidden rounded-lg cursor-pointer animate-fade-in"
+                style={{ animationDelay: `${index * 100}ms` }}
+                onClick={() => setSelectedPhoto(photo)}
+              >
+                <img
+                  src={photo.src}
+                  alt={photo.alt}
+                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+                />
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-all duration-500 flex items-center justify-center">
+                  <span className="text-white opacity-0 group-hover:opacity-100 transition-opacity duration-500 text-sm tracking-wider font-light">
+                    {photo.category}
+                  </span>
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {selectedPhoto && (
