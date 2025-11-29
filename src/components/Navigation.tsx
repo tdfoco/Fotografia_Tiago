@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Lock } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import LanguageSelector from "./LanguageSelector";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -35,8 +35,8 @@ const Navigation = () => {
     return (
         <nav
             className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled
-                    ? "bg-background/95 backdrop-blur-md shadow-lg border-b border-border"
-                    : "bg-transparent"
+                ? "bg-background/95 backdrop-blur-md shadow-lg border-b border-border"
+                : "bg-transparent"
                 }`}
         >
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -46,11 +46,6 @@ const Navigation = () => {
                         to="/"
                         className="flex items-center gap-3 hover:opacity-80 transition-opacity"
                     >
-                        <img
-                            src="/tdfoco-logo.png"
-                            alt="tdfoco"
-                            className="h-10 w-10 rounded-full object-cover"
-                        />
                         <span className="text-lg font-medium tracking-tight text-foreground">
                             tdfoco
                         </span>
@@ -64,8 +59,8 @@ const Navigation = () => {
                                     key={link.path}
                                     to={link.path}
                                     className={`text-sm font-medium tracking-wide transition-all duration-300 relative group ${location.pathname === link.path
-                                            ? "text-accent"
-                                            : "text-foreground/80 hover:text-accent"
+                                        ? "text-accent"
+                                        : "text-foreground/80 hover:text-accent"
                                         }`}
                                 >
                                     {link.name}
@@ -76,7 +71,16 @@ const Navigation = () => {
                                 </Link>
                             ))}
                         </div>
-                        <LanguageSelector />
+                        <div className="flex items-center gap-4">
+                            <LanguageSelector />
+                            <Link
+                                to="/admin"
+                                className="text-foreground/80 hover:text-accent transition-colors p-2"
+                                aria-label="Admin Panel"
+                            >
+                                <Lock className="h-4 w-4" />
+                            </Link>
+                        </div>
                     </div>
 
                     {/* Mobile menu button */}
@@ -97,8 +101,8 @@ const Navigation = () => {
             {/* Mobile Navigation */}
             <div
                 className={`md:hidden transition-all duration-300 ease-in-out ${isOpen
-                        ? "max-h-96 opacity-100 border-b border-border"
-                        : "max-h-0 opacity-0 overflow-hidden"
+                    ? "max-h-96 opacity-100 border-b border-border"
+                    : "max-h-0 opacity-0 overflow-hidden"
                     }`}
             >
                 <div className="px-4 pt-2 pb-6 space-y-3 bg-background/95 backdrop-blur-md">
@@ -107,15 +111,22 @@ const Navigation = () => {
                             key={link.path}
                             to={link.path}
                             className={`block px-4 py-3 rounded-lg text-base font-medium transition-all duration-200 ${location.pathname === link.path
-                                    ? "bg-accent text-accent-foreground"
-                                    : "text-foreground/80 hover:bg-accent/10 hover:text-accent"
+                                ? "bg-accent text-accent-foreground"
+                                : "text-foreground/80 hover:bg-accent/10 hover:text-accent"
                                 }`}
                         >
                             {link.name}
                         </Link>
                     ))}
-                    <div className="px-4 pt-2">
+                    <div className="px-4 pt-2 flex items-center justify-between">
                         <LanguageSelector />
+                        <Link
+                            to="/admin"
+                            className="flex items-center gap-2 text-foreground/80 hover:text-accent transition-colors px-4 py-2"
+                        >
+                            <Lock className="h-4 w-4" />
+                            <span className="text-sm font-medium">Admin</span>
+                        </Link>
                     </div>
                 </div>
             </div>

@@ -6,6 +6,11 @@ const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || ''
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
+// Storage bucket names
+export const PHOTOGRAPHY_BUCKET = 'photography';
+export const DESIGN_BUCKET = 'design';
+export const HERO_BUCKET = 'hero';
+
 // TypeScript types
 export interface PhotographyItem {
     id: string;
@@ -15,7 +20,7 @@ export interface PhotographyItem {
     description?: string;
     year?: number;
     created_at: string;
-    updated_at: string;
+    updated_at?: string;
 }
 
 export interface DesignProject {
@@ -28,12 +33,16 @@ export interface DesignProject {
     year?: number;
     link?: string;
     created_at: string;
-    updated_at: string;
+    updated_at?: string;
 }
 
-// Storage bucket names
-export const PHOTOGRAPHY_BUCKET = 'photography';
-export const DESIGN_BUCKET = 'design';
+export interface HeroImage {
+    id: string;
+    created_at: string;
+    url: string;
+    title: string;
+    active: boolean;
+}
 
 // Helper function to upload image
 export async function uploadImage(bucket: string, file: File): Promise<string> {

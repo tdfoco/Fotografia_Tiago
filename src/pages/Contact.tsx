@@ -6,8 +6,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const Contact = () => {
+    const { t } = useLanguage();
     const [formData, setFormData] = useState({
         name: "",
         email: "",
@@ -24,8 +26,8 @@ const Contact = () => {
         // Simulate form submission - in production, this would connect to your email service
         setTimeout(() => {
             toast({
-                title: "Message Sent!",
-                description: "Thank you for reaching out. I'll get back to you soon.",
+                title: t('contact.messageSent'),
+                description: t('contact.thankYou'),
             });
             setFormData({ name: "", email: "", service: "", message: "" });
             setIsSubmitting(false);
@@ -49,11 +51,11 @@ const Contact = () => {
                 <section className="bg-gradient-to-br from-background via-secondary to-background py-24 px-4">
                     <div className="max-w-4xl mx-auto text-center">
                         <h1 className="text-5xl md:text-6xl font-display font-bold tracking-tight mb-6 animate-fade-in">
-                            Get in Touch
+                            {t('contact.title')}
                         </h1>
                         <div className="w-24 h-1 bg-accent mx-auto mb-8" />
                         <p className="text-lg md:text-xl text-muted-foreground font-light leading-relaxed max-w-2xl mx-auto">
-                            Have a project in mind? Let's work together to create something amazing
+                            {t('contact.description')}
                         </p>
                     </div>
                 </section>
@@ -64,11 +66,11 @@ const Contact = () => {
                         <div className="grid lg:grid-cols-2 gap-12">
                             {/* Contact Form */}
                             <div className="bg-secondary p-8 rounded-lg">
-                                <h2 className="text-2xl font-display font-bold mb-6">Send a Message</h2>
+                                <h2 className="text-2xl font-display font-bold mb-6">{t('contact.sendMessage')}</h2>
                                 <form onSubmit={handleSubmit} className="space-y-6">
                                     <div>
                                         <label htmlFor="name" className="block text-sm font-medium mb-2">
-                                            Name *
+                                            {t('contact.name')} *
                                         </label>
                                         <Input
                                             id="name"
@@ -77,14 +79,14 @@ const Contact = () => {
                                             required
                                             value={formData.name}
                                             onChange={handleChange}
-                                            placeholder="Your name"
+                                            placeholder={t('contact.yourName')}
                                             className="w-full"
                                         />
                                     </div>
 
                                     <div>
                                         <label htmlFor="email" className="block text-sm font-medium mb-2">
-                                            Email *
+                                            {t('contact.email')} *
                                         </label>
                                         <Input
                                             id="email"
@@ -93,14 +95,14 @@ const Contact = () => {
                                             required
                                             value={formData.email}
                                             onChange={handleChange}
-                                            placeholder="your.email@example.com"
+                                            placeholder={t('contact.yourEmail')}
                                             className="w-full"
                                         />
                                     </div>
 
                                     <div>
                                         <label htmlFor="service" className="block text-sm font-medium mb-2">
-                                            Service Interest
+                                            {t('contact.serviceInterest')}
                                         </label>
                                         <select
                                             id="service"
@@ -109,21 +111,21 @@ const Contact = () => {
                                             onChange={handleChange}
                                             className="w-full px-4 py-2 rounded-md bg-background border border-input focus:outline-none focus:ring-2 focus:ring-accent"
                                         >
-                                            <option value="">Select a service...</option>
-                                            <option value="portrait">Portrait Photography</option>
-                                            <option value="event">Event Photography</option>
-                                            <option value="urban">Urban Photography</option>
-                                            <option value="nature">Nature Photography</option>
-                                            <option value="logo">Logo Design</option>
-                                            <option value="branding">Visual Identity & Branding</option>
-                                            <option value="social">Social Media Design</option>
-                                            <option value="other">Other</option>
+                                            <option value="">{t('contact.selectService')}</option>
+                                            <option value="portrait">{t('services.serviceOptions.portrait')}</option>
+                                            <option value="event">{t('services.serviceOptions.event')}</option>
+                                            <option value="urban">{t('services.serviceOptions.urban')}</option>
+                                            <option value="nature">{t('services.serviceOptions.nature')}</option>
+                                            <option value="logo">{t('services.serviceOptions.logo')}</option>
+                                            <option value="branding">{t('services.serviceOptions.branding')}</option>
+                                            <option value="social">{t('services.serviceOptions.social')}</option>
+                                            <option value="other">{t('services.serviceOptions.other')}</option>
                                         </select>
                                     </div>
 
                                     <div>
                                         <label htmlFor="message" className="block text-sm font-medium mb-2">
-                                            Message *
+                                            {t('contact.message')} *
                                         </label>
                                         <Textarea
                                             id="message"
@@ -131,7 +133,7 @@ const Contact = () => {
                                             required
                                             value={formData.message}
                                             onChange={handleChange}
-                                            placeholder="Tell me about your project..."
+                                            placeholder={t('contact.tellAboutProject')}
                                             rows={6}
                                             className="w-full"
                                         />
@@ -143,11 +145,11 @@ const Contact = () => {
                                         className="w-full bg-accent text-accent-foreground hover:bg-accent/90 py-6 text-lg font-semibold"
                                     >
                                         {isSubmitting ? (
-                                            "Sending..."
+                                            t('contact.sending')
                                         ) : (
                                             <>
                                                 <Send className="mr-2" size={20} />
-                                                Send Message
+                                                {t('contact.send')}
                                             </>
                                         )}
                                     </Button>
@@ -157,10 +159,9 @@ const Contact = () => {
                             {/* Contact Info */}
                             <div className="space-y-8">
                                 <div>
-                                    <h2 className="text-2xl font-display font-bold mb-6">Contact Information</h2>
+                                    <h2 className="text-2xl font-display font-bold mb-6">{t('contact.contactInfo')}</h2>
                                     <p className="text-muted-foreground mb-8">
-                                        Feel free to reach out through any of these channels. I typically respond
-                                        within 24-48 hours.
+                                        {t('contact.contactDesc')}
                                     </p>
                                 </div>
 
@@ -170,7 +171,7 @@ const Contact = () => {
                                             <Mail className="text-accent" size={20} />
                                         </div>
                                         <div>
-                                            <h3 className="font-semibold mb-1">Email</h3>
+                                            <h3 className="font-semibold mb-1">{t('contact.email')}</h3>
                                             <a
                                                 href="mailto:tiago@example.com"
                                                 className="text-muted-foreground hover:text-accent transition-colors"
@@ -185,7 +186,7 @@ const Contact = () => {
                                             <Phone className="text-accent" size={20} />
                                         </div>
                                         <div>
-                                            <h3 className="font-semibold mb-1">Phone</h3>
+                                            <h3 className="font-semibold mb-1">{t('contact.phone')}</h3>
                                             <a
                                                 href="tel:+5511999999999"
                                                 className="text-muted-foreground hover:text-accent transition-colors"
@@ -200,9 +201,9 @@ const Contact = () => {
                                             <MapPin className="text-accent" size={20} />
                                         </div>
                                         <div>
-                                            <h3 className="font-semibold mb-1">Location</h3>
+                                            <h3 className="font-semibold mb-1">{t('contact.location')}</h3>
                                             <p className="text-muted-foreground">
-                                                São Paulo, Brazil
+                                                {t('contact.locationValue')}
                                             </p>
                                         </div>
                                     </div>
@@ -210,7 +211,7 @@ const Contact = () => {
 
                                 {/* Social Media - Optional */}
                                 <div className="pt-8 border-t border-border">
-                                    <h3 className="font-semibold mb-4">Follow Me</h3>
+                                    <h3 className="font-semibold mb-4">{t('contact.followMe')}</h3>
                                     <div className="flex space-x-4">
                                         <a
                                             href="https://instagram.com/tdfoco"

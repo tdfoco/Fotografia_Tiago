@@ -3,12 +3,14 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { useDesignProjects } from "@/hooks/useSupabaseData";
 import type { DesignProject } from "@/lib/supabase";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface DesignGridProps {
     selectedCategory?: string;
 }
 
 const DesignGrid = ({ selectedCategory = "Todos" }: DesignGridProps) => {
+    const { t } = useLanguage();
     const [selectedProject, setSelectedProject] = useState<DesignProject | null>(null);
 
     // Fetch projects using Supabase hook
@@ -17,11 +19,11 @@ const DesignGrid = ({ selectedCategory = "Todos" }: DesignGridProps) => {
     );
 
     const categories = {
-        logos: "Logos",
-        visual_identity: "Visual Identity",
-        social_media: "Social Media",
-        posters: "Posters",
-        special: "Special Projects"
+        logos: t('design.categories.logos'),
+        visual_identity: t('design.categories.visualIdentity'),
+        social_media: t('design.categories.socialMedia'),
+        posters: t('design.categories.posters'),
+        special: t('design.categories.special')
     };
 
     const filteredProjects = selectedCategory === "Todos"
@@ -31,7 +33,7 @@ const DesignGrid = ({ selectedCategory = "Todos" }: DesignGridProps) => {
     if (loading) {
         return (
             <div className="flex items-center justify-center min-h-[400px]">
-                <p className="text-muted-foreground">Loading projects...</p>
+                <p className="text-muted-foreground">{t('portfolio.loading')}</p>
             </div>
         );
     }
@@ -80,16 +82,17 @@ const DesignGrid = ({ selectedCategory = "Todos" }: DesignGridProps) => {
 };
 
 const GraphicDesign = () => {
+    const { t } = useLanguage();
     const [filter, setFilter] = useState("Todos");
 
     const categories = ["Todos", "logos", "visual_identity", "social_media", "posters", "special"];
     const categoryLabels: Record<string, string> = {
-        "Todos": "All",
-        "logos": "Logos",
-        "visual_identity": "Visual Identity",
-        "social_media": "Social Media",
-        "posters": "Posters",
-        "special": "Special Projects"
+        "Todos": t('design.categories.all'),
+        "logos": t('design.categories.logos'),
+        "visual_identity": t('design.categories.visualIdentity'),
+        "social_media": t('design.categories.socialMedia'),
+        "posters": t('design.categories.posters'),
+        "special": t('design.categories.special')
     };
 
     return (
@@ -100,12 +103,11 @@ const GraphicDesign = () => {
                 <section className="bg-gradient-to-br from-background via-secondary to-background py-24 px-4">
                     <div className="max-w-4xl mx-auto text-center">
                         <h1 className="text-5xl md:text-6xl font-display font-bold tracking-tight mb-6 animate-fade-in">
-                            Graphic Design
+                            {t('design.title')}
                         </h1>
                         <div className="w-24 h-1 bg-accent mx-auto mb-8" />
                         <p className="text-lg md:text-xl text-muted-foreground font-light leading-relaxed max-w-2xl mx-auto">
-                            Modern visual identities, branding, and design pieces that create
-                            strong visual impact and memorable brand experiences.
+                            {t('design.description')}
                         </p>
                     </div>
                 </section>

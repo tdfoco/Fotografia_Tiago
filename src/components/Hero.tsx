@@ -1,8 +1,39 @@
+import { useState, useEffect } from "react";
 import { ArrowDown } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { supabase } from "@/lib/supabase";
+import type { HeroImage } from "@/lib/supabase";
 
 const Hero = () => {
   const { t } = useLanguage();
+  const [heroImages, setHeroImages] = useState<HeroImage[]>([]);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  useEffect(() => {
+    const fetchHeroImages = async () => {
+      const { data } = await supabase
+        .from('hero_images')
+        .select('*')
+        .eq('active', true)
+        .order('created_at', { ascending: false });
+
+      if (data && data.length > 0) {
+        setHeroImages(data);
+      }
+    };
+
+    fetchHeroImages();
+  }, []);
+
+  useEffect(() => {
+    if (heroImages.length <= 1) return;
+
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prev) => (prev + 1) % heroImages.length);
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [heroImages]);
 
   const scrollToGallery = () => {
     const gallery = document.getElementById('gallery');
@@ -11,8 +42,18 @@ const Hero = () => {
 
   return (
     <section className="relative h-screen w-full overflow-hidden bg-gradient-to-br from-black via-purple-900/20 to-black">
+      {/* Background Images Slideshow */}
+      {heroImages.length > 0 && heroImages.map((image, index) => (
+        <div
+          key={image.id}
+          className={`absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat transition-opacity duration-1000 ${index === currentImageIndex ? 'opacity-100' : 'opacity-0'
+            }`}
+          style={{ backgroundImage: `url(${image.url})` }}
+        />
+      ))}
+
       {/* Animated gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/60" />
+      <div className={`absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/60 ${heroImages.length > 0 ? 'bg-black/30' : ''}`} />
 
       <div className="relative h-full flex flex-col items-center justify-center text-center px-4">
         <h1 className="text-4xl md:text-6xl lg:text-7xl font-display font-bold tracking-tight text-white mb-4 animate-fade-in">
@@ -25,12 +66,18 @@ const Hero = () => {
           {t('hero.description')}
         </p>
 
-        <div className="flex flex-col sm:flex-row gap-4 animate-fade-in">
+        <div className="flex flex-col sm:flex-row gap-4 animate-fade-in justify-center">
           <a
-            href="#portfolio"
+            href="/photography"
             className="px-8 py-3 bg-accent text-accent-foreground rounded-full font-medium hover:bg-accent/90 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-accent/50"
           >
-            {t('hero.viewPortfolio')}
+            {t('nav.photography')}
+          </a>
+          <a
+            href="/design"
+            className="px-8 py-3 bg-accent text-accent-foreground rounded-full font-medium hover:bg-accent/90 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-accent/50"
+          >
+            {t('nav.graphicDesign')}
           </a>
           <a
             href="/contact"
