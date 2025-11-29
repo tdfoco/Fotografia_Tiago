@@ -264,7 +264,6 @@ const PhotoManagement = ({ photos, onDelete, onRefresh, loading }: PhotoManageme
                 category: formData.category,
                 title: formData.title,
                 description: formData.description,
-                year: formData.year,
             });
 
             toast({
@@ -397,7 +396,7 @@ const PhotoManagement = ({ photos, onDelete, onRefresh, loading }: PhotoManageme
                             <CardContent className="p-4">
                                 <p className="text-sm text-accent font-medium mb-1">{photo.category}</p>
                                 <h3 className="font-semibold mb-1">{photo.title}</h3>
-                                <p className="text-sm text-muted-foreground mb-3">{photo.year}</p>
+                                <p className="text-sm text-muted-foreground mb-3">{photo.description}</p>
                                 <Button
                                     variant="destructive"
                                     size="sm"
@@ -431,7 +430,7 @@ const DesignManagement = ({ projects, onDelete, onRefresh, loading }: DesignMana
 
     const [formData, setFormData] = useState({
         files: [] as File[],
-        category: 'logos' as DesignProject['category'],
+        category: 'branding' as DesignProject['category'],
         title: '',
         description: '',
         year: new Date().getFullYear(),
@@ -464,7 +463,7 @@ const DesignManagement = ({ projects, onDelete, onRefresh, loading }: DesignMana
 
             setFormData({
                 files: [],
-                category: 'logos',
+                category: 'branding',
                 title: '',
                 description: '',
                 year: new Date().getFullYear(),
@@ -518,11 +517,11 @@ const DesignManagement = ({ projects, onDelete, onRefresh, loading }: DesignMana
                                     onChange={(e) => setFormData({ ...formData, category: e.target.value as any })}
                                     className="w-full px-4 py-2 rounded-md border border-input bg-background"
                                 >
-                                    <option value="logos">Logos</option>
-                                    <option value="visual_identity">Visual Identity</option>
-                                    <option value="social_media">Social Media</option>
-                                    <option value="posters">Posters</option>
-                                    <option value="special">Special Projects</option>
+                                    <option value="branding">Branding</option>
+                                    <option value="editorial">Editorial</option>
+                                    <option value="web">Web</option>
+                                    <option value="illustration">Illustration</option>
+                                    <option value="packaging">Packaging</option>
                                 </select>
                             </div>
 

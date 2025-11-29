@@ -1,40 +1,20 @@
 import { useState } from "react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
-import { supabase } from "@/lib/supabase";
+import { useDesignProjects } from "@/hooks/useSupabaseData";
 import type { DesignProject } from "@/lib/supabase";
-import { useEffect } from "react";
 
 interface DesignGridProps {
     selectedCategory?: string;
 }
 
 const DesignGrid = ({ selectedCategory = "Todos" }: DesignGridProps) => {
-    const [projects, setProjects] = useState<DesignProject[]>([]);
     const [selectedProject, setSelectedProject] = useState<DesignProject | null>(null);
-    const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        fetchProjects();
-    }, []);
-
-    const fetchProjects = async () => {
-        try {
-            let query = supabase
-                .from('design_projects')
-                .select('*')
-                .order('created_at', { ascending: false });
-
-            const { data, error } = await query;
-
-            if (error) throw error;
-            setProjects(data || []);
-        } catch (error) {
-            console.error('Error fetching projects:', error);
-        } finally {
-            setLoading(false);
-        }
-    };
+    // Fetch projects using Supabase hook
+    const { projects, loading } = useDesignProjects(
+        selectedCategory === "Todos" ? undefined : selectedCategory
+    );
 
     const categories = {
         logos: "Logos",
@@ -140,8 +120,8 @@ const GraphicDesign = () => {
                                     key={category}
                                     onClick={() => setFilter(category)}
                                     className={`px-6 py-2 rounded-full text-sm font-medium tracking-wide transition-all duration-300 ${filter === category
-                                            ? "bg-accent text-accent-foreground shadow-lg shadow-accent/30"
-                                            : "bg-secondary text-secondary-foreground hover:bg-accent/20"
+                                        ? "bg-accent text-accent-foreground shadow-lg shadow-accent/30"
+                                        : "bg-secondary text-secondary-foreground hover:bg-accent/20"
                                         }`}
                                 >
                                     {categoryLabels[category]}

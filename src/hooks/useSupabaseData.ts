@@ -1,91 +1,92 @@
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
 import type { PhotographyItem, DesignProject } from '@/lib/supabase';
 
-export const usePhotography = (category?: string) => {
+// Hook for fetching photography items
+export function usePhotography(category?: string) {
     const [photos, setPhotos] = useState<PhotographyItem[]>([]);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<Error | null>(null);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
+        async function fetchPhotos() {
+            try {
+                setLoading(true);
+                let query = supabase
+                    .from('photography')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (category) {
+                    query = query.eq('category', category);
+                }
+
+                const { data, error } = await query;
+
+                if (error) throw error;
+                setPhotos(data || []);
+                setError(null);
+            } catch (err: any) {
+                setError(err.message);
+                setPhotos([]);
+            } finally {
+                setLoading(false);
+            }
+        }
+
         fetchPhotos();
     }, [category]);
 
-    const fetchPhotos = async () => {
-        try {
-            setLoading(true);
-            let query = supabase
-                .from('photography')
-                .select('*')
-                .order('created_at', { ascending: false });
+    return { photos, loading, error };
+}
 
-            if (category && category !== 'Todos') {
-                query = query.eq('category', category);
-            }
-
-            const { data, error: fetchError } = await query;
-
-            if (fetchError) throw fetchError;
-            setPhotos(data || []);
-            setError(null);
-        } catch (err) {
-            setError(err as Error);
-            console.error('Error fetching photos:', err);
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    return { photos, loading, error, refetch: fetchPhotos };
-};
-
-export const useDesignProjects = (category?: string) => {
+// Hook for fetching design projects
+export function useDesignProjects(category?: string) {
     const [projects, setProjects] = useState<DesignProject[]>([]);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<Error | null>(null);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
+        async function fetchProjects() {
+            try {
+                setLoading(true);
+                let query = supabase
+                    .from('design_projects')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (category) {
+                    query = query.eq('category', category);
+                }
+
+                const { data, error } = await query;
+
+                if (error) throw error;
+                setProjects(data || []);
+                setError(null);
+            } catch (err: any) {
+                setError(err.message);
+                setProjects([]);
+            } finally {
+                setLoading(false);
+            }
+        }
+
         fetchProjects();
     }, [category]);
 
-    const fetchProjects = async () => {
-        try {
-            setLoading(true);
-            let query = supabase
-                .from('design_projects')
-                .select('*')
-                .order('created_at', { ascending: false });
+    return { projects, loading, error };
+}
 
-            if (category && category !== 'Todos') {
-                query = query.eq('category', category);
-            }
-
-            const { data, error: fetchError } = await query;
-
-            if (fetchError) throw fetchError;
-            setProjects(data || []);
-            setError(null);
-        } catch (err) {
-            setError(err as Error);
-            console.error('Error fetching projects:', err);
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    return { projects, loading, error, refetch: fetchProjects };
-};
-
-// Hook to check if user is authenticated (admin)
-export const useAuth = () => {
+// Hook for authentication
+export function useAuth() {
     const [user, setUser] = useState<any>(null);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        // Check current session
+        // Get initial session
         supabase.auth.getSession().then(({ data: { session } }) => {
             setUser(session?.user ?? null);
-            setLoading(false);
         });
 
         // Listen for auth changes
@@ -99,10 +100,12 @@ export const useAuth = () => {
     }, []);
 
     const signIn = async (email: string, password: string) => {
+        setLoading(true);
         const { data, error } = await supabase.auth.signInWithPassword({
             email,
             password,
         });
+        setLoading(false);
         return { data, error };
     };
 
@@ -111,5 +114,10 @@ export const useAuth = () => {
         return { error };
     };
 
-    return { user, loading, signIn, signOut };
-};
+    return {
+        user,
+        loading,
+        signIn,
+        signOut,
+    };
+}

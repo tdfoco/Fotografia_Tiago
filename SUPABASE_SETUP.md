@@ -1,180 +1,300 @@
-# Supabase Setup Guide
+# 🚀 Guia de Configuração do Supabase
 
-This guide will help you set up Supabase for your hybrid photography + design portfolio.
+Este guia detalha todos os passos necessários para configurar o Supabase para o seu portfólio.
 
-## Step 1: Create a Supabase Project
+## 📋 Índice
+1. [Criar Conta e Projeto](#1-criar-conta-e-projeto)
+2. [Configurar Banco de Dados](#2-configurar-banco-de-dados)
+3. [Configurar Storage](#3-configurar-storage)
+4. [Obter Credenciais](#4-obter-credenciais)
+5. [Configurar Aplicação](#5-configurar-aplicação)
+6. [Testar](#6-testar)
 
-1. Go to [https://supabase.com](https://supabase.com) and sign up/login
-2. Click **"New Project"**
-3. Choose an organization (or create one)
-4. Fill in project details:
-   - **Name**: `tiago-portfolio` (or any name you prefer)
-   - **Database Password**: Create a strong password (save this!)
-   - **Region**: Choose the closest to your users
-5. Click **"Create new project"** and wait ~2 minutes
+---
 
-## Step 2: Create Database Tables
+## 1. Criar Conta e Projeto
 
-1. Go to the **SQL Editor** in your Supabase dashboard
-2. Click **"New Query"**
-3. Paste the following SQL and click **"Run"**:
+### 1.1 Criar Conta
+1. Acesse [https://supabase.com](https://supabase.com)
+2. Clique em **"Start your project"**
+3. Faça login com GitHub, Google ou email
+
+### 1.2 Criar Novo Projeto
+1. No dashboard, clique em **"New Project"**
+2. Preencha os dados:
+   - **Name**: `portfolio-tiago` (ou nome de sua preferência)
+   - **Database Password**: Crie uma senha forte e **guarde-a com segurança**
+   - **Region**: Escolha a região mais próxima do Brasil (ex: `South America (São Paulo)`)
+3. Clique em **"Create new project"**
+4. Aguarde alguns minutos enquanto o projeto é criado
+
+---
+
+## 2. Configurar Banco de Dados
+
+### 2.1 Acessar o SQL Editor
+1. No menu lateral, clique em **"SQL Editor"**
+2. Clique em **"New query"**
+
+### 2.2 Criar Tabela de Fotografia
+Cole e execute o seguinte SQL:
 
 ```sql
--- Create photography table
+-- Criar tabela de fotografia
 CREATE TABLE photography (
-  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  url TEXT NOT NULL,
-  category TEXT NOT NULL CHECK (category IN ('portraits', 'urban', 'nature', 'art', 'events')),
-  title TEXT NOT NULL,
-  description TEXT NOT NULL,
-  year INTEGER NOT NULL,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc', NOW())
+  id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
+  title text NOT NULL,
+  category text CHECK (category IN ('portraits', 'urban', 'nature', 'art', 'events')),
+  url text NOT NULL,
+  description text,
+  year integer,
+  created_at timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL,
+  updated_at timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
--- Create design_projects table
-CREATE TABLE design_projects (
-  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  images TEXT[] NOT NULL,
-  category TEXT NOT NULL CHECK (category IN ('logos', 'visual_identity', 'social_media', 'posters', 'special')),
-  title TEXT NOT NULL,
-  description TEXT NOT NULL,
-  year INTEGER NOT NULL,
-  client TEXT,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc', NOW())
-);
-
--- Enable Row Level Security
+-- Habilitar RLS (Row Level Security)
 ALTER TABLE photography ENABLE ROW LEVEL SECURITY;
+
+-- Política para permitir leitura pública
+CREATE POLICY "Permitir leitura pública de fotografia" 
+ON photography FOR SELECT 
+USING (true);
+
+-- Política para permitir inserção apenas para usuários autenticados
+CREATE POLICY "Permitir inserção para usuários autenticados" 
+ON photography FOR INSERT 
+WITH CHECK (auth.role() = 'authenticated');
+
+-- Política para permitir atualização apenas para usuários autenticados
+CREATE POLICY "Permitir atualização para usuários autenticados" 
+ON photography FOR UPDATE 
+USING (auth.role() = 'authenticated');
+
+-- Política para permitir deleção apenas para usuários autenticados
+CREATE POLICY "Permitir deleção para usuários autenticados" 
+ON photography FOR DELETE 
+USING (auth.role() = 'authenticated');
+```
+
+### 2.3 Criar Tabela de Projetos de Design
+Cole e execute o seguinte SQL:
+
+```sql
+-- Criar tabela de projetos de design
+CREATE TABLE design_projects (
+  id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
+  title text NOT NULL,
+  category text CHECK (category IN ('logos', 'visual_identity', 'social_media', 'posters', 'special')),
+  description text NOT NULL,
+  images text[] NOT NULL,
+  client text,
+  year integer,
+  link text,
+  created_at timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL,
+  updated_at timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
+-- Habilitar RLS
 ALTER TABLE design_projects ENABLE ROW LEVEL SECURITY;
 
--- Create policies to allow public read access
-CREATE POLICY "Public can view photography"
-  ON photography FOR SELECT
-  USING (true);
+-- Política para permitir leitura pública
+CREATE POLICY "Permitir leitura pública de projetos" 
+ON design_projects FOR SELECT 
+USING (true);
 
-CREATE POLICY "Public can view design projects"
-  ON design_projects FOR SELECT
-  USING (true);
+-- Política para permitir inserção apenas para usuários autenticados
+CREATE POLICY "Permitir inserção de projetos para usuários autenticados" 
+ON design_projects FOR INSERT 
+WITH CHECK (auth.role() = 'authenticated');
 
--- Create policies to allow authenticated users to insert/update/delete
-CREATE POLICY "Authenticated users can insert photography"
-  ON photography FOR INSERT
-  WITH CHECK (auth.role() = 'authenticated');
+-- Política para permitir atualização apenas para usuários autenticados
+CREATE POLICY "Permitir atualização de projetos para usuários autenticados" 
+ON design_projects FOR UPDATE 
+USING (auth.role() = 'authenticated');
 
-CREATE POLICY "Authenticated users can update photography"
-  ON photography FOR UPDATE
-  USING (auth.role() = 'authenticated');
-
-CREATE POLICY "Authenticated users can delete photography"
-  ON photography FOR DELETE
-  USING (auth.role() = 'authenticated');
-
-CREATE POLICY "Authenticated users can insert design projects"
-  ON design_projects FOR INSERT
-  WITH CHECK (auth.role() = 'authenticated');
-
-CREATE POLICY "Authenticated users can update design projects"
-  ON design_projects FOR UPDATE
-  USING (auth.role() = 'authenticated');
-
-CREATE POLICY "Authenticated users can delete design projects"
-  ON design_projects FOR DELETE
-  USING (auth.role() = 'authenticated');
+-- Política para permitir deleção apenas para usuários autenticados
+CREATE POLICY "Permitir deleção de projetos para usuários autenticados" 
+ON design_projects FOR DELETE 
+USING (auth.role() = 'authenticated');
 ```
 
-## Step 3: Create Storage Buckets
+### 2.4 Verificar Tabelas
+1. No menu lateral, clique em **"Table Editor"**
+2. Você deve ver as tabelas `photography` e `design_projects`
 
-1. Go to **Storage** in your Supabase dashboard
-2. Click **"Create a new bucket"**
-3. Create the first bucket:
+---
+
+## 3. Configurar Storage
+
+### 3.1 Criar Bucket para Fotografia
+1. No menu lateral, clique em **"Storage"**
+2. Clique em **"Create a new bucket"**
+3. Preencha:
    - **Name**: `photography`
-   - **Public bucket**: ✅ Yes (check this)
-   - Click **"Create bucket"**
-4. Create the second bucket:
-   - **Name**: `design`
-   - **Public bucket**: ✅ Yes (check this)
-   - Click **"Create bucket"**
+   - **Public bucket**: ✅ **Ativar** (marque a caixa)
+4. Clique em **"Create bucket"**
 
-## Step 4: Create Admin User
+### 3.2 Configurar Políticas do Bucket de Fotografia
+1. Clique no bucket `photography`
+2. Vá na aba **"Policies"**
+3. Clique em **"New policy"** > **"For full customization"**
+4. Cole a seguinte política para permitir leitura pública:
 
-1. Go to **Authentication** → **Users** in your Supabase dashboard
-2. Click **"Add user"** → **"Create new user"**
-3. Fill in:
-   - **Email**: Your admin email (e.g., `admin@tiago.com`)
-   - **Password**: Create a strong password (you'll use this to login to /admin)
-   - Leave **Auto Confirm User** checked
-4. Click **"Create user"**
+```sql
+CREATE POLICY "Permitir leitura pública de imagens"
+ON storage.objects FOR SELECT
+USING (bucket_id = 'photography');
+```
 
-## Step 5: Get Your API Keys
+5. Clique em **"Review"** e depois **"Save policy"**
 
-1. Go to **Settings** → **API** in your Supabase dashboard
-2. Under **Project API keys**, you'll see:
-   - **Project URL**: Copy this (starts with `https://xxx.supabase.co`)
-   - **anon/public key**: Copy this (long string starting with `eyJ...`)
+6. Crie outra política para upload (apenas autenticados):
 
-## Step 6: Configure Your Project
+```sql
+CREATE POLICY "Permitir upload para usuários autenticados"
+ON storage.objects FOR INSERT
+WITH CHECK (bucket_id = 'photography' AND auth.role() = 'authenticated');
+```
 
-1. In your project folder, create a file named `.env` (copy from `.env.example`)
-2. Paste your credentials:
+### 3.3 Criar Bucket para Design
+Repita o mesmo processo acima, mas com o nome `design`:
+
+1. Crie o bucket **"design"** (público)
+2. Adicione as mesmas políticas, substituindo `'photography'` por `'design'`
+
+---
+
+## 4. Obter Credenciais
+
+### 4.1 Acessar Configurações da API
+1. No menu lateral, clique no ícone de **engrenagem (⚙️)**
+2. Clique em **"API"**
+
+### 4.2 Copiar Credenciais
+Você verá duas informações importantes:
+
+1. **Project URL** - Algo como: `https://xxxxxxxxxxxxx.supabase.co`
+2. **anon/public key** - Uma chave longa começando com `eyJ...`
+
+> ⚠️ **Importante**: Copie a chave **anon** (não a service_role)
+
+---
+
+## 5. Configurar Aplicação
+
+### 5.1 Criar Arquivo .env
+1. Na raiz do projeto, crie o arquivo `.env` (se ainda não existir)
+2. Adicione as credenciais copiadas:
 
 ```env
-VITE_SUPABASE_URL=https://your-project-id.supabase.co
-VITE_SUPABASE_ANON_KEY=your-anon-key-here
+VITE_SUPABASE_URL=https://xxxxxxxxxxxxx.supabase.co
+VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 ```
 
-3. Save the file
+> ⚠️ **Substitua** os valores pelos dados reais do seu projeto!
 
-## Step 7: Start Your Development Server
+### 5.2 Verificar .gitignore
+O arquivo `.gitignore` já está configurado para ignorar o `.env`, então suas credenciais não serão commitadas no Git.
 
+---
+
+## 6. Testar
+
+### 6.1 Instalar Dependências (se necessário)
+```bash
+npm install
+```
+
+### 6.2 Iniciar Servidor de Desenvolvimento
 ```bash
 npm run dev
 ```
 
-Your portfolio should now be running! Visit:
-- **Homepage**: `http://localhost:5173`
-- **Admin Panel**: `http://localhost:5173/admin`
+### 6.3 Verificar Console do Browser
+1. Abra o navegador em `http://localhost:5173`
+2. Abra o DevTools (F12)
+3. Verifique se não há erros relacionados ao Supabase
 
-## Using the Admin Panel
+### 6.4 Testar com Dados de Exemplo
 
-1. Navigate to `/admin`
-2. Login with the email and password you created in Step 4
-3. You can now:
-   - **Photography Tab**: Upload photos, select category, add title/description/year
-   - **Design Tab**: Upload projects (multiple images), select category, add details
-   - **Delete**: Remove any photo or project
+#### Adicionar Fotografia de Teste
+1. No Supabase, vá em **"Table Editor"** > **"photography"**
+2. Clique em **"Insert row"**
+3. Preencha:
+   - **title**: "Foto Teste"
+   - **category**: "urban"
+   - **url**: URL de uma imagem qualquer (ou use: `https://images.unsplash.com/photo-1516483638261-f4dbaf036963`)
+   - **year**: 2024
+4. Clique em **"Save"**
 
-## Storage Policies (Important!)
+#### Adicionar Projeto de Design de Teste
+1. Vá em **"Table Editor"** > **"design_projects"**
+2. Clique em **"Insert row"**
+3. Preencha:
+   - **title**: "Projeto Teste"
+   - **category**: "logos"
+   - **description**: "Descrição do projeto"
+   - **images**: `{"https://images.unsplash.com/photo-1626785774573-4b799315345d"}` (formato array)
+   - **year**: 2024
+4. Clique em **"Save"**
 
-The storage buckets are public by default. If you need to restrict access:
-
-1. Go to **Storage** → Select bucket → **Policies**
-2. You can create custom policies for read/write access
-
-## Troubleshooting
-
-**Images not loading?**
-- Make sure buckets are set to **public**
-- Check that the storage policies allow public SELECT
-
-**Can't login to admin?**
-- Verify your admin user email/password in Supabase Authentication
-- Check that `.env` file has correct credentials
-- Make sure to restart dev server after changing `.env`
-
-**Upload failing?**
-- Check storage policies allow authenticated INSERT
-- Verify file size isn't too large (default limit: 50MB)
-
-## Production Deployment
-
-When deploying to production (Vercel, Netlify, etc.):
-
-1. Add environment variables in your hosting platform:
-   - `VITE_SUPABASE_URL`
-   - `VITE_SUPABASE_ANON_KEY`
-2. Build the project: `npm run build`
-3. Deploy the `dist` folder
+### 6.5 Verificar na Aplicação
+1. Navegue até a página de Design Gráfico
+2. Você deve ver o projeto de teste aparecer
+3. Se aparecer, está tudo funcionando! 🎉
 
 ---
 
-**Need help?** Check the [Supabase Documentation](https://supabase.com/docs)
+## 🔐 Configurar Autenticação (Opcional)
+
+Se você quiser usar o sistema de login para adicionar/editar conteúdo:
+
+### 6.6 Criar Usuário Admin
+1. No Supabase, vá em **"Authentication"** > **"Users"**
+2. Clique em **"Add user"** > **"Create new user"**
+3. Preencha:
+   - **Email**: seu email
+   - **Password**: senha forte
+   - **Auto Confirm User**: ✅ **Ativar**
+4. Clique em **"Create user"**
+
+Agora você pode fazer login na aplicação com esse email e senha!
+
+---
+
+## 🎯 Próximos Passos
+
+Após configurar tudo:
+1. ✅ Teste a aplicação localmente
+2. ✅ Adicione seus projetos reais via Table Editor ou crie uma interface admin
+3. ✅ Faça upload de suas imagens nos buckets de storage
+4. ✅ Deploy da aplicação (Vercel, Netlify, etc.)
+
+---
+
+## ❓ Problemas Comuns
+
+### Erro: "Invalid API key"
+- Verifique se copiou a chave **anon** correta
+- Verifique se o `.env` está na raiz do projeto
+- Reinicie o servidor de desenvolvimento
+
+### Imagens não carregam
+- Verifique se os buckets estão marcados como **públicos**
+- Verifique se as políticas de leitura foram criadas corretamente
+
+### Não consigo inserir dados
+- Verifique se está logado (se as políticas exigem autenticação)
+- Verifique as políticas RLS das tabelas
+
+---
+
+## 📚 Recursos Úteis
+
+- [Documentação Oficial Supabase](https://supabase.com/docs)
+- [Supabase Storage Guide](https://supabase.com/docs/guides/storage)
+- [Row Level Security](https://supabase.com/docs/guides/auth/row-level-security)
+
+---
+
+**Feito com ❤️ para seu portfólio!**
