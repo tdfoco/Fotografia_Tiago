@@ -55,8 +55,8 @@ const Navigation = () => {
 
 
                     {/* Desktop Navigation */}
-                    <div className="hidden md:flex items-center space-x-4">
-                        <div className="flex items-center space-x-8">
+                    <div className="hidden lg:flex items-center space-x-4">
+                        <div className="flex items-center space-x-6">
                             {navLinks.map((link) => (
                                 <Link
                                     key={link.path}
@@ -74,8 +74,8 @@ const Navigation = () => {
                                 </Link>
                             ))}
                         </div>
-                        <div className="flex items-center gap-4">
-                            <div className="w-64">
+                        <div className="flex items-center gap-3">
+                            <div className="w-56">
                                 <SearchBar />
                             </div>
                             <LanguageSelector />
@@ -92,7 +92,7 @@ const Navigation = () => {
                     {/* Mobile menu button */}
                     <button
                         onClick={() => setIsOpen(!isOpen)}
-                        className="md:hidden p-2 rounded-lg hover:bg-accent/10 transition-colors"
+                        className="lg:hidden p-2 rounded-lg hover:bg-accent/10 transition-colors"
                         aria-label="Toggle menu"
                     >
                         {isOpen ? (
@@ -106,20 +106,23 @@ const Navigation = () => {
 
             {/* Mobile Navigation */}
             <div
-                className={`md:hidden transition-all duration-300 ease-in-out ${isOpen
-                    ? "max-h-96 opacity-100 border-b border-border"
+                className={`lg:hidden transition-all duration-300 ease-in-out ${isOpen
+                    ? "max-h-[32rem] opacity-100 border-b border-border"
                     : "max-h-0 opacity-0 overflow-hidden"
                     }`}
             >
-                <div className="px-4 pt-2 pb-6 space-y-3 bg-background/95 backdrop-blur-md">
-                    <div className="px-4 py-2">
+                <div className="px-4 pt-4 pb-6 space-y-2 bg-background/95 backdrop-blur-md">
+                    {/* Search Bar in Mobile */}
+                    <div className="mb-4">
                         <SearchBar />
                     </div>
+
+                    {/* Navigation Links */}
                     {navLinks.map((link) => (
                         <Link
                             key={link.path}
                             to={link.path}
-                            className={`block px-4 py-3 rounded-lg text-base font-medium transition-all duration-200 ${location.pathname === link.path
+                            className={`block px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 ${location.pathname === link.path
                                 ? "bg-accent text-accent-foreground"
                                 : "text-foreground/80 hover:bg-accent/10 hover:text-accent"
                                 }`}
@@ -127,11 +130,13 @@ const Navigation = () => {
                             {link.name}
                         </Link>
                     ))}
-                    <div className="px-4 pt-2 flex items-center justify-between">
+
+                    {/* Language & Admin */}
+                    <div className="flex items-center justify-between pt-4 border-t border-border mt-4">
                         <LanguageSelector />
                         <Link
                             to="/admin"
-                            className="flex items-center gap-2 text-foreground/80 hover:text-accent transition-colors px-4 py-2"
+                            className="flex items-center gap-2 text-foreground/80 hover:text-accent transition-colors px-3 py-2 rounded-lg hover:bg-accent/10"
                         >
                             <Lock className="h-4 w-4" />
                             <span className="text-sm font-medium">Admin</span>
