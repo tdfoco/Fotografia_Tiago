@@ -33,6 +33,8 @@ const InteractionBar = ({
     // Check local storage for liked status
     useEffect(() => {
         const likedItems = JSON.parse(localStorage.getItem('liked_items') || '{}');
+        // We still set isLiked to true if they have liked it, to show the visual state
+        // But we won't block the action based on this state alone
         if (likedItems[itemId]) {
             setIsLiked(true);
         }
@@ -49,15 +51,29 @@ const InteractionBar = ({
 
     const handleLike = async (e: React.MouseEvent) => {
         e.stopPropagation();
-        if (isLiked) return;
+
+        const likedItems = JSON.parse(localStorage.getItem('liked_items') || '{}');
+        const lastLiked = likedItems[itemId];
+        const now = Date.now();
+        const COOLDOWN = 10 * 60 * 1000; // 10 minutes
+
+        // Check if currently in cooldown
+        if (lastLiked && typeof lastLiked === 'number' && (now - lastLiked < COOLDOWN)) {
+            const remaining = Math.ceil((COOLDOWN - (now - lastLiked)) / 60000);
+            toast({
+                title: "Aguarde um pouco",
+                description: `Você poderá curtir novamente em ${remaining} minutos.`,
+                variant: "destructive"
+            });
+            return;
+        }
 
         // Optimistic update
         setLikes(prev => prev + 1);
         setIsLiked(true);
 
-        // Save to local storage
-        const likedItems = JSON.parse(localStorage.getItem('liked_items') || '{}');
-        likedItems[itemId] = true;
+        // Save timestamp to local storage
+        likedItems[itemId] = now;
         localStorage.setItem('liked_items', JSON.stringify(likedItems));
 
         // API call
