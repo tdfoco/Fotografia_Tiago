@@ -4,6 +4,16 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { supabase } from "@/lib/supabase";
 import type { HeroImage } from "@/lib/supabase";
 
+// Fisher-Yates shuffle algorithm for randomizing arrays
+function shuffleArray<T>(array: T[]): T[] {
+  const shuffled = [...array];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+}
+
 interface HeroProps {
   page?: string;
 }
@@ -19,8 +29,7 @@ const Hero = ({ page = 'home' }: HeroProps) => {
       const { data, error } = await supabase
         .from('hero_images')
         .select('*')
-        .eq('active', true)
-        .order('created_at', { ascending: false });
+        .eq('active', true);
 
       if (error) {
         console.error('Error fetching hero images:', error);
@@ -38,7 +47,8 @@ const Hero = ({ page = 'home' }: HeroProps) => {
           filtered = data.filter(img => img.page === page);
         }
 
-        setHeroImages(filtered);
+        // Randomize the filtered images
+        setHeroImages(shuffleArray(filtered));
       }
     };
 

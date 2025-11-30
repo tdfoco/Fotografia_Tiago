@@ -2,6 +2,16 @@ import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
 import type { PhotographyItem, DesignProject } from '@/lib/supabase';
 
+// Fisher-Yates shuffle algorithm for randomizing arrays
+function shuffleArray<T>(array: T[]): T[] {
+    const shuffled = [...array];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+}
+
 // Hook for fetching photography items
 export function usePhotography(category?: string) {
     const [photos, setPhotos] = useState<PhotographyItem[]>([]);
@@ -14,8 +24,7 @@ export function usePhotography(category?: string) {
                 setLoading(true);
                 let query = supabase
                     .from('photography')
-                    .select('*')
-                    .order('created_at', { ascending: false });
+                    .select('*');
 
                 if (category) {
                     query = query.eq('category', category);
@@ -24,7 +33,8 @@ export function usePhotography(category?: string) {
                 const { data, error } = await query;
 
                 if (error) throw error;
-                setPhotos(data || []);
+                // Randomize the order of photos
+                setPhotos(shuffleArray(data || []));
                 setError(null);
             } catch (err: any) {
                 setError(err.message);
@@ -52,8 +62,7 @@ export function useDesignProjects(category?: string) {
                 setLoading(true);
                 let query = supabase
                     .from('design_projects')
-                    .select('*')
-                    .order('created_at', { ascending: false });
+                    .select('*');
 
                 if (category) {
                     query = query.eq('category', category);
@@ -62,7 +71,8 @@ export function useDesignProjects(category?: string) {
                 const { data, error } = await query;
 
                 if (error) throw error;
-                setProjects(data || []);
+                // Randomize the order of projects
+                setProjects(shuffleArray(data || []));
                 setError(null);
             } catch (err: any) {
                 setError(err.message);
