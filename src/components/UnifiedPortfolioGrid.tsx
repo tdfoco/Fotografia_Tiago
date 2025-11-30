@@ -1,29 +1,47 @@
 import { useState } from "react";
 import { usePhotography, useDesignProjects } from "@/hooks/useSupabaseData";
-import { useLanguage } from "@/contexts/LanguageContext";
 import { useImageProtection } from "@/hooks/useImageProtection";
 import ProtectedImage from "./ProtectedImage";
 
-// Unified portfolio item type
-type UnifiedPortfolioItem = {
+type UnifiedItem = {
     id: string;
     src: string;
     alt: string;
     type: 'photography' | 'design';
-    category?: string;
+    category: string;
 };
 
 const UnifiedPortfolioGrid = () => {
-    const { t } = useLanguage();
     useImageProtection();
 
-    const { photos, loading: photosLoading } = usePhotography();
-    const { projects, loading: projectsLoading } = useDesignProjects();
+    const [photoFilter, setPhotoFilter] = useState<string>("all");
+    const [designFilter, setDesignFilter] = useState<string>("all");
+
+    const { photos, loading: photosLoading } = usePhotography(photoFilter === "all" ? undefined : photoFilter);
+    const { projects, loading: projectsLoading } = useDesignProjects(designFilter === "all" ? undefined : designFilter);
 
     const loading = photosLoading || projectsLoading;
 
-    // Combine and shuffle both portfolios
-    const unifiedItems: UnifiedPortfolioItem[] = [
+    const photoCategories = [
+        { key: "all", label: "Todos" },
+        { key: "portraits", label: "Retratos" },
+        { key: "urban", label: "Urbano" },
+        { key: "nature", label: "Natureza" },
+        { key: "art", label: "Arte" },
+        { key: "events", label: "Eventos" }
+    ];
+
+    const designCategories = [
+        { key: "all", label: "Todos" },
+        { key: "logos", label: "Logos" },
+        { key: "visual_identity", label: "Identidade Visual" },
+        { key: "social_media", label: "Redes Sociais" },
+        { key: "posters", label: "Pôsteres" },
+        { key: "special", label: "Projetos Especiais" }
+    ];
+
+    // Combine both portfolios into unified items
+    const unifiedItems: UnifiedItem[] = [
         ...photos.map(photo => ({
             id: `photo-${photo.id}`,
             src: photo.url,
@@ -41,56 +59,87 @@ const UnifiedPortfolioGrid = () => {
     ];
 
     return (
-        <section id="unified-portfolio" className="min-h-screen bg-background py-20 px-4 md:px-8">
+        <section id="portfolio" className="min-h-screen bg-background py-20 px-4 md:px-8">
             <div className="max-w-7xl mx-auto">
-                {/* Header Section */}
-                <div className="text-center mb-16">
-                    <h2 className="text-4xl md:text-5xl font-light tracking-tight mb-8">
-                        Portfólio
-                    </h2>
+                {/* Main Title */}
+                <h1 className="text-5xl md:text-6xl font-light tracking-tight text-center mb-12">
+                    Portfólio
+                </h1>
 
-                    {/* Two columns for Photography and Design */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto mb-6">
-                        {/* Photography */}
-                        <div className="text-center md:text-right md:border-r border-border md:pr-8">
-                            <h3 className="text-xl md:text-2xl font-display font-semibold mb-3 text-accent">
-                                Fotografia
-                            </h3>
-                            <p className="text-muted-foreground text-sm md:text-base font-light">
-                                Uma coleção de momentos capturados através de diferentes perspectivas
-                            </p>
-                        </div>
+                {/* Two sections side by side with divider */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto mb-8">
+                    {/* Photography Section */}
+                    <div className="text-center md:text-right md:border-r border-border md:pr-8">
+                        <h2 className="text-2xl md:text-3xl font-display font-semibold mb-4 text-[#00A3FF]">
+                            Fotografia
+                        </h2>
+                        <p className="text-muted-foreground text-sm md:text-base font-light leading-relaxed">
+                            Uma coleção de momentos capturados através de diferentes perspectivas
+                        </p>
+                    </div>
 
-                        {/* Design */}
-                        <div className="text-center md:text-left md:pl-8">
-                            <h3 className="text-xl md:text-2xl font-display font-semibold mb-3 text-accent">
-                                Design Gráfico
-                            </h3>
-                            <p className="text-muted-foreground text-sm md:text-base font-light">
-                                Identidades visuais modernas, branding e peças de design que criam forte impacto visual e experiências memoráveis de marca
-                            </p>
-                        </div>
+                    {/* Design Section */}
+                    <div className="text-center md:text-left md:pl-8">
+                        <h2 className="text-2xl md:text-3xl font-display font-semibold mb-4 text-[#00A3FF]">
+                            Design Gráfico
+                        </h2>
+                        <p className="text-muted-foreground text-sm md:text-base font-light leading-relaxed">
+                            Identidades visuais modernas, branding e peças de design que criam forte impacto visual e experiências memoráveis de marca
+                        </p>
+                    </div>
+                </div>
+
+                {/* Category Filters - Two rows */}
+                <div className="space-y-4 mb-12">
+                    {/* Photography Filters */}
+                    <div className="flex flex-wrap gap-3 justify-center">
+                        {photoCategories.map((category) => (
+                            <button
+                                key={category.key}
+                                onClick={() => setPhotoFilter(category.key)}
+                                className={`px-5 py-2 rounded-full text-sm font-medium tracking-wide transition-all duration-300 ${photoFilter === category.key
+                                        ? "bg-[#00A3FF] text-white shadow-lg shadow-[#00A3FF]/30"
+                                        : "bg-secondary text-secondary-foreground hover:bg-[#00A3FF]/20"
+                                    }`}
+                            >
+                                {category.label}
+                            </button>
+                        ))}
+                    </div>
+
+                    {/* Design Filters */}
+                    <div className="flex flex-wrap gap-3 justify-center">
+                        {designCategories.map((category) => (
+                            <button
+                                key={category.key}
+                                onClick={() => setDesignFilter(category.key)}
+                                className={`px-5 py-2 rounded-full text-sm font-medium tracking-wide transition-all duration-300 ${designFilter === category.key
+                                        ? "bg-[#00A3FF] text-white shadow-lg shadow-[#00A3FF]/30"
+                                        : "bg-secondary text-secondary-foreground hover:bg-[#00A3FF]/20"
+                                    }`}
+                            >
+                                {category.label}
+                            </button>
+                        ))}
                     </div>
                 </div>
 
                 {/* Unified Grid */}
                 {loading ? (
                     <div className="text-center py-20">
-                        <p className="text-muted-foreground">{t('portfolio.loading')}</p>
+                        <p className="text-muted-foreground">Carregando...</p>
                     </div>
                 ) : unifiedItems.length === 0 ? (
                     <div className="text-center py-20">
-                        <p className="text-muted-foreground">
-                            Nenhum item encontrado
-                        </p>
+                        <p className="text-muted-foreground">Nenhum item encontrado</p>
                     </div>
                 ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
                         {unifiedItems.map((item, index) => (
                             <div
                                 key={item.id}
                                 className="group relative aspect-square overflow-hidden rounded-lg animate-fade-in"
-                                style={{ animationDelay: `${index * 50}ms` }}
+                                style={{ animationDelay: `${index * 30}ms` }}
                             >
                                 <ProtectedImage
                                     src={item.src}
@@ -99,7 +148,7 @@ const UnifiedPortfolioGrid = () => {
                                     className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
                                     onImageClick={() => { }}
                                 />
-                                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-all duration-500 flex items-center justify-center pointer-events-none">
+                                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/50 transition-all duration-500 flex items-center justify-center pointer-events-none">
                                     <span className="text-white opacity-0 group-hover:opacity-100 transition-opacity duration-500 text-sm tracking-wider font-light">
                                         {item.type === 'photography' ? 'Fotografia' : 'Design'}
                                     </span>
