@@ -7,9 +7,11 @@ import Lightbox, { Photo } from "./Lightbox";
 
 interface PhotoGridProps {
   showHeader?: boolean;
+  showFilters?: boolean;
+  limit?: number;
 }
 
-const PhotoGrid = ({ showHeader = true }: PhotoGridProps) => {
+const PhotoGrid = ({ showHeader = true, showFilters = true, limit }: PhotoGridProps) => {
   const { t } = useLanguage();
   const [selectedPhoto, setSelectedPhoto] = useState<Photo | null>(null);
   const [filter, setFilter] = useState<string>("all");
@@ -47,6 +49,9 @@ const PhotoGrid = ({ showHeader = true }: PhotoGridProps) => {
     ? photos
     : photos.filter(photo => photo.category.toLowerCase() === filter);
 
+  // Apply limit if specified
+  const displayPhotos = limit ? filteredPhotos.slice(0, limit) : filteredPhotos;
+
   return (
     <section id="gallery" className="min-h-screen bg-background py-20 px-4 md:px-8">
       <div className="max-w-7xl mx-auto">
@@ -62,27 +67,29 @@ const PhotoGrid = ({ showHeader = true }: PhotoGridProps) => {
         )}
 
         {/* Category Filter */}
-        <div className="flex flex-wrap justify-center gap-4 mb-12">
-          {categories.map((category) => (
-            <button
-              key={category.key}
-              onClick={() => setFilter(category.key)}
-              className={`px-6 py-2 rounded-full text-sm font-light tracking-wide transition-all duration-300 ${filter === category.key
-                ? "bg-accent text-accent-foreground"
-                : "bg-secondary text-secondary-foreground hover:bg-accent/20"
-                }`}
-            >
-              {category.label}
-            </button>
-          ))}
-        </div>
+        {showFilters && (
+          <div className="flex flex-wrap justify-center gap-4 mb-12">
+            {categories.map((category) => (
+              <button
+                key={category.key}
+                onClick={() => setFilter(category.key)}
+                className={`px-6 py-2 rounded-full text-sm font-light tracking-wide transition-all duration-300 ${filter === category.key
+                  ? "bg-accent text-accent-foreground"
+                  : "bg-secondary text-secondary-foreground hover:bg-accent/20"
+                  }`}
+              >
+                {category.label}
+              </button>
+            ))}
+          </div>
+        )}
 
         {/* Photo Grid */}
         {loading ? (
           <div className="text-center py-20">
             <p className="text-muted-foreground">{t('portfolio.loading')}</p>
           </div>
-        ) : filteredPhotos.length === 0 ? (
+        ) : displayPhotos.length === 0 ? (
           <div className="text-center py-20">
             <p className="text-muted-foreground">
               {t('portfolio.noPhotos')}
@@ -93,7 +100,7 @@ const PhotoGrid = ({ showHeader = true }: PhotoGridProps) => {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredPhotos.map((photo, index) => (
+            {displayPhotos.map((photo, index) => (
               <div
                 key={photo.id}
                 className="group relative aspect-[4/5] md:aspect-square overflow-hidden rounded-lg animate-fade-in"
@@ -120,7 +127,7 @@ const PhotoGrid = ({ showHeader = true }: PhotoGridProps) => {
       {selectedPhoto && (
         <Lightbox
           photo={selectedPhoto}
-          photos={filteredPhotos}
+          photos={displayPhotos}
           onClose={() => setSelectedPhoto(null)}
           onNavigate={setSelectedPhoto}
         />
