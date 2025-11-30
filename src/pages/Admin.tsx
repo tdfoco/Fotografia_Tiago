@@ -9,7 +9,9 @@ import { Textarea } from '@/components/ui/textarea';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, LogOut, Plus, Trash2, Upload } from 'lucide-react';
+import { extractExifData, formatDateForInput, formatExifAsDescription } from '@/lib/exifExtractor';
+import { Calendar, Edit, Loader2, LogOut, Plus, Tag, Trash2, Upload } from 'lucide-react';
+import TagInput from '@/components/TagInput';
 import {
     Accordion,
     AccordionContent,
@@ -96,8 +98,42 @@ const Admin = () => {
         if (!confirm('Are you sure you want to delete this photo?')) return;
 
         try {
-            await deleteImage(PHOTOGRAPHY_BUCKET, photo.url);
-            await supabase.from('photography').delete().eq('id', photo.id);
+            // First, verify the photo exists and we can read it
+            const { data: existingPhoto, error: checkError } = await supabase
+                .from('photography')
+                .select('id')
+                .eq('id', photo.id)
+                .single();
+
+            if (checkError || !existingPhoto) {
+                throw new Error('Photo not found or cannot be accessed.');
+            }
+
+            // Try to delete from storage
+            const { error: storageError } = await deleteImage(PHOTOGRAPHY_BUCKET, photo.url);
+            if (storageError) {
+                console.error('Storage delete error:', storageError);
+                // Don't fail the whole operation for storage errors
+            }
+
+            // Attempt database delete
+            const { error: deleteError, count } = await supabase
+                .from('photography')
+                .delete({ count: 'exact' })
+                .eq('id', photo.id);
+
+            if (deleteError) throw deleteError;
+
+            // Verify it was actually deleted
+            const { data: stillExists } = await supabase
+                .from('photography')
+                .select('id')
+                .eq('id', photo.id)
+                .single();
+
+            if (stillExists) {
+                throw new Error('Delete failed: Item still exists in database. This is likely due to missing permissions in Supabase. Please check RLS policies.');
+            }
 
             toast({
                 title: 'Photo Deleted',
@@ -106,9 +142,14 @@ const Admin = () => {
 
             loadData();
         } catch (error: any) {
+            console.error('Delete error:', error);
+            let description = error.message || 'An unexpected error occurred.';
+            if (error.message && error.message.includes('Item still exists')) {
+                description = 'Delete failed: Item still exists in database. This is likely due to missing DELETE permissions in Supabase. Please run the fix-delete-permissions.sql script in your Supabase SQL Editor.';
+            }
             toast({
-                title: 'Error',
-                description: error.message,
+                title: 'Delete Failed',
+                description: description,
                 variant: 'destructive',
             });
         }
@@ -118,12 +159,43 @@ const Admin = () => {
         if (!confirm('Are you sure you want to delete this project?')) return;
 
         try {
-            // Delete all images
-            for (const imageUrl of project.images) {
-                await deleteImage(DESIGN_BUCKET, imageUrl);
+            // First, verify the project exists and we can read it
+            const { data: existingProject, error: checkError } = await supabase
+                .from('design_projects')
+                .select('id')
+                .eq('id', project.id)
+                .single();
+
+            if (checkError || !existingProject) {
+                throw new Error('Project not found or cannot be accessed.');
             }
 
-            await supabase.from('design_projects').delete().eq('id', project.id);
+            // Try to delete all images from storage
+            for (const imageUrl of project.images) {
+                const { error: storageError } = await deleteImage(DESIGN_BUCKET, imageUrl);
+                if (storageError) {
+                    console.error('Storage delete error:', storageError);
+                }
+            }
+
+            // Attempt database delete
+            const { error: deleteError, count } = await supabase
+                .from('design_projects')
+                .delete({ count: 'exact' })
+                .eq('id', project.id);
+
+            if (deleteError) throw deleteError;
+
+            // Verify it was actually deleted
+            const { data: stillExists } = await supabase
+                .from('design_projects')
+                .select('id')
+                .eq('id', project.id)
+                .single();
+
+            if (stillExists) {
+                throw new Error('Delete failed: Item still exists in database. This is likely due to missing permissions in Supabase. Please check RLS policies.');
+            }
 
             toast({
                 title: 'Project Deleted',
@@ -132,9 +204,14 @@ const Admin = () => {
 
             loadData();
         } catch (error: any) {
+            console.error('Delete error:', error);
+            let description = error.message || 'An unexpected error occurred.';
+            if (error.message && error.message.includes('Item still exists')) {
+                description = 'Delete failed: Item still exists in database. This is likely due to missing DELETE permissions in Supabase. Please run the fix-delete-permissions.sql script in your Supabase SQL Editor.';
+            }
             toast({
-                title: 'Error',
-                description: error.message,
+                title: 'Delete Failed',
+                description: description,
                 variant: 'destructive',
             });
         }
@@ -144,8 +221,41 @@ const Admin = () => {
         if (!confirm('Are you sure you want to delete this image?')) return;
 
         try {
-            await deleteImage(HERO_BUCKET, image.url);
-            await supabase.from('hero_images').delete().eq('id', image.id);
+            // First, verify the hero image exists and we can read it
+            const { data: existingImage, error: checkError } = await supabase
+                .from('hero_images')
+                .select('id')
+                .eq('id', image.id)
+                .single();
+
+            if (checkError || !existingImage) {
+                throw new Error('Hero image not found or cannot be accessed.');
+            }
+
+            // Try to delete from storage
+            const { error: storageError } = await deleteImage(HERO_BUCKET, image.url);
+            if (storageError) {
+                console.error('Storage delete error:', storageError);
+            }
+
+            // Attempt database delete
+            const { error: deleteError, count } = await supabase
+                .from('hero_images')
+                .delete({ count: 'exact' })
+                .eq('id', image.id);
+
+            if (deleteError) throw deleteError;
+
+            // Verify it was actually deleted
+            const { data: stillExists } = await supabase
+                .from('hero_images')
+                .select('id')
+                .eq('id', image.id)
+                .single();
+
+            if (stillExists) {
+                throw new Error('Delete failed: Item still exists in database. This is likely due to missing permissions in Supabase. Please check RLS policies.');
+            }
 
             toast({
                 title: 'Image Deleted',
@@ -154,9 +264,14 @@ const Admin = () => {
 
             loadData();
         } catch (error: any) {
+            console.error('Delete error:', error);
+            let description = error.message || 'An unexpected error occurred.';
+            if (error.message && error.message.includes('Item still exists')) {
+                description = 'Delete failed: Item still exists in database. This is likely due to missing DELETE permissions in Supabase. Please run the fix-delete-permissions.sql script in your Supabase SQL Editor.';
+            }
             toast({
-                title: 'Error',
-                description: error.message,
+                title: 'Delete Failed',
+                description: description,
                 variant: 'destructive',
             });
         }
@@ -319,7 +434,26 @@ const PhotoManagement = ({ photos, onDelete, onRefresh, loading }: PhotoManageme
         title: '',
         description: '',
         year: new Date().getFullYear(),
+        event_name: '',
+        event_date: '',
+        tags: [] as string[],
     });
+
+    const [editingPhoto, setEditingPhoto] = useState<PhotographyItem | null>(null);
+
+    const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        const exifData = await extractExifData(file);
+        const exifDescription = formatExifAsDescription(exifData);
+
+        setFormData(prev => ({
+            ...prev,
+            file,
+            description: exifDescription || prev.description,
+        }));
+    };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -334,6 +468,9 @@ const PhotoManagement = ({ photos, onDelete, onRefresh, loading }: PhotoManageme
                 category: formData.category,
                 title: formData.title,
                 description: formData.description,
+                event_name: formData.event_name || null,
+                event_date: formData.event_date || null,
+                tags: formData.tags.length > 0 ? formData.tags : null,
             });
 
             toast({
@@ -347,6 +484,9 @@ const PhotoManagement = ({ photos, onDelete, onRefresh, loading }: PhotoManageme
                 title: '',
                 description: '',
                 year: new Date().getFullYear(),
+                event_name: '',
+                event_date: '',
+                tags: [],
             });
             setShowForm(false);
             onRefresh();
@@ -361,6 +501,46 @@ const PhotoManagement = ({ photos, onDelete, onRefresh, loading }: PhotoManageme
         }
     };
 
+    const handleUpdate = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!editingPhoto) return;
+
+        setUploading(true);
+        try {
+            await supabase.from('photography').update({
+                category: formData.category,
+                title: formData.title,
+                description: formData.description,
+                event_name: formData.event_name || null,
+                event_date: formData.event_date || null,
+                tags: formData.tags.length > 0 ? formData.tags : null,
+            }).eq('id', editingPhoto.id);
+
+            toast({ title: 'Success', description: 'Photo updated successfully!' });
+            setEditingPhoto(null);
+            onRefresh();
+        } catch (error: any) {
+            toast({ title: 'Error', description: error.message, variant: 'destructive' });
+        } finally {
+            setUploading(false);
+        }
+    };
+
+    const handleEdit = (photo: PhotographyItem) => {
+        setEditingPhoto(photo);
+        setFormData({
+            file: null,
+            category: photo.category,
+            title: photo.title,
+            description: photo.description || '',
+            year: photo.year || new Date().getFullYear(),
+            event_name: photo.event_name || '',
+            event_date: photo.event_date || '',
+            tags: photo.tags || [],
+        });
+        setShowForm(false);
+    };
+
     return (
         <div className="space-y-6">
             <div className="flex justify-between items-center">
@@ -370,6 +550,105 @@ const PhotoManagement = ({ photos, onDelete, onRefresh, loading }: PhotoManageme
                     Add New Photo
                 </Button>
             </div>
+
+            {editingPhoto && (
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Edit Photo</CardTitle>
+                        <CardDescription>Update photo metadata and information</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <form onSubmit={handleUpdate} className="space-y-4">
+                            {/* Same form fields as upload, but without file input */}
+                            <div>
+                                <label className="block text-sm font-medium mb-2">Category</label>
+                                <select
+                                    value={formData.category}
+                                    onChange={(e) => setFormData({ ...formData, category: e.target.value as any })}
+                                    className="w-full px-4 py-2 rounded-md border border-input bg-background"
+                                >
+                                    <option value="portraits">Portraits</option>
+                                    <option value="urban">Urban</option>
+                                    <option value="nature">Nature</option>
+                                    <option value="art">Art</option>
+                                    <option value="events">Events</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium mb-2">Title</label>
+                                <Input
+                                    value={formData.title}
+                                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                                    required
+                                />
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label className="block text-sm font-medium mb-2 flex items-center gap-2">
+                                        <Calendar size={16} />
+                                        Event Name (optional)
+                                    </label>
+                                    <Input
+                                        value={formData.event_name}
+                                        onChange={(e) => setFormData({ ...formData, event_name: e.target.value })}
+                                        placeholder="e.g., Aniversário Alice"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium mb-2">Event Date (optional)</label>
+                                    <Input
+                                        type="date"
+                                        value={formData.event_date}
+                                        onChange={(e) => setFormData({ ...formData, event_date: e.target.value })}
+                                    />
+                                </div>
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium mb-2 flex items-center gap-2">
+                                    <Tag size={16} />
+                                    Tags (optional)
+                                </label>
+                                <TagInput
+                                    tags={formData.tags}
+                                    onChange={(tags) => setFormData({ ...formData, tags })}
+                                    placeholder="Add tags like: portrait, studio, commercial"
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium mb-2">Description</label>
+                                <Textarea
+                                    value={formData.description}
+                                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                                    required
+                                />
+                            </div>
+
+                            <div className="flex gap-4">
+                                <Button type="submit" disabled={uploading}>
+                                    {uploading ? (
+                                        <>
+                                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                            Updating...
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Upload className="mr-2 h-4 w-4" />
+                                            Update Photo
+                                        </>
+                                    )}
+                                </Button>
+                                <Button type="button" variant="outline" onClick={() => setEditingPhoto(null)}>
+                                    Cancel
+                                </Button>
+                            </div>
+                        </form>
+                    </CardContent>
+                </Card>
+            )}
 
             {showForm && (
                 <Card>
@@ -383,7 +662,7 @@ const PhotoManagement = ({ photos, onDelete, onRefresh, loading }: PhotoManageme
                                 <Input
                                     type="file"
                                     accept="image/*"
-                                    onChange={(e) => setFormData({ ...formData, file: e.target.files?.[0] || null })}
+                                    onChange={handleFileChange}
                                     required
                                 />
                             </div>
@@ -409,6 +688,40 @@ const PhotoManagement = ({ photos, onDelete, onRefresh, loading }: PhotoManageme
                                     value={formData.title}
                                     onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                                     required
+                                />
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label className="block text-sm font-medium mb-2 flex items-center gap-2">
+                                        <Calendar size={16} />
+                                        Event Name (optional)
+                                    </label>
+                                    <Input
+                                        value={formData.event_name}
+                                        onChange={(e) => setFormData({ ...formData, event_name: e.target.value })}
+                                        placeholder="e.g., Aniversário Alice"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium mb-2">Event Date (optional)</label>
+                                    <Input
+                                        type="date"
+                                        value={formData.event_date}
+                                        onChange={(e) => setFormData({ ...formData, event_date: e.target.value })}
+                                    />
+                                </div>
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium mb-2 flex items-center gap-2">
+                                    <Tag size={16} />
+                                    Tags (optional)
+                                </label>
+                                <TagInput
+                                    tags={formData.tags}
+                                    onChange={(tags) => setFormData({ ...formData, tags })}
+                                    placeholder="Add tags like: portrait, studio, commercial"
                                 />
                             </div>
 
@@ -466,16 +779,51 @@ const PhotoManagement = ({ photos, onDelete, onRefresh, loading }: PhotoManageme
                             <CardContent className="p-4">
                                 <p className="text-sm text-accent font-medium mb-1">{photo.category}</p>
                                 <h3 className="font-semibold mb-1">{photo.title}</h3>
-                                <p className="text-sm text-muted-foreground mb-3">{photo.description}</p>
-                                <Button
-                                    variant="destructive"
-                                    size="sm"
-                                    onClick={() => onDelete(photo)}
-                                    className="w-full"
-                                >
-                                    <Trash2 className="mr-2 h-4 w-4" />
-                                    Delete
-                                </Button>
+
+                                {photo.event_name && (
+                                    <div className="flex items-center gap-1 text-sm mb-1">
+                                        <Calendar size={14} className="text-muted-foreground" />
+                                        <span className="font-medium">{photo.event_name}</span>
+                                        {photo.event_date && (
+                                            <span className="text-muted-foreground">
+                                                • {new Date(photo.event_date).toLocaleDateString('pt-BR')}
+                                            </span>
+                                        )}
+                                    </div>
+                                )}
+
+                                {photo.tags && photo.tags.length > 0 && (
+                                    <div className="flex flex-wrap gap-1 mb-2">
+                                        {photo.tags.map((tag) => (
+                                            <span key={tag} className="text-xs bg-secondary px-2 py-0.5 rounded-full">
+                                                #{tag}
+                                            </span>
+                                        ))}
+                                    </div>
+                                )}
+
+                                <p className="text-sm text-muted-foreground mb-3 line-clamp-2">{photo.description}</p>
+
+                                <div className="flex gap-2">
+                                    <Button
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={() => handleEdit(photo)}
+                                        className="flex-1"
+                                    >
+                                        <Edit className="mr-2 h-4 w-4" />
+                                        Edit
+                                    </Button>
+                                    <Button
+                                        variant="destructive"
+                                        size="sm"
+                                        onClick={() => onDelete(photo)}
+                                        className="flex-1"
+                                    >
+                                        <Trash2 className="mr-2 h-4 w-4" />
+                                        Delete
+                                    </Button>
+                                </div>
                             </CardContent>
                         </Card>
                     ))
@@ -910,14 +1258,14 @@ const ContentManagement = () => {
     );
 
     // Group content by section (prefix)
-    const groupedContent = filteredContent.reduce((acc, item) => {
+    const groupedContent: Record<string, any[]> = filteredContent.reduce((acc: Record<string, any[]>, item) => {
         const prefix = item.key.split('.')[0];
         if (!acc[prefix]) {
             acc[prefix] = [];
         }
         acc[prefix].push(item);
         return acc;
-    }, {} as Record<string, typeof content>);
+    }, {});
 
     return (
         <div className="space-y-6">

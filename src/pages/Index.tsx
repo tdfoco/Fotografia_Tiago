@@ -4,12 +4,15 @@ import PhotoGrid from "@/components/PhotoGrid";
 import About from "@/components/About";
 import Footer from "@/components/Footer";
 
+import { SEO } from "@/components/SEO";
+
 const Index = () => {
   return (
     <>
+      <SEO />
       <Navigation />
       <main className="min-h-screen">
-        <Hero />
+        <Hero page="home" />
         <PhotoGrid />
         <About />
         <Footer />

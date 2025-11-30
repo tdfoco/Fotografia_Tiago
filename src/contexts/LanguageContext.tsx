@@ -10,7 +10,7 @@ type Language = 'pt' | 'en' | 'es' | 'fr';
 interface LanguageContextType {
     language: Language;
     setLanguage: (lang: Language) => void;
-    t: (key: string) => string;
+    t: (key: string) => any;
 }
 
 const localTranslations = {
@@ -90,7 +90,7 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
         localStorage.setItem('language', lang);
     };
 
-    const t = (key: string): string => {
+    const t = (key: string): any => {
         // First check database translations
         if (dbTranslations[key]) {
             return dbTranslations[key];

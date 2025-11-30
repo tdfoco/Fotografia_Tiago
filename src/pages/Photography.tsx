@@ -1,31 +1,65 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Navigation from "@/components/Navigation";
 import PhotoGrid from "@/components/PhotoGrid";
 import Footer from "@/components/Footer";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { supabase } from "@/lib/supabase";
+import { SEO } from "@/components/SEO";
 
 const Photography = () => {
     const { t } = useLanguage();
+    const [heroImage, setHeroImage] = useState<string | null>(null);
+
+    useEffect(() => {
+        const fetchHeroImage = async () => {
+            const { data } = await supabase
+                .from('hero_images')
+                .select('url')
+                .eq('page', 'photography')
+                .eq('active', true)
+                .order('created_at', { ascending: false })
+                .limit(1)
+                .single();
+
+            if (data) {
+                setHeroImage(data.url);
+            }
+        };
+
+        fetchHeroImage();
+    }, []);
 
     return (
         <>
+            <SEO title="Fotografia" description={t('portfolio.description')} />
             <Navigation />
-            <main className="min-h-screen pt-20">
-                {/* Header Section */}
-                <section className="bg-gradient-to-br from-background via-secondary to-background py-24 px-4">
-                    <div className="max-w-4xl mx-auto text-center">
-                        <h1 className="text-5xl md:text-6xl font-display font-bold tracking-tight mb-6 animate-fade-in">
+            <main className="min-h-screen pt-20 bg-background">
+                {/* Hero Section */}
+                <section className="relative py-32 px-4 overflow-hidden">
+                    {/* Background Image */}
+                    {heroImage && (
+                        <div
+                            className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-20 z-0"
+                            style={{ backgroundImage: `url(${heroImage})` }}
+                        />
+                    )}
+                    {/* Background Gradient */}
+                    <div className={`absolute inset-0 bg-gradient-to-br from-background via-secondary/20 to-background z-0 ${heroImage ? 'opacity-80' : ''}`} />
+                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-accent/10 blur-[120px] rounded-full pointer-events-none" />
+
+                    <div className="relative z-10 max-w-4xl mx-auto text-center">
+                        <h1 className="text-5xl md:text-7xl font-display font-bold tracking-tight mb-8 animate-fade-in bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/70">
                             {t('portfolio.title')}
                         </h1>
-                        <div className="w-24 h-1 bg-accent mx-auto mb-8" />
-                        <p className="text-lg md:text-xl text-muted-foreground font-light leading-relaxed max-w-2xl mx-auto">
+                        <div className="w-32 h-1.5 bg-gradient-to-r from-accent to-purple-500 mx-auto mb-10 rounded-full shadow-[0_0_20px_rgba(0,163,255,0.5)]" />
+                        <p className="text-xl md:text-2xl text-muted-foreground font-light leading-relaxed max-w-2xl mx-auto">
                             {t('portfolio.description')}
                         </p>
                     </div>
                 </section>
 
                 {/* Photo Grid */}
-                <PhotoGrid />
+                <PhotoGrid showHeader={false} />
             </main>
             <Footer />
         </>

@@ -1,9 +1,12 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { useDesignProjects } from "@/hooks/useSupabaseData";
 import type { DesignProject } from "@/lib/supabase";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useImageProtection } from "@/hooks/useImageProtection";
+import ProtectedImage from "@/components/ProtectedImage";
+import { supabase } from "@/lib/supabase";
 
 interface DesignGridProps {
     selectedCategory?: string;
@@ -11,6 +14,9 @@ interface DesignGridProps {
 
 const DesignGrid = ({ selectedCategory = "Todos" }: DesignGridProps) => {
     const { t } = useLanguage();
+
+    // Enable image protection
+    useImageProtection();
     const [selectedProject, setSelectedProject] = useState<DesignProject | null>(null);
 
     // Fetch projects using Supabase hook
@@ -43,17 +49,18 @@ const DesignGrid = ({ selectedCategory = "Todos" }: DesignGridProps) => {
             {filteredProjects.map((project, index) => (
                 <div
                     key={project.id}
-                    className="group cursor-pointer animate-fade-in"
+                    className="group animate-fade-in"
                     style={{ animationDelay: `${index * 100}ms` }}
-                    onClick={() => setSelectedProject(project)}
                 >
                     <div className="relative aspect-[4/3] overflow-hidden rounded-lg bg-secondary">
-                        <img
+                        <ProtectedImage
                             src={project.images[0]}
                             alt={project.title}
+                            loading="lazy"
                             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                            onImageClick={() => setSelectedProject(project)}
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
                             <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
                                 <p className="text-sm font-light text-accent mb-2">
                                     {categories[project.category as keyof typeof categories]}
@@ -81,9 +88,31 @@ const DesignGrid = ({ selectedCategory = "Todos" }: DesignGridProps) => {
     );
 };
 
+import { SEO } from "@/components/SEO";
+
 const GraphicDesign = () => {
     const { t } = useLanguage();
     const [filter, setFilter] = useState("Todos");
+    const [heroImage, setHeroImage] = useState<string | null>(null);
+
+    useEffect(() => {
+        const fetchHeroImage = async () => {
+            const { data } = await supabase
+                .from('hero_images')
+                .select('url')
+                .eq('page', 'design')
+                .eq('active', true)
+                .order('created_at', { ascending: false })
+                .limit(1)
+                .single();
+
+            if (data) {
+                setHeroImage(data.url);
+            }
+        };
+
+        fetchHeroImage();
+    }, []);
 
     const categories = ["Todos", "logos", "visual_identity", "social_media", "posters", "special"];
     const categoryLabels: Record<string, string> = {
@@ -97,16 +126,28 @@ const GraphicDesign = () => {
 
     return (
         <>
+            <SEO title="Design Gráfico" description={t('design.description')} />
             <Navigation />
-            <main className="min-h-screen pt-20">
-                {/* Header Section */}
-                <section className="bg-gradient-to-br from-background via-secondary to-background py-24 px-4">
-                    <div className="max-w-4xl mx-auto text-center">
-                        <h1 className="text-5xl md:text-6xl font-display font-bold tracking-tight mb-6 animate-fade-in">
+            <main className="min-h-screen pt-20 bg-background">
+                {/* Hero Section */}
+                <section className="relative py-32 px-4 overflow-hidden">
+                    {/* Background Image */}
+                    {heroImage && (
+                        <div
+                            className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-20 z-0"
+                            style={{ backgroundImage: `url(${heroImage})` }}
+                        />
+                    )}
+                    {/* Background Gradient */}
+                    <div className={`absolute inset-0 bg-gradient-to-br from-background via-secondary/20 to-background z-0 ${heroImage ? 'opacity-80' : ''}`} />
+                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-accent/10 blur-[120px] rounded-full pointer-events-none" />
+
+                    <div className="relative z-10 max-w-4xl mx-auto text-center">
+                        <h1 className="text-5xl md:text-7xl font-display font-bold tracking-tight mb-8 animate-fade-in bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/70">
                             {t('design.title')}
                         </h1>
-                        <div className="w-24 h-1 bg-accent mx-auto mb-8" />
-                        <p className="text-lg md:text-xl text-muted-foreground font-light leading-relaxed max-w-2xl mx-auto">
+                        <div className="w-32 h-1.5 bg-gradient-to-r from-accent to-purple-500 mx-auto mb-10 rounded-full shadow-[0_0_20px_rgba(0,163,255,0.5)]" />
+                        <p className="text-xl md:text-2xl text-muted-foreground font-light leading-relaxed max-w-2xl mx-auto">
                             {t('design.description')}
                         </p>
                     </div>

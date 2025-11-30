@@ -5,7 +5,8 @@
         "graphicDesign": "Diseño Gráfico",
         "about": "Acerca de",
         "services": "Servicios",
-        "contact": "Contacto"
+        "contact": "Contacto",
+        "search": "Buscar"
     },
     "hero": {
         "title": "Tiago Damasceno",
@@ -228,7 +229,7 @@
     },
     "footer": {
         "brand": "Portfolio",
-        "tagline": "Capturando historias visuales que inspiran y emocionan",
+        "tagline": "Capturando historias visuales que inspiran y emocionam",
         "contactTitle": "Contacto",
         "servicesTitle": "Servicios",
         "portraitPhotography": "Fotografía de Retratos",

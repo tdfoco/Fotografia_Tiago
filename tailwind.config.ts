@@ -59,9 +59,9 @@ export default {
         },
       },
       fontFamily: {
-        sans: ["Inter", "system-ui", "sans-serif"],
-        heading: ["Poppins", "Montserrat", "system-ui", "sans-serif"],
-        display: ["Montserrat", "Poppins", "system-ui", "sans-serif"],
+        sans: ["Lato", "system-ui", "sans-serif"],
+        heading: ["Lato", "system-ui", "sans-serif"],
+        display: ["Lato", "system-ui", "sans-serif"],
       },
       borderRadius: {
         lg: "var(--radius)",

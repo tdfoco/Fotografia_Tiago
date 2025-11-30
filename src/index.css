@@ -8,8 +8,10 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 0 0% 95%; /* Ice White #F2F2F2 */
-    --foreground: 0 0% 0%; /* Deep Black #000000 */
+    --background: 0 0% 95%;
+    /* Ice White #F2F2F2 */
+    --foreground: 0 0% 0%;
+    /* Deep Black #000000 */
 
     --card: 0 0% 98%;
     --card-foreground: 0 0% 5%;
@@ -17,8 +19,10 @@ All colors MUST be HSL.
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 0%;
 
-    --primary: 0 0% 0%; /* Deep Black */
-    --primary-foreground: 0 0% 95%; /* Ice White */
+    --primary: 0 0% 0%;
+    /* Deep Black */
+    --primary-foreground: 0 0% 95%;
+    /* Ice White */
 
     --secondary: 0 0% 90%;
     --secondary-foreground: 0 0% 0%;
@@ -26,7 +30,8 @@ All colors MUST be HSL.
     --muted: 0 0% 88%;
     --muted-foreground: 0 0% 40%;
 
-    --accent: 199 100% 50%; /* Electric Blue #00A3FF */
+    --accent: 199 100% 50%;
+    /* Electric Blue #00A3FF */
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84.2% 60.2%;
@@ -34,29 +39,36 @@ All colors MUST be HSL.
 
     --border: 0 0% 85%;
     --input: 0 0% 85%;
-    --ring: 199 100% 50%; /* Electric Blue */
+    --ring: 199 100% 50%;
+    /* Electric Blue */
 
     --radius: 0.5rem;
 
     /* Custom hybrid portfolio tokens */
-    --electric-blue: 199 100% 50%; /* #00A3FF */
-    --vibrant-purple: 260 100% 62%; /* #7A3FFF */
-    --deep-black: 0 0% 0%; /* #000000 */
-    --ice-white: 0 0% 95%; /* #F2F2F2 */
-    
+    --electric-blue: 199 100% 50%;
+    /* #00A3FF */
+    --vibrant-purple: 260 100% 62%;
+    /* #7A3FFF */
+    --deep-black: 0 0% 0%;
+    /* #000000 */
+    --ice-white: 0 0% 95%;
+    /* #F2F2F2 */
+
     --photo-overlay: 0 0% 0%;
     --photo-glow: 199 100% 50%;
     --hero-gradient-start: 0 0% 5%;
     --hero-gradient-end: 260 100% 62%;
-    
+
     /* Transitions */
     --transition-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     --transition-fast: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .dark {
-    --background: 0 0% 0%; /* Deep Black #000000 */
-    --foreground: 0 0% 95%; /* Ice White #F2F2F2 */
+    --background: 0 0% 0%;
+    /* Deep Black #000000 */
+    --foreground: 0 0% 95%;
+    /* Ice White #F2F2F2 */
 
     --card: 0 0% 5%;
     --card-foreground: 0 0% 95%;
@@ -64,8 +76,10 @@ All colors MUST be HSL.
     --popover: 0 0% 5%;
     --popover-foreground: 0 0% 95%;
 
-    --primary: 0 0% 95%; /* Ice White */
-    --primary-foreground: 0 0% 0%; /* Deep Black */
+    --primary: 0 0% 95%;
+    /* Ice White */
+    --primary-foreground: 0 0% 0%;
+    /* Deep Black */
 
     --secondary: 0 0% 10%;
     --secondary-foreground: 0 0% 95%;
@@ -73,7 +87,8 @@ All colors MUST be HSL.
     --muted: 0 0% 12%;
     --muted-foreground: 0 0% 65%;
 
-    --accent: 199 100% 50%; /* Electric Blue */
+    --accent: 199 100% 50%;
+    /* Electric Blue */
     --accent-foreground: 0 0% 0%;
 
     --destructive: 0 62.8% 50%;
@@ -98,6 +113,19 @@ All colors MUST be HSL.
   html {
     scroll-behavior: smooth;
   }
+
+  /* Image Protection - Global Rules */
+  img {
+    -webkit-user-drag: none;
+    -khtml-user-drag: none;
+    -moz-user-drag: none;
+    -o-user-drag: none;
+    user-drag: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
 }
 
 @layer utilities {
@@ -110,18 +138,14 @@ All colors MUST be HSL.
   }
 
   .overlay-dark {
-    background: linear-gradient(
-      to bottom,
-      hsla(var(--photo-overlay), 0) 0%,
-      hsla(var(--photo-overlay), 0.7) 100%
-    );
+    background: linear-gradient(to bottom,
+        hsla(var(--photo-overlay), 0) 0%,
+        hsla(var(--photo-overlay), 0.7) 100%);
   }
 
   .hero-gradient {
-    background: linear-gradient(
-      135deg,
-      hsl(var(--hero-gradient-start)) 0%,
-      hsl(var(--hero-gradient-end)) 100%
-    );
+    background: linear-gradient(135deg,
+        hsl(var(--hero-gradient-start)) 0%,
+        hsl(var(--hero-gradient-end)) 100%);
   }
 }

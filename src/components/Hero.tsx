@@ -4,26 +4,46 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { supabase } from "@/lib/supabase";
 import type { HeroImage } from "@/lib/supabase";
 
-const Hero = () => {
+interface HeroProps {
+  page?: string;
+}
+
+const Hero = ({ page = 'home' }: HeroProps) => {
   const { t } = useLanguage();
   const [heroImages, setHeroImages] = useState<HeroImage[]>([]);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   useEffect(() => {
     const fetchHeroImages = async () => {
-      const { data } = await supabase
+      // Fetch all active hero images
+      const { data, error } = await supabase
         .from('hero_images')
         .select('*')
         .eq('active', true)
         .order('created_at', { ascending: false });
 
+      if (error) {
+        console.error('Error fetching hero images:', error);
+        return;
+      }
+
       if (data && data.length > 0) {
-        setHeroImages(data);
+        // Filter on the client side to handle null values properly
+        let filtered;
+        if (page === 'home') {
+          // For home page, include images with page='home' OR page=null
+          filtered = data.filter(img => !img.page || img.page === 'home');
+        } else {
+          // For other pages, only include exact matches
+          filtered = data.filter(img => img.page === page);
+        }
+
+        setHeroImages(filtered);
       }
     };
 
     fetchHeroImages();
-  }, []);
+  }, [page]);
 
   useEffect(() => {
     if (heroImages.length <= 1) return;

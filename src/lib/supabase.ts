@@ -19,6 +19,18 @@ export interface PhotographyItem {
     url: string;
     description?: string;
     year?: number;
+    event_name?: string;
+    event_date?: string;
+    tags?: string[];
+    // EXIF metadata
+    camera_make?: string;
+    camera_model?: string;
+    lens_model?: string;
+    iso?: number;
+    aperture?: string;
+    shutter_speed?: string;
+    focal_length?: string;
+    capture_date?: string;
     created_at: string;
     updated_at?: string;
 }
@@ -32,6 +44,9 @@ export interface DesignProject {
     client?: string;
     year?: number;
     link?: string;
+    event_name?: string;
+    event_date?: string;
+    tags?: string[];
     created_at: string;
     updated_at?: string;
 }
@@ -42,6 +57,7 @@ export interface HeroImage {
     url: string;
     title: string;
     active: boolean;
+    page?: string;
 }
 
 // Helper function to upload image
@@ -65,7 +81,7 @@ export async function uploadImage(bucket: string, file: File): Promise<string> {
 
 // Helper function to delete image
 export async function deleteImage(bucket: string, url: string): Promise<{ error: string | null }> {
-    const fileName = url.split('/').pop();
+    const fileName = url.split('/').pop()?.split('?')[0];
     if (!fileName) return { error: 'Invalid file URL' };
 
     const { error } = await supabase.storage

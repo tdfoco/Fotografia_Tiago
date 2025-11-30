@@ -3,6 +3,7 @@ import { Menu, X, Lock } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import LanguageSelector from "./LanguageSelector";
 import { useLanguage } from "@/contexts/LanguageContext";
+import SearchBar from "./SearchBar";
 
 const Navigation = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -51,6 +52,8 @@ const Navigation = () => {
                         </span>
                     </Link>
 
+
+
                     {/* Desktop Navigation */}
                     <div className="hidden md:flex items-center space-x-4">
                         <div className="flex items-center space-x-8">
@@ -72,6 +75,9 @@ const Navigation = () => {
                             ))}
                         </div>
                         <div className="flex items-center gap-4">
+                            <div className="w-64">
+                                <SearchBar />
+                            </div>
                             <LanguageSelector />
                             <Link
                                 to="/admin"
@@ -106,6 +112,9 @@ const Navigation = () => {
                     }`}
             >
                 <div className="px-4 pt-2 pb-6 space-y-3 bg-background/95 backdrop-blur-md">
+                    <div className="px-4 py-2">
+                        <SearchBar />
+                    </div>
                     {navLinks.map((link) => (
                         <Link
                             key={link.path}
