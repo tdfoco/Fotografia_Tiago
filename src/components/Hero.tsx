@@ -82,17 +82,17 @@ const Hero = ({ page = 'home' }: HeroProps) => {
         />
       ))}
 
-      {/* Animated gradient overlay */}
-      <div className={`absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/60 ${heroImages.length > 0 ? 'bg-black/30' : ''}`} />
+      {/* Stronger overlay to ensure text readability */}
+      <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/70" />
 
       <div className="relative h-full flex flex-col items-center justify-center text-center px-4">
-        <h1 className="text-4xl md:text-6xl lg:text-7xl font-display font-bold tracking-tight text-white mb-4 animate-fade-in">
+        <h1 className="text-4xl md:text-6xl lg:text-7xl font-display font-bold tracking-tight text-white mb-4 animate-fade-in drop-shadow-[0_4px_12px_rgba(0,0,0,0.8)]">
           {t('hero.title')}
         </h1>
-        <p className="text-xl md:text-2xl text-white/90 font-light mb-3 animate-fade-in">
+        <p className="text-xl md:text-2xl text-white/95 font-light mb-3 animate-fade-in drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
           {t('hero.subtitle')}
         </p>
-        <p className="text-base md:text-lg text-white/80 max-w-3xl mb-10 animate-fade-in font-light tracking-wide">
+        <p className="text-base md:text-lg text-white/90 max-w-3xl mb-10 animate-fade-in font-light tracking-wide drop-shadow-[0_2px_6px_rgba(0,0,0,0.7)]">
           {t('hero.description')}
         </p>
 

@@ -55,7 +55,7 @@ const Navigation = () => {
 
 
                     {/* Desktop Navigation */}
-                    <div className="hidden lg:flex items-center space-x-4">
+                    <div className="hidden md:flex items-center space-x-4">
                         <div className="flex items-center space-x-6">
                             {navLinks.map((link) => (
                                 <Link
@@ -92,7 +92,7 @@ const Navigation = () => {
                     {/* Mobile menu button */}
                     <button
                         onClick={() => setIsOpen(!isOpen)}
-                        className="lg:hidden p-2 rounded-lg hover:bg-accent/10 transition-colors"
+                        className="md:hidden p-2 rounded-lg hover:bg-accent/10 transition-colors"
                         aria-label="Toggle menu"
                     >
                         {isOpen ? (
@@ -106,7 +106,7 @@ const Navigation = () => {
 
             {/* Mobile Navigation */}
             <div
-                className={`lg:hidden transition-all duration-300 ease-in-out ${isOpen
+                className={`md:hidden transition-all duration-300 ease-in-out ${isOpen
                     ? "max-h-[32rem] opacity-100 border-b border-border"
                     : "max-h-0 opacity-0 overflow-hidden"
                     }`}
