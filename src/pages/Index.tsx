@@ -1,6 +1,6 @@
 import Navigation from "@/components/Navigation";
 import Hero from "@/components/Hero";
-import UnifiedPortfolioGrid from "@/components/UnifiedPortfolioGrid";
+import DualPortfolioGrid from "@/components/DualPortfolioGrid";
 import About from "@/components/About";
 import Footer from "@/components/Footer";
 
@@ -13,7 +13,7 @@ const Index = () => {
       <Navigation />
       <main className="min-h-screen">
         <Hero page="home" />
-        <UnifiedPortfolioGrid />
+        <DualPortfolioGrid />
         <About />
         <Footer />
       </main>
