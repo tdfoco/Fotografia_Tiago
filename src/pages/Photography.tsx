@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import Navigation from "@/components/Navigation";
 import PhotoGrid from "@/components/PhotoGrid";
+import RankingSection from "@/components/RankingSection";
 import Footer from "@/components/Footer";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { supabase } from "@/lib/supabase";
@@ -60,6 +61,7 @@ const Photography = () => {
 
                 {/* Photo Grid */}
                 <PhotoGrid showHeader={false} />
+                <RankingSection />
             </main>
             <Footer />
         </>

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '@/hooks/useSupabaseData';
+import { useAuth, useAdminComments } from '@/hooks/useSupabaseData';
+import type { Comment } from '@/hooks/useSupabaseData';
 import { supabase, uploadImage, deleteImage, PHOTOGRAPHY_BUCKET, DESIGN_BUCKET, HERO_BUCKET } from '@/lib/supabase';
 import type { PhotographyItem, DesignProject, HeroImage } from '@/lib/supabase';
 import { Button } from '@/components/ui/button';
@@ -10,8 +11,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { extractExifData, formatDateForInput, formatExifAsDescription } from '@/lib/exifExtractor';
-import { Calendar, Edit, Loader2, LogOut, Plus, Tag, Trash2, Upload } from 'lucide-react';
+import { Calendar, Edit, Loader2, LogOut, Plus, Tag, Trash2, Upload, MessageCircle, Check, X as XIcon } from 'lucide-react';
 import TagInput from '@/components/TagInput';
+import BatchUpload from '@/components/BatchUpload';
 import {
     Accordion,
     AccordionContent,
@@ -375,6 +377,7 @@ const Admin = () => {
                         <TabsTrigger value="photography" className="flex-1">Photography</TabsTrigger>
                         <TabsTrigger value="design" className="flex-1">Design Projects</TabsTrigger>
                         <TabsTrigger value="hero" className="flex-1">Hero Images</TabsTrigger>
+                        <TabsTrigger value="comments" className="flex-1">Comentários</TabsTrigger>
                         <TabsTrigger value="content" className="flex-1">Content</TabsTrigger>
                     </TabsList>
 
@@ -406,6 +409,10 @@ const Admin = () => {
                         />
                     </TabsContent>
 
+                    <TabsContent value="comments" className="mt-8">
+                        <CommentManagement />
+                    </TabsContent>
+
                     <TabsContent value="content" className="mt-8">
                         <ContentManagement />
                     </TabsContent>
@@ -425,6 +432,7 @@ interface PhotoManagementProps {
 
 const PhotoManagement = ({ photos, onDelete, onRefresh, loading }: PhotoManagementProps) => {
     const [showForm, setShowForm] = useState(false);
+    const [showBatchUpload, setShowBatchUpload] = useState(false);
     const [uploading, setUploading] = useState(false);
     const { toast } = useToast();
 
@@ -545,11 +553,28 @@ const PhotoManagement = ({ photos, onDelete, onRefresh, loading }: PhotoManageme
         <div className="space-y-6">
             <div className="flex justify-between items-center">
                 <h2 className="text-2xl font-display font-bold">Photography Management</h2>
-                <Button onClick={() => setShowForm(!showForm)}>
-                    <Plus className="mr-2 h-4 w-4" />
-                    Add New Photo
-                </Button>
+                <div className="flex gap-2">
+                    <Button onClick={() => setShowBatchUpload(!showBatchUpload)} variant="outline">
+                        <Upload className="mr-2 h-4 w-4" />
+                        Batch Upload
+                    </Button>
+                    <Button onClick={() => setShowForm(!showForm)}>
+                        <Plus className="mr-2 h-4 w-4" />
+                        Add New Photo
+                    </Button>
+                </div>
             </div>
+
+            {showBatchUpload && (
+                <BatchUpload
+                    type="photography"
+                    onComplete={() => {
+                        setShowBatchUpload(false);
+                        onRefresh();
+                    }}
+                    onCancel={() => setShowBatchUpload(false)}
+                />
+            )}
 
             {editingPhoto && (
                 <Card>
@@ -843,6 +868,7 @@ interface DesignManagementProps {
 
 const DesignManagement = ({ projects, onDelete, onRefresh, loading }: DesignManagementProps) => {
     const [showForm, setShowForm] = useState(false);
+    const [showBatchUpload, setShowBatchUpload] = useState(false);
     const [uploading, setUploading] = useState(false);
     const { toast } = useToast();
 
@@ -904,11 +930,28 @@ const DesignManagement = ({ projects, onDelete, onRefresh, loading }: DesignMana
         <div className="space-y-6">
             <div className="flex justify-between items-center">
                 <h2 className="text-2xl font-display font-bold">Design Projects Management</h2>
-                <Button onClick={() => setShowForm(!showForm)}>
-                    <Plus className="mr-2 h-4 w-4" />
-                    Add New Project
-                </Button>
+                <div className="flex gap-2">
+                    <Button onClick={() => setShowBatchUpload(!showBatchUpload)} variant="outline">
+                        <Upload className="mr-2 h-4 w-4" />
+                        Batch Upload
+                    </Button>
+                    <Button onClick={() => setShowForm(!showForm)}>
+                        <Plus className="mr-2 h-4 w-4" />
+                        Add New Project
+                    </Button>
+                </div>
             </div>
+
+            {showBatchUpload && (
+                <BatchUpload
+                    type="design"
+                    onComplete={() => {
+                        setShowBatchUpload(false);
+                        onRefresh();
+                    }}
+                    onCancel={() => setShowBatchUpload(false)}
+                />
+            )}
 
             {showForm && (
                 <Card>
@@ -1035,6 +1078,98 @@ const DesignManagement = ({ projects, onDelete, onRefresh, loading }: DesignMana
     );
 };
 
+const CommentManagement = () => {
+    const { pendingComments, loading, approveComment, rejectComment, refreshComments } = useAdminComments();
+    const { toast } = useToast();
+
+    const handleApprove = async (id: string) => {
+        try {
+            await approveComment(id);
+            toast({ title: 'Comentário Aprovado', description: 'O comentário agora está visível publicamente.' });
+        } catch (error) {
+            toast({ title: 'Erro', description: 'Falha ao aprovar comentário.', variant: 'destructive' });
+        }
+    };
+
+    const handleReject = async (id: string) => {
+        if (!confirm('Tem certeza que deseja rejeitar este comentário?')) return;
+        try {
+            await rejectComment(id);
+            toast({ title: 'Comentário Rejeitado', description: 'O comentário foi removido.' });
+        } catch (error) {
+            toast({ title: 'Erro', description: 'Falha ao rejeitar comentário.', variant: 'destructive' });
+        }
+    };
+
+    return (
+        <div className="space-y-6">
+            <div className="flex justify-between items-center">
+                <h2 className="text-2xl font-display font-bold">Moderação de Comentários</h2>
+                <Button onClick={() => refreshComments()} variant="outline" size="sm">
+                    Atualizar
+                </Button>
+            </div>
+
+            {loading ? (
+                <div className="text-center py-10">
+                    <Loader2 className="h-8 w-8 animate-spin mx-auto text-muted-foreground" />
+                    <p className="mt-2 text-muted-foreground">Carregando comentários...</p>
+                </div>
+            ) : pendingComments.length === 0 ? (
+                <div className="text-center py-20 bg-secondary/20 rounded-lg">
+                    <MessageCircle className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+                    <p className="text-lg font-medium">Nenhum comentário pendente</p>
+                    <p className="text-muted-foreground">Todos os comentários foram moderados.</p>
+                </div>
+            ) : (
+                <div className="grid gap-4">
+                    {pendingComments.map((comment: any) => (
+                        <Card key={comment.id}>
+                            <CardContent className="p-6">
+                                <div className="flex flex-col md:flex-row gap-6 justify-between items-start">
+                                    <div className="space-y-2 flex-1">
+                                        <div className="flex items-center gap-2">
+                                            <span className="font-semibold text-lg">{comment.user_name || 'Anônimo'}</span>
+                                            <span className="text-sm text-muted-foreground">
+                                                em {comment.photography?.title || comment.design_projects?.title || 'Item desconhecido'}
+                                            </span>
+                                            <span className="text-xs bg-yellow-500/10 text-yellow-500 px-2 py-0.5 rounded-full">
+                                                Pendente
+                                            </span>
+                                        </div>
+                                        <p className="text-foreground/90 bg-secondary/30 p-3 rounded-md">
+                                            "{comment.content}"
+                                        </p>
+                                        <p className="text-xs text-muted-foreground">
+                                            {new Date(comment.created_at).toLocaleString()}
+                                        </p>
+                                    </div>
+                                    <div className="flex gap-2">
+                                        <Button
+                                            onClick={() => handleApprove(comment.id)}
+                                            className="bg-green-600 hover:bg-green-700 text-white"
+                                        >
+                                            <Check className="mr-2 h-4 w-4" />
+                                            Aprovar
+                                        </Button>
+                                        <Button
+                                            onClick={() => handleReject(comment.id)}
+                                            variant="destructive"
+                                        >
+                                            <XIcon className="mr-2 h-4 w-4" />
+                                            Rejeitar
+                                        </Button>
+                                    </div>
+                                </div>
+                            </CardContent>
+                        </Card>
+                    ))}
+                </div>
+            )}
+        </div>
+    );
+};
+
 export default Admin;
 
 interface HeroManagementProps {
@@ -1047,6 +1182,7 @@ interface HeroManagementProps {
 
 const HeroManagement = ({ images, onDelete, onToggleActive, onRefresh, loading }: HeroManagementProps) => {
     const [showForm, setShowForm] = useState(false);
+    const [showBatchUpload, setShowBatchUpload] = useState(false);
     const [uploading, setUploading] = useState(false);
     const { toast } = useToast();
 
@@ -1095,11 +1231,28 @@ const HeroManagement = ({ images, onDelete, onToggleActive, onRefresh, loading }
         <div className="space-y-6">
             <div className="flex justify-between items-center">
                 <h2 className="text-2xl font-display font-bold">Hero Images Management</h2>
-                <Button onClick={() => setShowForm(!showForm)}>
-                    <Plus className="mr-2 h-4 w-4" />
-                    Add New Hero Image
-                </Button>
+                <div className="flex gap-2">
+                    <Button onClick={() => setShowBatchUpload(!showBatchUpload)} variant="outline">
+                        <Upload className="mr-2 h-4 w-4" />
+                        Batch Upload
+                    </Button>
+                    <Button onClick={() => setShowForm(!showForm)}>
+                        <Plus className="mr-2 h-4 w-4" />
+                        Add New Hero Image
+                    </Button>
+                </div>
             </div>
+
+            {showBatchUpload && (
+                <BatchUpload
+                    type="hero"
+                    onComplete={() => {
+                        setShowBatchUpload(false);
+                        onRefresh();
+                    }}
+                    onCancel={() => setShowBatchUpload(false)}
+                />
+            )}
 
             {showForm && (
                 <Card>

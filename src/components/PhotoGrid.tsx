@@ -4,6 +4,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { useImageProtection } from "@/hooks/useImageProtection";
 import ProtectedImage from "./ProtectedImage";
 import Lightbox, { Photo } from "./Lightbox";
+import InteractionBar from "./InteractionBar";
 
 interface PhotoGridProps {
   showHeader?: boolean;
@@ -42,7 +43,10 @@ const PhotoGrid = ({ showHeader = true, showFilters = true, limit }: PhotoGridPr
     iso: photo.iso,
     aperture: photo.aperture,
     shutter_speed: photo.shutter_speed,
-    focal_length: photo.focal_length
+    focal_length: photo.focal_length,
+    likes_count: photo.likes_count,
+    comments_count: photo.comments_count,
+    shares_count: photo.shares_count
   }));
 
   const filteredPhotos = filter === "all"
@@ -103,21 +107,33 @@ const PhotoGrid = ({ showHeader = true, showFilters = true, limit }: PhotoGridPr
             {displayPhotos.map((photo, index) => (
               <div
                 key={photo.id}
-                className="group relative aspect-[4/5] md:aspect-square overflow-hidden rounded-lg animate-fade-in"
+                className="group animate-fade-in"
                 style={{ animationDelay: `${index * 100}ms` }}
               >
-                <ProtectedImage
-                  src={photo.src}
-                  alt={photo.alt}
-                  loading="lazy"
-                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
-                  onImageClick={() => setSelectedPhoto(photo)}
-                />
-                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-all duration-500 flex items-center justify-center pointer-events-none">
-                  <span className="text-white opacity-0 group-hover:opacity-100 transition-opacity duration-500 text-sm tracking-wider font-light">
-                    {photo.category}
-                  </span>
+                <div className="relative aspect-[4/5] md:aspect-square overflow-hidden rounded-lg mb-3">
+                  <ProtectedImage
+                    src={photo.src}
+                    alt={photo.alt}
+                    loading="lazy"
+                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    onImageClick={() => setSelectedPhoto(photo)}
+                  />
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-all duration-500 flex items-center justify-center pointer-events-none">
+                    <span className="text-white opacity-0 group-hover:opacity-100 transition-opacity duration-500 text-sm tracking-wider font-light">
+                      {photo.category}
+                    </span>
+                  </div>
                 </div>
+
+                <InteractionBar
+                  itemId={photo.id}
+                  type="photography"
+                  initialLikes={photo.likes_count}
+                  initialComments={photo.comments_count}
+                  initialShares={photo.shares_count}
+                  variant="light"
+                  className="justify-between px-1"
+                />
               </div>
             ))}
           </div>

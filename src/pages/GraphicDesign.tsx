@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import DesignGrid from "@/components/DesignGrid";
+import RankingSection from "@/components/RankingSection";
 import { supabase } from "@/lib/supabase";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { SEO } from "@/components/SEO";
@@ -63,6 +64,7 @@ const GraphicDesign = () => {
                     showHeader={false}
                     showFilters={true}
                 />
+                <RankingSection />
             </main>
             <Footer />
         </>

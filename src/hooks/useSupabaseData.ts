@@ -2,6 +2,16 @@ import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
 import type { PhotographyItem, DesignProject } from '@/lib/supabase';
 
+export interface Comment {
+    id: string;
+    content: string;
+    user_name: string;
+    created_at: string;
+    photo_id?: string;
+    project_id?: string;
+    approved?: boolean;
+}
+
 // Fisher-Yates shuffle algorithm for randomizing arrays
 function shuffleArray<T>(array: T[]): T[] {
     const shuffled = [...array];
@@ -88,6 +98,115 @@ export function useDesignProjects(category?: string) {
     return { projects, loading, error };
 }
 
+export const useComments = (itemId: string, type: 'photography' | 'design') => {
+    const [comments, setComments] = useState<Comment[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    const fetchComments = async () => {
+        try {
+            const column = type === 'photography' ? 'photo_id' : 'project_id';
+            const { data, error } = await supabase
+                .from('comments')
+                .select('*')
+                .eq(column, itemId)
+                .eq('approved', true)
+                .order('created_at', { ascending: false });
+
+            if (error) throw error;
+            setComments(data || []);
+        } catch (error) {
+            console.error('Error fetching comments:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        if (itemId) fetchComments();
+    }, [itemId, type]);
+
+    const addComment = async (content: string, userName: string = 'Anonymous') => {
+        const column = type === 'photography' ? 'photo_id' : 'project_id';
+        const { error } = await supabase
+            .from('comments')
+            .insert({
+                content,
+                user_name: userName,
+                [column]: itemId
+            });
+
+        if (error) throw error;
+        await fetchComments();
+    };
+
+    return { comments, loading, addComment, refreshComments: fetchComments };
+};
+
+export const incrementLikes = async (id: string, type: 'photography' | 'design') => {
+    const table = type === 'photography' ? 'photography' : 'design_projects';
+    const { error } = await supabase.rpc('increment_likes', { row_id: id, table_name: table });
+    if (error) console.error('Error incrementing likes:', error);
+};
+
+export const incrementShares = async (id: string, type: 'photography' | 'design') => {
+    const table = type === 'photography' ? 'photography' : 'design_projects';
+    const { error } = await supabase.rpc('increment_shares', { row_id: id, table_name: table });
+    if (error) console.error('Error incrementing shares:', error);
+};
+
+export const useAdminComments = () => {
+    const [pendingComments, setPendingComments] = useState<Comment[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    const fetchPendingComments = async () => {
+        try {
+            setLoading(true);
+            const { data, error } = await supabase
+                .from('comments')
+                .select(`
+                    *,
+                    photography (title),
+                    design_projects (title)
+                `)
+                .eq('approved', false)
+                .order('created_at', { ascending: false });
+
+            if (error) throw error;
+            setPendingComments(data || []);
+        } catch (error) {
+            console.error('Error fetching pending comments:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchPendingComments();
+    }, []);
+
+    const approveComment = async (id: string) => {
+        const { error } = await supabase
+            .from('comments')
+            .update({ approved: true })
+            .eq('id', id);
+
+        if (error) throw error;
+        await fetchPendingComments();
+    };
+
+    const rejectComment = async (id: string) => {
+        const { error } = await supabase
+            .from('comments')
+            .delete()
+            .eq('id', id);
+
+        if (error) throw error;
+        await fetchPendingComments();
+    };
+
+    return { pendingComments, loading, approveComment, rejectComment, refreshComments: fetchPendingComments };
+};
+
 // Hook for authentication
 export function useAuth() {
     const [user, setUser] = useState<any>(null);
@@ -131,3 +250,46 @@ export function useAuth() {
         signOut,
     };
 }
+
+export const useTopRated = (limit = 5) => {
+    const [topPhotos, setTopPhotos] = useState<PhotographyItem[]>([]);
+    const [topProjects, setTopProjects] = useState<DesignProject[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchTopRated = async () => {
+            try {
+                setLoading(true);
+
+                // Fetch top photos by likes
+                const { data: photos, error: photosError } = await supabase
+                    .from('photography')
+                    .select('*')
+                    .order('likes_count', { ascending: false })
+                    .limit(limit);
+
+                if (photosError) throw photosError;
+                setTopPhotos(photos || []);
+
+                // Fetch top projects by likes
+                const { data: projects, error: projectsError } = await supabase
+                    .from('design_projects')
+                    .select('*')
+                    .order('likes_count', { ascending: false })
+                    .limit(limit);
+
+                if (projectsError) throw projectsError;
+                setTopProjects(projects || []);
+
+            } catch (error) {
+                console.error('Error fetching top rated:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchTopRated();
+    }, [limit]);
+
+    return { topPhotos, topProjects, loading };
+};

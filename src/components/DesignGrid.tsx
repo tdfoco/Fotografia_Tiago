@@ -4,6 +4,8 @@ import type { DesignProject } from "@/lib/supabase";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useImageProtection } from "@/hooks/useImageProtection";
 import ProtectedImage from "./ProtectedImage";
+import ProjectModal from "./ProjectModal";
+import InteractionBar from "./InteractionBar";
 
 interface DesignGridProps {
     showHeader?: boolean;
@@ -79,8 +81,8 @@ const DesignGrid = ({ showHeader = true, showFilters = true, limit }: DesignGrid
                                 key={category}
                                 onClick={() => setFilter(category)}
                                 className={`px-6 py-2 rounded-full text-sm font-medium tracking-wide transition-all duration-300 ${filter === category
-                                        ? "bg-accent text-accent-foreground shadow-lg shadow-accent/30"
-                                        : "bg-secondary text-secondary-foreground hover:bg-accent/20"
+                                    ? "bg-accent text-accent-foreground shadow-lg shadow-accent/30"
+                                    : "bg-secondary text-secondary-foreground hover:bg-accent/20"
                                     }`}
                             >
                                 {categoryLabels[category]}
@@ -133,12 +135,29 @@ const DesignGrid = ({ showHeader = true, showFilters = true, limit }: DesignGrid
                                     <p className="text-sm text-muted-foreground mt-1">
                                         {project.year} {project.client && `• ${project.client}`}
                                     </p>
+
+                                    <InteractionBar
+                                        itemId={project.id}
+                                        type="design"
+                                        initialLikes={project.likes_count}
+                                        initialComments={project.comments_count}
+                                        initialShares={project.shares_count}
+                                        variant="light"
+                                        className="mt-4 pt-4 border-t border-border/50"
+                                    />
                                 </div>
                             </div>
                         ))}
                     </div>
                 )}
             </div>
+
+            {selectedProject && (
+                <ProjectModal
+                    project={selectedProject}
+                    onClose={() => setSelectedProject(null)}
+                />
+            )}
         </section>
     );
 };

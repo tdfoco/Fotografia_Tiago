@@ -30,6 +30,7 @@ const Navigation = () => {
         { name: t('nav.graphicDesign'), path: "/design" },
         { name: t('nav.about'), path: "/about" },
         { name: t('nav.services'), path: "/services" },
+        { name: "Ranking", path: "/ranking" },
         { name: t('nav.contact'), path: "/contact" },
     ];
 

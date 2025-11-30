@@ -2,6 +2,7 @@ import { useState } from "react";
 import { usePhotography, useDesignProjects } from "@/hooks/useSupabaseData";
 import { useImageProtection } from "@/hooks/useImageProtection";
 import ProtectedImage from "./ProtectedImage";
+import InteractionBar from "./InteractionBar";
 
 type UnifiedItem = {
     id: string;
@@ -9,6 +10,10 @@ type UnifiedItem = {
     alt: string;
     type: 'photography' | 'design';
     category: string;
+    likes_count?: number;
+    comments_count?: number;
+    shares_count?: number;
+    originalId: string;
 };
 
 const UnifiedPortfolioGrid = () => {
@@ -47,14 +52,22 @@ const UnifiedPortfolioGrid = () => {
             src: photo.url,
             alt: photo.title,
             type: 'photography' as const,
-            category: photo.category
+            category: photo.category,
+            likes_count: photo.likes_count,
+            comments_count: photo.comments_count,
+            shares_count: photo.shares_count,
+            originalId: photo.id
         })),
         ...projects.map(project => ({
             id: `design-${project.id}`,
             src: project.images[0],
             alt: project.title,
             type: 'design' as const,
-            category: project.category
+            category: project.category,
+            likes_count: project.likes_count,
+            comments_count: project.comments_count,
+            shares_count: project.shares_count,
+            originalId: project.id
         }))
     ];
 
@@ -98,8 +111,8 @@ const UnifiedPortfolioGrid = () => {
                                 key={category.key}
                                 onClick={() => setPhotoFilter(category.key)}
                                 className={`px-5 py-2 rounded-full text-sm font-medium tracking-wide transition-all duration-300 ${photoFilter === category.key
-                                        ? "bg-[#00A3FF] text-white shadow-lg shadow-[#00A3FF]/30"
-                                        : "bg-secondary text-secondary-foreground hover:bg-[#00A3FF]/20"
+                                    ? "bg-[#00A3FF] text-white shadow-lg shadow-[#00A3FF]/30"
+                                    : "bg-secondary text-secondary-foreground hover:bg-[#00A3FF]/20"
                                     }`}
                             >
                                 {category.label}
@@ -114,8 +127,8 @@ const UnifiedPortfolioGrid = () => {
                                 key={category.key}
                                 onClick={() => setDesignFilter(category.key)}
                                 className={`px-5 py-2 rounded-full text-sm font-medium tracking-wide transition-all duration-300 ${designFilter === category.key
-                                        ? "bg-[#00A3FF] text-white shadow-lg shadow-[#00A3FF]/30"
-                                        : "bg-secondary text-secondary-foreground hover:bg-[#00A3FF]/20"
+                                    ? "bg-[#00A3FF] text-white shadow-lg shadow-[#00A3FF]/30"
+                                    : "bg-secondary text-secondary-foreground hover:bg-[#00A3FF]/20"
                                     }`}
                             >
                                 {category.label}
@@ -138,27 +151,39 @@ const UnifiedPortfolioGrid = () => {
                         {unifiedItems.map((item, index) => (
                             <div
                                 key={item.id}
-                                className="group relative aspect-square overflow-hidden rounded-lg animate-fade-in"
+                                className="group animate-fade-in"
                                 style={{ animationDelay: `${index * 30}ms` }}
                             >
-                                <ProtectedImage
-                                    src={item.src}
-                                    alt={item.alt}
-                                    loading="lazy"
-                                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
-                                    onImageClick={() => { }}
-                                />
-                                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/50 transition-all duration-500 flex items-center justify-center pointer-events-none">
-                                    <span className="text-white opacity-0 group-hover:opacity-100 transition-opacity duration-500 text-sm tracking-wider font-light">
-                                        {item.type === 'photography' ? 'Fotografia' : 'Design'}
-                                    </span>
+                                <div className="relative aspect-square overflow-hidden rounded-lg">
+                                    <ProtectedImage
+                                        src={item.src}
+                                        alt={item.alt}
+                                        loading="lazy"
+                                        className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+                                        onImageClick={() => { }}
+                                    />
+                                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/50 transition-all duration-500 flex items-center justify-center pointer-events-none">
+                                        <span className="text-white opacity-0 group-hover:opacity-100 transition-opacity duration-500 text-sm tracking-wider font-light">
+                                            {item.type === 'photography' ? 'Fotografia' : 'Design'}
+                                        </span>
+                                    </div>
                                 </div>
+
+                                <InteractionBar
+                                    itemId={item.originalId}
+                                    type={item.type}
+                                    initialLikes={item.likes_count}
+                                    initialComments={item.comments_count}
+                                    initialShares={item.shares_count}
+                                    variant="light"
+                                    className="mt-2 justify-between px-1"
+                                />
                             </div>
                         ))}
                     </div>
                 )}
             </div>
-        </section>
+        </section >
     );
 };
 

@@ -33,6 +33,9 @@ export interface PhotographyItem {
     capture_date?: string;
     created_at: string;
     updated_at?: string;
+    likes_count?: number;
+    comments_count?: number;
+    shares_count?: number;
 }
 
 export interface DesignProject {
@@ -49,6 +52,9 @@ export interface DesignProject {
     tags?: string[];
     created_at: string;
     updated_at?: string;
+    likes_count?: number;
+    comments_count?: number;
+    shares_count?: number;
 }
 
 export interface HeroImage {
