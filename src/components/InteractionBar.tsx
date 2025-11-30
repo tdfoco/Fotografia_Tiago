@@ -38,6 +38,15 @@ const InteractionBar = ({
         }
     }, [itemId]);
 
+    // Sync state with props when data loads
+    useEffect(() => {
+        setLikes(initialLikes);
+    }, [initialLikes]);
+
+    useEffect(() => {
+        setShares(initialShares);
+    }, [initialShares]);
+
     const handleLike = async (e: React.MouseEvent) => {
         e.stopPropagation();
         if (isLiked) return;
