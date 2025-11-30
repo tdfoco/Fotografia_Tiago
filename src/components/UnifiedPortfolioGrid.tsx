@@ -3,6 +3,9 @@ import { usePhotography, useDesignProjects } from "@/hooks/useSupabaseData";
 import { useImageProtection } from "@/hooks/useImageProtection";
 import ProtectedImage from "./ProtectedImage";
 import InteractionBar from "./InteractionBar";
+import Lightbox, { Photo } from "./Lightbox";
+import ProjectModal from "./ProjectModal";
+import type { DesignProject } from "@/lib/supabase";
 
 type UnifiedItem = {
     id: string;
@@ -21,6 +24,8 @@ const UnifiedPortfolioGrid = () => {
 
     const [photoFilter, setPhotoFilter] = useState<string>("all");
     const [designFilter, setDesignFilter] = useState<string>("all");
+    const [selectedPhoto, setSelectedPhoto] = useState<Photo | null>(null);
+    const [selectedProject, setSelectedProject] = useState<DesignProject | null>(null);
 
     const { photos, loading: photosLoading } = usePhotography(photoFilter === "all" ? undefined : photoFilter);
     const { projects, loading: projectsLoading } = useDesignProjects(designFilter === "all" ? undefined : designFilter);
@@ -160,7 +165,27 @@ const UnifiedPortfolioGrid = () => {
                                         alt={item.alt}
                                         loading="lazy"
                                         className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
-                                        onImageClick={() => { }}
+                                        onImageClick={() => {
+                                            if (item.type === 'photography') {
+                                                const photo = photos.find(p => p.id === item.originalId);
+                                                if (photo) {
+                                                    setSelectedPhoto({
+                                                        id: photo.id,
+                                                        src: photo.url,
+                                                        alt: photo.title,
+                                                        category: photo.category,
+                                                        description: photo.description,
+                                                        likes_count: photo.likes_count,
+                                                        comments_count: photo.comments_count,
+                                                        shares_count: photo.shares_count,
+                                                        // Map other fields if necessary
+                                                    });
+                                                }
+                                            } else {
+                                                const project = projects.find(p => p.id === item.originalId);
+                                                if (project) setSelectedProject(project);
+                                            }
+                                        }}
                                     />
                                     <div className="absolute inset-0 bg-black/0 group-hover:bg-black/50 transition-all duration-500 flex items-center justify-center pointer-events-none">
                                         <span className="text-white opacity-0 group-hover:opacity-100 transition-opacity duration-500 text-sm tracking-wider font-light">
@@ -183,6 +208,34 @@ const UnifiedPortfolioGrid = () => {
                     </div>
                 )}
             </div>
+
+            {/* Lightbox for Photography */}
+            {selectedPhoto && (
+                <Lightbox
+                    photo={selectedPhoto}
+                    photos={photos.map(p => ({
+                        id: p.id,
+                        src: p.url,
+                        alt: p.title,
+                        category: p.category,
+                        description: p.description,
+                        likes_count: p.likes_count,
+                        comments_count: p.comments_count,
+                        shares_count: p.shares_count
+                    }))}
+                    onClose={() => setSelectedPhoto(null)}
+                    onNavigate={(photo) => setSelectedPhoto(photo)}
+                />
+            )}
+
+            {/* Modal for Design Projects */}
+            {selectedProject && (
+                <ProjectModal
+                    project={selectedProject}
+                    isOpen={!!selectedProject}
+                    onClose={() => setSelectedProject(null)}
+                />
+            )}
         </section >
     );
 };
