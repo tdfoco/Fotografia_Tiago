@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentação Técnica - Portfolio Tiago Damasceno | tdfoco.cloud</title>
+
+    <!-- Google Fonts: Lato -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&family=Fira+Code:wght@400;500;600&display=swap"
+        rel="stylesheet">
+
+    <style>
+        /* ========================================
+           VARIÁVEIS E RESET
+           ======================================== */
+        :root {
+            /* Cores Principais */
+            --primary: #2563eb;
+            --primary-dark: #1e40af;
+            --primary-light: #3b82f6;
+            --secondary: #10b981;
+            --accent: #f59e0b;
+
+            /* Tons de Cinza */
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-400: #9ca3af;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+
+            /* Tipografia */
+            --font-main: 'Lato', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            --font-code: 'Fira Code', 'Courier New', monospace;
+
+            /* Espaçamentos */
+            --spacing-xs: 0.25rem;
+            --spacing-sm: 0.5rem;
+            --spacing-md: 1rem;
+            --spacing-lg: 1.5rem;
+            --spacing-xl: 2rem;
+            --spacing-2xl: 3rem;
+
+            /* Sombras */
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* ========================================
+           LAYOUT PRINCIPAL
+           ======================================== */
+        html {
+            font-size: 11pt;
+        }
+
+        body {
+            font-family: var(--font-main);
+            line-height: 1.7;
+            color: var(--gray-800);
+            background: white;
+            counter-reset: page;
+        }
+
+        /* Container Principal */
+        .document {
+            max-width: 210mm;
+            /* A4 */
+            margin: 0 auto;
+            background: white;
+        }
+
+        /* Páginas */
+        .page {
+            padding: 20mm 25mm;
+            min-height: 297mm;
+            /* A4 height */
+            position: relative;
+            page-break-after: always;
+        }
+
+        .page:last-child {
+            page-break-after: auto;
+        }
+
+        /* ========================================
+           CAPA PROFISSIONAL
+           ======================================== */
+        .cover-page {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            text-align: center;
+            padding: 40mm 30mm !important;
+            min-height: 297mm;
+        }
+
+        .cover-header {
+            width: 100%;
+            padding-top: 30mm;
+        }
+
+        .cover-logo {
+            width: 80px;
+            height: 80px;
+            background: white;
+            border-radius: 50%;
+            margin: 0 auto 20mm;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36pt;
+            font-weight: 900;
+            color: var(--primary);
+        }
+
+        .cover-title {
+            font-size: 42pt;
+            font-weight: 900;
+            margin-bottom: 8mm;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            line-height: 1.2;
+        }
+
+        .cover-subtitle {
+            font-size: 22pt;
+            font-weight: 300;
+            margin-bottom: 5mm;
+            opacity: 0.95;
+        }
+
+        .cover-description {
+            font-size: 13pt;
+            font-weight: 400;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .cover-divider {
+            width: 100px;
+            height: 4px;
+            background: white;
+            margin: 20mm auto;
+            opacity: 0.8;
+        }
+
+        .cover-author {
+            font-size: 18pt;
+            font-weight: 700;
+            margin-bottom: 3mm;
+        }
+
+        .cover-domain {
+            font-size: 16pt;
+            font-weight: 400;
+            opacity: 0.9;
+            margin-bottom: 15mm;
+        }
+
+        .cover-footer {
+            width: 100%;
+            font-size: 12pt;
+            font-weight: 300;
+            opacity: 0.8;
+        }
+
+        .cover-date {
+            margin-bottom: 5mm;
+        }
+
+        .cover-version {
+            margin-bottom: 5mm;
+        }
+
+        .cover-tech {
+            font-size: 10pt;
+            opacity: 0.7;
+        }
+
+        /* ========================================
+           SUMÁRIO (ÍNDICE)
+           ======================================== */
+        .toc-page {
+            background: var(--gray-50);
+        }
+
+        .toc-title {
+            font-size: 28pt;
+            font-weight: 900;
+            color: var(--primary);
+            margin-bottom: 15mm;
+            padding-bottom: 5mm;
+            border-bottom: 4px solid var(--primary);
+        }
+
+        .toc-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .toc-item {
+            margin-bottom: 8pt;
+            padding: 8pt 12pt;
+            background: white;
+            border-left: 4px solid var(--primary);
+            border-radius: 4pt;
+            transition: all 0.2s;
+        }
+
+        .toc-item:hover {
+            background: var(--gray-100);
+            border-left-width: 6px;
+            transform: translateX(5px);
+        }
+
+        .toc-item.level-1 {
+            font-size: 13pt;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .toc-item.level-2 {
+            font-size: 11pt;
+            font-weight: 600;
+            margin-left: 20pt;
+            border-left-color: var(--primary-light);
+        }
+
+        .toc-item.level-3 {
+            font-size: 10pt;
+            font-weight: 400;
+            margin-left: 40pt;
+            border-left-color: var(--gray-300);
+        }
+
+        .toc-link {
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .toc-dots {
+            flex-grow: 1;
+            border-bottom: 1px dotted var(--gray-300);
+            margin: 0 10pt;
+            min-width: 20pt;
+        }
+
+        .toc-page-number {
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        /* ========================================
+           TIPOGRAFIA E HIERARQUIA
+           ======================================== */
+        h1 {
+            font-size: 28pt;
+            font-weight: 900;
+            color: var(--primary);
+            margin-top: 0;
+            margin-bottom: 15pt;
+            padding-bottom: 8pt;
+            border-bottom: 4px solid var(--primary);
+            page-break-after: avoid;
+        }
+
+        h2 {
+            font-size: 20pt;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-top: 25pt;
+            margin-bottom: 12pt;
+            padding-left: 12pt;
+            border-left: 5px solid var(--primary);
+            page-break-after: avoid;
+        }
+
+        h3 {
+            font-size: 16pt;
+            font-weight: 700;
+            color: var(--gray-800);
+            margin-top: 20pt;
+            margin-bottom: 10pt;
+            page-break-after: avoid;
+        }
+
+        h4 {
+            font-size: 13pt;
+            font-weight: 600;
+            color: var(--gray-700);
+            margin-top: 15pt;
+            margin-bottom: 8pt;
+            page-break-after: avoid;
+        }
+
+        h5 {
+            font-size: 12pt;
+            font-weight: 600;
+            color: var(--gray-600);
+            margin-top: 12pt;
+            margin-bottom: 6pt;
+            page-break-after: avoid;
+        }
+
+        p {
+            margin-bottom: 10pt;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        /* ========================================
+           LISTAS
+           ======================================== */
+        ul,
+        ol {
+            margin: 10pt 0;
+            padding-left: 25pt;
+        }
+
+        li {
+            margin-bottom: 6pt;
+            line-height: 1.6;
+        }
+
+        ul li::marker {
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        /* Lista com ícones customizados */
+        .checklist {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .checklist li {
+            padding-left: 30pt;
+            position: relative;
+        }
+
+        .checklist li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: var(--secondary);
+            font-weight: 900;
+            font-size: 14pt;
+        }
+
+        /* ========================================
+           TABELAS PROFISSIONAIS
+           ======================================== */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15pt 0;
+            font-size: 10pt;
+            background: white;
+            box-shadow: var(--shadow-md);
+            page-break-inside: avoid;
+        }
+
+        thead {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+        }
+
+        th {
+            padding: 12pt;
+            text-align: left;
+            font-weight: 700;
+            font-size: 11pt;
+            border: none;
+        }
+
+        td {
+            padding: 10pt 12pt;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        tbody tr:nth-child(even) {
+            background: var(--gray-50);
+        }
+
+        tbody tr:hover {
+            background: #dbeafe;
+        }
+
+        /* Células de destaque */
+        td.highlight {
+            background: #fef3c7;
+            font-weight: 600;
+        }
+
+        /* ========================================
+           BLOCOS DE CÓDIGO
+           ======================================== */
+        code {
+            font-family: var(--font-code);
+            background: var(--gray-100);
+            padding: 2pt 6pt;
+            border-radius: 4pt;
+            font-size: 9.5pt;
+            color: #dc2626;
+            font-weight: 500;
+        }
+
+        pre {
+            background: #282c34;
+            color: #abb2bf;
+            border-left: 5px solid var(--primary);
+            padding: 15pt;
+            margin: 15pt 0;
+            overflow-x: auto;
+            border-radius: 6pt;
+            box-shadow: var(--shadow-lg);
+            page-break-inside: avoid;
+        }
+
+        pre code {
+            background: transparent;
+            padding: 0;
+            color: inherit;
+            border-radius: 0;
+            font-size: 9pt;
+            line-height: 1.5;
+        }
+
+        /* Syntax Highlighting */
+        .keyword {
+            color: #c678dd;
+            font-weight: 600;
+        }
+
+        .string {
+            color: #98c379;
+        }
+
+        .comment {
+            color: #5c6370;
+            font-style: italic;
+        }
+
+        .function {
+            color: #61afef;
+        }
+
+        .number {
+            color: #d19a66;
+        }
+
+        /* ========================================
+           IMAGENS E FIGURAS
+           ======================================== */
+        figure {
+            margin: 20pt 0;
+            text-align: center;
+            page-break-inside: avoid;
+        }
+
+        figure img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8pt;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--gray-200);
+        }
+
+        figcaption {
+            margin-top: 10pt;
+            font-size: 10pt;
+            color: var(--gray-600);
+            font-style: italic;
+            padding: 8pt;
+            background: var(--gray-50);
+            border-radius: 4pt;
+        }
+
+        figcaption strong {
+            color: var(--primary);
+            font-weight: 700;
+            font-style: normal;
+        }
+
+        /* ========================================
+           BOXES E ALERTAS
+           ======================================== */
+        .info-box,
+        .warning-box,
+        .success-box,
+        .tip-box {
+            padding: 15pt;
+            margin: 15pt 0;
+            border-radius: 8pt;
+            border-left: 6px solid;
+            page-break-inside: avoid;
+        }
+
+        .info-box {
+            background: #dbeafe;
+            border-left-color: var(--primary);
+        }
+
+        .warning-box {
+            background: #fef3c7;
+            border-left-color: var(--accent);
+        }
+
+        .success-box {
+            background: #d1fae5;
+            border-left-color: var(--secondary);
+        }
+
+        .tip-box {
+            background: #f3e8ff;
+            border-left-color: #a855f7;
+        }
+
+        .box-title {
+            font-weight: 700;
+            font-size: 12pt;
+            margin-bottom: 8pt;
+            display: flex;
+            align-items: center;
+            gap: 8pt;
+        }
+
+        .box-icon {
+            font-size: 16pt;
+        }
+
+        /* ========================================
+           CABEÇALHO E RODAPÉ
+           ======================================== */
+        .page-header {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 15mm;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 0 25mm;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 9pt;
+            font-weight: 600;
+        }
+
+        .page-footer {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 12mm;
+            background: var(--gray-100);
+            border-top: 2px solid var(--gray-300);
+            padding: 0 25mm;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 9pt;
+            color: var(--gray-600);
+        }
+
+        .footer-left {
+            font-weight: 600;
+        }
+
+        .footer-center {
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        .footer-right {
+            text-align: right;
+        }
+
+        .page-number:before {
+            content: "Página ";
+        }
+
+        .page-number:after {
+            content: counter(page);
+            counter-increment: page;
+        }
+
+        /* Ocultar header/footer na capa */
+        .cover-page .page-header,
+        .cover-page .page-footer {
+            display: none;
+        }
+
+        /* ========================================
+           BADGES E TAGS
+           ======================================== */
+        .badge {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 4pt 10pt;
+            border-radius: 12pt;
+            font-size: 9pt;
+            font-weight: 700;
+            margin-right: 6pt;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-secondary {
+            background: var(--secondary);
+        }
+
+        .badge-accent {
+            background: var(--accent);
+        }
+
+        .badge-gray {
+            background: var(--gray-500);
+        }
+
+        /* ========================================
+           SEÇÕES ESPECIAIS
+           ======================================== */
+        .section-intro {
+            background: var(--gray-50);
+            padding: 20pt;
+            border-radius: 8pt;
+            border-left: 5px solid var(--primary);
+            margin: 20pt 0;
+            font-size: 11pt;
+        }
+
+        .section-intro h3 {
+            margin-top: 0;
+            color: var(--primary);
+        }
+
+        /* Diagrama / Arquitetura */
+        .diagram-box {
+            background: white;
+            border: 2px solid var(--gray-300);
+            border-radius: 8pt;
+            padding: 20pt;
+            margin: 20pt 0;
+            text-align: center;
+        }
+
+        /* Grid de Tecnologias */
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150pt, 1fr));
+            gap: 15pt;
+            margin: 20pt 0;
+        }
+
+        .tech-card {
+            background: white;
+            border: 2px solid var(--gray-200);
+            border-radius: 8pt;
+            padding: 15pt;
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .tech-card:hover {
+            border-color: var(--primary);
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-2pt);
+        }
+
+        .tech-icon {
+            font-size: 32pt;
+            margin-bottom: 8pt;
+        }
+
+        .tech-name {
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 4pt;
+        }
+
+        .tech-version {
+            font-size: 9pt;
+            color: var(--gray-500);
+        }
+
+        /* ========================================
+           SEPARADORES E DIVISORES
+           ======================================== */
+        hr {
+            border: none;
+            border-top: 3px solid var(--gray-200);
+            margin: 25pt 0;
+        }
+
+        hr.primary {
+            border-top-color: var(--primary);
+        }
+
+        .section-divider {
+            text-align: center;
+            margin: 30pt 0;
+            position: relative;
+        }
+
+        .section-divider:before,
+        .section-divider:after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            width: 40%;
+            height: 2px;
+            background: var(--gray-300);
+        }
+
+        .section-divider:before {
+            left: 0;
+        }
+
+        .section-divider:after {
+            right: 0;
+        }
+
+        .section-divider-text {
+            display: inline-block;
+            background: white;
+            padding: 0 15pt;
+            color: var(--primary);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 10pt;
+        }
+
+        /* ========================================
+           LINKS
+           ======================================== */
+        a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            border-bottom: 1px solid transparent;
+            transition: all 0.2s;
+        }
+
+        a:hover {
+            border-bottom-color: var(--primary);
+        }
+
+        /* ========================================
+           PRINT STYLES
+           ======================================== */
+        @media print {
+            html {
+                font-size: 10pt;
+            }
+
+            .document {
+                max-width: 100%;
+            }
+
+            .page {
+                padding: 15mm 20mm;
+            }
+
+            h1,
+            h2,
+            h3,
+            h4,
+            h5 {
+                page-break-after: avoid;
+            }
+
+            table,
+            figure,
+            pre,
+            .info-box,
+            .warning-box,
+            .success-box {
+                page-break-inside: avoid;
+            }
+
+            a {
+                color: var(--primary);
+                text-decoration: none;
+            }
+
+            a[href^="http"]:after {
+                content: " (" attr(href) ")";
+                font-size: 8pt;
+                color: var(--gray-500);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="document">
+
+        <!-- ========================================
+             CAPA
+             ======================================== -->
+        <div class="page cover-page">
+            <div class="cover-header">
+                <div class="cover-logo">TD</div>
+                <h1 class="cover-title">Documentação<br>Técnica Completa</h1>
+                <p class="cover-subtitle">Portfolio de Fotografia e Design</p>
+                <p class="cover-description">
+                    Sistema web moderno para portfólio fotográfico profissional<br>
+                    com painel administrativo, sistema de comentários e interação social
+                </p>
+            </div>
+
+            <div class="cover-divider"></div>
+
+            <div>
+                <p class="cover-author">Tiago Damasceno</p>
+                <p class="cover-domain">tdfoco.cloud</p>
+            </div>
+
+            <div class="cover-footer">
+                <p class="cover-date">30 de Novembro de 2025</p>
+                <p class="cover-version">Versão 1.0.0</p>
+                <p class="cover-tech">React • TypeScript • Vite • Supabase • Tailwind CSS</p>
+            </div>
+        </div>
+
+        <!-- ========================================
+             SUMÁRIO
+             ======================================== -->
+        <div class="page toc-page">
+            <div class="page-header">
+                <span>Portfolio de Fotografia - Documentação Técnica</span>
+                <span>Tiago Damasceno</span>
+            </div>
+
+            <h1 class="toc-title">📋 Sumário</h1>
+
+            <ul class="toc-list">
+                <li class="toc-item level-1">
+                    <a href="#intro" class="toc-link">
+                        <span>1. Introdução ao Projeto</span>
+                        <span class="toc-dots"></span>
+                        <span class="toc-page-number">3</span>
+                    </a>
+                </li>
+                <li class="toc-item level-2">
+                    <a href="#objetivo" class="toc-link">
+                        <span>1.1 Objetivo do Sistema</span>
+                        <span class="toc-dots"></span>
+                        <span class="toc-page-number">3</span>
+                    </a>
+                </li>
+                <li class="toc-item level-2">
+                    <a href="#publico" class="toc-link">
+                        <span>1.2 Público-Alvo</span>
+                        <span class="toc-dots"></span>
+                        <span class="toc-page-number">3</span>
+                    </a>
+                </li>
+
+                <li class="toc-item level-1">
+                    <a href="#tecnologias" class="toc-link">
+                        <span>2. Stack Tecnológica</span>
+                        <span class="toc-dots"></span>
+                        <span class="toc-page-number">4</span>
+                    </a>
+                </li>
+                <li class="toc-item level-2">
+                    <a href="#frontend" class="toc-link">
+                        <span>2.1 Frontend</span>
+                        <span class="toc-dots"></span>
+                        <span class="toc-page-number">4</span>
+                    </a>
+                </li>
+                <li class="toc-item level-2">
+                    <a href="#backend" class="toc-link">
+                        <span>2.2 Backend e Banco de Dados</span>
+                        <span class="toc-dots"></span>
+                        <span class="toc-page-number">5</span>
+                    </a>
+                </li>
+
+                <li class="toc-item level-1">
+                    <a href="#arquitetura" class="toc-link">
+                        <span>3. Arquitetura do Sistema</span>
+                        <span class="toc-dots"></span>
+                        <span class="toc-page-number">6</span>
+                    </a>
+                </li>
+
+                <li class="toc-item level-1">
+                    <a href="#funcionalidades" class="toc-link">
+                        <span>4. Funcionalidades Implementadas</span>
+                        <span class="toc-dots"></span>
+                        <span class="toc-page-number">8</span>
+                    </a>
+                </li>
+
+                <li class="toc-item level-1">
+                    <a href="#estrutura" class="toc-link">
+                        <span>5. Estrutura do Código</span>
+                        <span class="toc-dots"></span>
+                        <span class="toc-page-number">10</span>
+                    </a>
+                </li>
+
+                <li class="toc-item level-1">
+                    <a href="#database" class="toc-link">
+                        <span>6. Database Schema</span>
+                        <span class="toc-dots"></span>
+                        <span class="toc-page-number">12</span>
+                    </a>
+                </li>
+
+                <li class="toc-item level-1">
+                    <a href="#deploy" class="toc-link">
+                        <span>7. Deploy e Configuração</span>
+                        <span class="toc-dots"></span>
+                        <span class="toc-page-number">15</span>
+                    </a>
+                </li>
+
+                <li class="toc-item level-1">
+                    <a href="#conclusao" class="toc-link">
+                        <span>8. Considerações Finais</span>
+                        <span class="toc-dots"></span>
+                        <span class="toc-page-number">16</span>
+                    </a>
+                </li>
+            </ul>
+
+            <div class="page-footer">
+                <span class="footer-left">Portfolio - Tiago Damasceno</span>
+                <span class="footer-center">tdfoco.cloud</span>
+                <span class="footer-right page-number"></span>
+            </div>
+        </div>
+
+        <!-- O RESTANTE DO CONTEÚDO SERÁ INSERIDO AQUI VIA SCRIPT -->
+        <div id="main-content">
+            <!-- Conteúdo será gerado dinamicamente -->
+        </div>
+
+    </div>
+</body>
+
+</html>

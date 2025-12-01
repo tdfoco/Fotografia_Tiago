@@ -1,0 +1,11629 @@
+# LIVRO COMPLETO DE CÓDIGO-FONTE
+## Portfolio de Fotografia - Tiago Damasceno
+
+**Versão:** 1.0.0 | **Data:** 30/11/2025 | **Domínio:** tdfoco.cloud
+
+---
+
+##  SOBRE ESTE LIVRO
+
+Este é um livro completo de código-fonte, apresentando **TODOS** os arquivos do projeto de forma didática e organizada. Ideal para estudo de:
+- Arquitetura React moderna
+- TypeScript avançado
+- Integração com Supabase
+- Padrões de componentização
+- Hooks customizados
+- Design patterns
+
+---
+
+
+---
+
+## ARQUIVO: `src\components\ui\accordion.tsx`
+**Linhas:** 53
+
+```typescript
+import * as React from "react";
+import * as AccordionPrimitive from "@radix-ui/react-accordion";
+import { ChevronDown } from "lucide-react";
+
+import { cn } from "@/lib/utils";
+
+const Accordion = AccordionPrimitive.Root;
+
+const AccordionItem = React.forwardRef<
+  React.ElementRef<typeof AccordionPrimitive.Item>,
+  React.ComponentPropsWithoutRef<typeof AccordionPrimitive.Item>
+>(({ className, ...props }, ref) => (
+  <AccordionPrimitive.Item ref={ref} className={cn("border-b", className)} {...props} />
+));
+AccordionItem.displayName = "AccordionItem";
+
+const AccordionTrigger = React.forwardRef<
+  React.ElementRef<typeof AccordionPrimitive.Trigger>,
+  React.ComponentPropsWithoutRef<typeof AccordionPrimitive.Trigger>
+>(({ className, children, ...props }, ref) => (
+  <AccordionPrimitive.Header className="flex">
+    <AccordionPrimitive.Trigger
+      ref={ref}
+      className={cn(
+        "flex flex-1 items-center justify-between py-4 font-medium transition-all hover:underline [&[data-state=open]>svg]:rotate-180",
+        className,
+      )}
+      {...props}
+    >
+      {children}
+      <ChevronDown className="h-4 w-4 shrink-0 transition-transform duration-200" />
+    </AccordionPrimitive.Trigger>
+  </AccordionPrimitive.Header>
+));
+AccordionTrigger.displayName = AccordionPrimitive.Trigger.displayName;
+
+const AccordionContent = React.forwardRef<
+  React.ElementRef<typeof AccordionPrimitive.Content>,
+  React.ComponentPropsWithoutRef<typeof AccordionPrimitive.Content>
+>(({ className, children, ...props }, ref) => (
+  <AccordionPrimitive.Content
+    ref={ref}
+    className="overflow-hidden text-sm transition-all data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down"
+    {...props}
+  >
+    <div className={cn("pb-4 pt-0", className)}>{children}</div>
+  </AccordionPrimitive.Content>
+));
+
+AccordionContent.displayName = AccordionPrimitive.Content.displayName;
+
+export { Accordion, AccordionItem, AccordionTrigger, AccordionContent };
+
+```
+
+
+---
+
+## ARQUIVO: `src\components\ui\alert-dialog.tsx`
+**Linhas:** 105
+
+```typescript
+import * as React from "react";
+import * as AlertDialogPrimitive from "@radix-ui/react-alert-dialog";
+
+import { cn } from "@/lib/utils";
+import { buttonVariants } from "@/components/ui/button";
+
+const AlertDialog = AlertDialogPrimitive.Root;
+
+const AlertDialogTrigger = AlertDialogPrimitive.Trigger;
+
+const AlertDialogPortal = AlertDialogPrimitive.Portal;
+
+const AlertDialogOverlay = React.forwardRef<
+  React.ElementRef<typeof AlertDialogPrimitive.Overlay>,
+  React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Overlay>
+>(({ className, ...props }, ref) => (
+  <AlertDialogPrimitive.Overlay
+    className={cn(
+      "fixed inset-0 z-50 bg-black/80 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
+      className,
+    )}
+    {...props}
+    ref={ref}
+  />
+));
+AlertDialogOverlay.displayName = AlertDialogPrimitive.Overlay.displayName;
+
+const AlertDialogContent = React.forwardRef<
+  React.ElementRef<typeof AlertDialogPrimitive.Content>,
+  React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Content>
+>(({ className, ...props }, ref) => (
+  <AlertDialogPortal>
+    <AlertDialogOverlay />
+    <AlertDialogPrimitive.Content
+      ref={ref}
+      className={cn(
+        "fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg",
+        className,
+      )}
+      {...props}
+    />
+  </AlertDialogPortal>
+));
+AlertDialogContent.displayName = AlertDialogPrimitive.Content.displayName;
+
+const AlertDialogHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
+  <div className={cn("flex flex-col space-y-2 text-center sm:text-left", className)} {...props} />
+);
+AlertDialogHeader.displayName = "AlertDialogHeader";
+
+const AlertDialogFooter = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
+  <div className={cn("flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2", className)} {...props} />
+);
+AlertDialogFooter.displayName = "AlertDialogFooter";
+
+const AlertDialogTitle = React.forwardRef<
+  React.ElementRef<typeof AlertDialogPrimitive.Title>,
+  React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Title>
+>(({ className, ...props }, ref) => (
+  <AlertDialogPrimitive.Title ref={ref} className={cn("text-lg font-semibold", className)} {...props} />
+));
+AlertDialogTitle.displayName = AlertDialogPrimitive.Title.displayName;
+
+const AlertDialogDescription = React.forwardRef<
+  React.ElementRef<typeof AlertDialogPrimitive.Description>,
+  React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Description>
+>(({ className, ...props }, ref) => (
+  <AlertDialogPrimitive.Description ref={ref} className={cn("text-sm text-muted-foreground", className)} {...props} />
+));
+AlertDialogDescription.displayName = AlertDialogPrimitive.Description.displayName;
+
+const AlertDialogAction = React.forwardRef<
+  React.ElementRef<typeof AlertDialogPrimitive.Action>,
+  React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Action>
+>(({ className, ...props }, ref) => (
+  <AlertDialogPrimitive.Action ref={ref} className={cn(buttonVariants(), className)} {...props} />
+));
+AlertDialogAction.displayName = AlertDialogPrimitive.Action.displayName;
+
+const AlertDialogCancel = React.forwardRef<
+  React.ElementRef<typeof AlertDialogPrimitive.Cancel>,
+  React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Cancel>
+>(({ className, ...props }, ref) => (
+  <AlertDialogPrimitive.Cancel
+    ref={ref}
+    className={cn(buttonVariants({ variant: "outline" }), "mt-2 sm:mt-0", className)}
+    {...props}
+  />
+));
+AlertDialogCancel.displayName = AlertDialogPrimitive.Cancel.displayName;
+
+export {
+  AlertDialog,
+  AlertDialogPortal,
+  AlertDialogOverlay,
+  AlertDialogTrigger,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogFooter,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogAction,
+  AlertDialogCancel,
+};
+
+```
+
+
+---
+
+## ARQUIVO: `src\components\ui\alert.tsx`
+**Linhas:** 44
+
+```typescript
+import * as React from "react";
+import { cva, type VariantProps } from "class-variance-authority";
+
+import { cn } from "@/lib/utils";
+
+const alertVariants = cva(
+  "relative w-full rounded-lg border p-4 [&>svg~*]:pl-7 [&>svg+div]:translate-y-[-3px] [&>svg]:absolute [&>svg]:left-4 [&>svg]:top-4 [&>svg]:text-foreground",
+  {
+    variants: {
+      variant: {
+        default: "bg-background text-foreground",
+        destructive: "border-destructive/50 text-destructive dark:border-destructive [&>svg]:text-destructive",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+    },
+  },
+);
+
+const Alert = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement> & VariantProps<typeof alertVariants>
+>(({ className, variant, ...props }, ref) => (
+  <div ref={ref} role="alert" className={cn(alertVariants({ variant }), className)} {...props} />
+));
+Alert.displayName = "Alert";
+
+const AlertTitle = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HTMLHeadingElement>>(
+  ({ className, ...props }, ref) => (
+    <h5 ref={ref} className={cn("mb-1 font-medium leading-none tracking-tight", className)} {...props} />
+  ),
+);
+AlertTitle.displayName = "AlertTitle";
+
+const AlertDescription = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HTMLParagraphElement>>(
+  ({ className, ...props }, ref) => (
+    <div ref={ref} className={cn("text-sm [&_p]:leading-relaxed", className)} {...props} />
+  ),
+);
+AlertDescription.displayName = "AlertDescription";
+
+export { Alert, AlertTitle, AlertDescription };
+
+```
+
+
+---
+
+## ARQUIVO: `src\components\ui\aspect-ratio.tsx`
+**Linhas:** 6
+
+```typescript
+import * as AspectRatioPrimitive from "@radix-ui/react-aspect-ratio";
+
+const AspectRatio = AspectRatioPrimitive.Root;
+
+export { AspectRatio };
+
+```
+
+
+---
+
+## ARQUIVO: `src\components\ui\avatar.tsx`
+**Linhas:** 39
+
+```typescript
+import * as React from "react";
+import * as AvatarPrimitive from "@radix-ui/react-avatar";
+
+import { cn } from "@/lib/utils";
+
+const Avatar = React.forwardRef<
+  React.ElementRef<typeof AvatarPrimitive.Root>,
+  React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Root>
+>(({ className, ...props }, ref) => (
+  <AvatarPrimitive.Root
+    ref={ref}
+    className={cn("relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full", className)}
+    {...props}
+  />
+));
+Avatar.displayName = AvatarPrimitive.Root.displayName;
+
+const AvatarImage = React.forwardRef<
+  React.ElementRef<typeof AvatarPrimitive.Image>,
+  React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Image>
+>(({ className, ...props }, ref) => (
+  <AvatarPrimitive.Image ref={ref} className={cn("aspect-square h-full w-full", className)} {...props} />
+));
+AvatarImage.displayName = AvatarPrimitive.Image.displayName;
+
+const AvatarFallback = React.forwardRef<
+  React.ElementRef<typeof AvatarPrimitive.Fallback>,
+  React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Fallback>
+>(({ className, ...props }, ref) => (
+  <AvatarPrimitive.Fallback
+    ref={ref}
+    className={cn("flex h-full w-full items-center justify-center rounded-full bg-muted", className)}
+    {...props}
+  />
+));
+AvatarFallback.displayName = AvatarPrimitive.Fallback.displayName;
+
+export { Avatar, AvatarImage, AvatarFallback };
+
+```
+
+
+---
+
+## ARQUIVO: `src\components\ui\badge.tsx`
+**Linhas:** 30
+
+```typescript
+import * as React from "react";
+import { cva, type VariantProps } from "class-variance-authority";
+
+import { cn } from "@/lib/utils";
+
+const badgeVariants = cva(
+  "inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
+  {
+    variants: {
+      variant: {
+        default: "border-transparent bg-primary text-primary-foreground hover:bg-primary/80",
+        secondary: "border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80",
+        destructive: "border-transparent bg-destructive text-destructive-foreground hover:bg-destructive/80",
+        outline: "text-foreground",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+    },
+  },
+);
+
+export interface BadgeProps extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof badgeVariants> {}
+
+function Badge({ className, variant, ...props }: BadgeProps) {
+  return <div className={cn(badgeVariants({ variant }), className)} {...props} />;
+}
+
+export { Badge, badgeVariants };
+
+```
+
+
+---
+
+## ARQUIVO: `src\components\ui\breadcrumb.tsx`
+**Linhas:** 91
+
+```typescript
+import * as React from "react";
+import { Slot } from "@radix-ui/react-slot";
+import { ChevronRight, MoreHorizontal } from "lucide-react";
+
+import { cn } from "@/lib/utils";
+
+const Breadcrumb = React.forwardRef<
+  HTMLElement,
+  React.ComponentPropsWithoutRef<"nav"> & {
+    separator?: React.ReactNode;
+  }
+>(({ ...props }, ref) => <nav ref={ref} aria-label="breadcrumb" {...props} />);
+Breadcrumb.displayName = "Breadcrumb";
+
+const BreadcrumbList = React.forwardRef<HTMLOListElement, React.ComponentPropsWithoutRef<"ol">>(
+  ({ className, ...props }, ref) => (
+    <ol
+      ref={ref}
+      className={cn(
+        "flex flex-wrap items-center gap-1.5 break-words text-sm text-muted-foreground sm:gap-2.5",
+        className,
+      )}
+      {...props}
+    />
+  ),
+);
+BreadcrumbList.displayName = "BreadcrumbList";
+
+const BreadcrumbItem = React.forwardRef<HTMLLIElement, React.ComponentPropsWithoutRef<"li">>(
+  ({ className, ...props }, ref) => (
+    <li ref={ref} className={cn("inline-flex items-center gap-1.5", className)} {...props} />
+  ),
+);
+BreadcrumbItem.displayName = "BreadcrumbItem";
+
+const BreadcrumbLink = React.forwardRef<
+  HTMLAnchorElement,
+  React.ComponentPropsWithoutRef<"a"> & {
+    asChild?: boolean;
+  }
+>(({ asChild, className, ...props }, ref) => {
+  const Comp = asChild ? Slot : "a";
+
+  return <Comp ref={ref} className={cn("transition-colors hover:text-foreground", className)} {...props} />;
+});
+BreadcrumbLink.displayName = "BreadcrumbLink";
+
+const BreadcrumbPage = React.forwardRef<HTMLSpanElement, React.ComponentPropsWithoutRef<"span">>(
+  ({ className, ...props }, ref) => (
+    <span
+      ref={ref}
+      role="link"
+      aria-disabled="true"
+      aria-current="page"
+      className={cn("font-normal text-foreground", className)}
+      {...props}
+    />
+  ),
+);
+BreadcrumbPage.displayName = "BreadcrumbPage";
+
+const BreadcrumbSeparator = ({ children, className, ...props }: React.ComponentProps<"li">) => (
+  <li role="presentation" aria-hidden="true" className={cn("[&>svg]:size-3.5", className)} {...props}>
+    {children ?? <ChevronRight />}
+  </li>
+);
+BreadcrumbSeparator.displayName = "BreadcrumbSeparator";
+
+const BreadcrumbEllipsis = ({ className, ...props }: React.ComponentProps<"span">) => (
+  <span
+    role="presentation"
+    aria-hidden="true"
+    className={cn("flex h-9 w-9 items-center justify-center", className)}
+    {...props}
+  >
+    <MoreHorizontal className="h-4 w-4" />
+    <span className="sr-only">More</span>
+  </span>
+);
+BreadcrumbEllipsis.displayName = "BreadcrumbElipssis";
+
+export {
+  Breadcrumb,
+  BreadcrumbList,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+  BreadcrumbEllipsis,
+};
+
+```
+
+
+---
+
+## ARQUIVO: `src\components\ui\button.tsx`
+**Linhas:** 48
+
+```typescript
+import * as React from "react";
+import { Slot } from "@radix-ui/react-slot";
+import { cva, type VariantProps } from "class-variance-authority";
+
+import { cn } from "@/lib/utils";
+
+const buttonVariants = cva(
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+  {
+    variants: {
+      variant: {
+        default: "bg-primary text-primary-foreground hover:bg-primary/90",
+        destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90",
+        outline: "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
+        secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
+        ghost: "hover:bg-accent hover:text-accent-foreground",
+        link: "text-primary underline-offset-4 hover:underline",
+      },
+      size: {
+        default: "h-10 px-4 py-2",
+        sm: "h-9 rounded-md px-3",
+        lg: "h-11 rounded-md px-8",
+        icon: "h-10 w-10",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+      size: "default",
+    },
+  },
+);
+
+export interface ButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+    VariantProps<typeof buttonVariants> {
+  asChild?: boolean;
+}
+
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ className, variant, size, asChild = false, ...props }, ref) => {
+    const Comp = asChild ? Slot : "button";
+    return <Comp className={cn(buttonVariants({ variant, size, className }))} ref={ref} {...props} />;
+  },
+);
+Button.displayName = "Button";
+
+export { Button, buttonVariants };
+
+```
+
+
+---
+
+## ARQUIVO: `src\components\ui\calendar.tsx`
+**Linhas:** 55
+
+```typescript
+import * as React from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { DayPicker } from "react-day-picker";
+
+import { cn } from "@/lib/utils";
+import { buttonVariants } from "@/components/ui/button";
+
+export type CalendarProps = React.ComponentProps<typeof DayPicker>;
+
+function Calendar({ className, classNames, showOutsideDays = true, ...props }: CalendarProps) {
+  return (
+    <DayPicker
+      showOutsideDays={showOutsideDays}
+      className={cn("p-3", className)}
+      classNames={{
+        months: "flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0",
+        month: "space-y-4",
+        caption: "flex justify-center pt-1 relative items-center",
+        caption_label: "text-sm font-medium",
+        nav: "space-x-1 flex items-center",
+        nav_button: cn(
+          buttonVariants({ variant: "outline" }),
+          "h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100",
+        ),
+        nav_button_previous: "absolute left-1",
+        nav_button_next: "absolute right-1",
+        table: "w-full border-collapse space-y-1",
+        head_row: "flex",
+        head_cell: "text-muted-foreground rounded-md w-9 font-normal text-[0.8rem]",
+        row: "flex w-full mt-2",
+        cell: "h-9 w-9 text-center text-sm p-0 relative [&:has([aria-selected].day-range-end)]:rounded-r-md [&:has([aria-selected].day-outside)]:bg-accent/50 [&:has([aria-selected])]:bg-accent first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20",
+        day: cn(buttonVariants({ variant: "ghost" }), "h-9 w-9 p-0 font-normal aria-selected:opacity-100"),
+        day_range_end: "day-range-end",
+        day_selected:
+          "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground",
+        day_today: "bg-accent text-accent-foreground",
+        day_outside:
+          "day-outside text-muted-foreground opacity-50 aria-selected:bg-accent/50 aria-selected:text-muted-foreground aria-selected:opacity-30",
+        day_disabled: "text-muted-foreground opacity-50",
+        day_range_middle: "aria-selected:bg-accent aria-selected:text-accent-foreground",
+        day_hidden: "invisible",
+        ...classNames,
+      }}
+      components={{
+        IconLeft: ({ ..._props }) => <ChevronLeft className="h-4 w-4" />,
+        IconRight: ({ ..._props }) => <ChevronRight className="h-4 w-4" />,
+      }}
+      {...props}
+    />
+  );
+}
+Calendar.displayName = "Calendar";
+
+export { Calendar };
+
+```
+
+
+---
+
+## ARQUIVO: `src\components\ui\card.tsx`
+**Linhas:** 44
+
+```typescript
+import * as React from "react";
+
+import { cn } from "@/lib/utils";
+
+const Card = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(({ className, ...props }, ref) => (
+  <div ref={ref} className={cn("rounded-lg border bg-card text-card-foreground shadow-sm", className)} {...props} />
+));
+Card.displayName = "Card";
+
+const CardHeader = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
+  ({ className, ...props }, ref) => (
+    <div ref={ref} className={cn("flex flex-col space-y-1.5 p-6", className)} {...props} />
+  ),
+);
+CardHeader.displayName = "CardHeader";
+
+const CardTitle = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HTMLHeadingElement>>(
+  ({ className, ...props }, ref) => (
+    <h3 ref={ref} className={cn("text-2xl font-semibold leading-none tracking-tight", className)} {...props} />
+  ),
+);
+CardTitle.displayName = "CardTitle";
+
+const CardDescription = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HTMLParagraphElement>>(
+  ({ className, ...props }, ref) => (
+    <p ref={ref} className={cn("text-sm text-muted-foreground", className)} {...props} />
+  ),
+);
+CardDescription.displayName = "CardDescription";
+
+const CardContent = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
+  ({ className, ...props }, ref) => <div ref={ref} className={cn("p-6 pt-0", className)} {...props} />,
+);
+CardContent.displayName = "CardContent";
+
+const CardFooter = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
+  ({ className, ...props }, ref) => (
+    <div ref={ref} className={cn("flex items-center p-6 pt-0", className)} {...props} />
+  ),
+);
+CardFooter.displayName = "CardFooter";
+
+export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent };
+
+```
+
+
+---
+
+## ARQUIVO: `src\components\ui\carousel.tsx`
+**Linhas:** 225
+
+```typescript
+import * as React from "react";
+import useEmblaCarousel, { type UseEmblaCarouselType } from "embla-carousel-react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
+
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+
+type CarouselApi = UseEmblaCarouselType[1];
+type UseCarouselParameters = Parameters<typeof useEmblaCarousel>;
+type CarouselOptions = UseCarouselParameters[0];
+type CarouselPlugin = UseCarouselParameters[1];
+
+type CarouselProps = {
+  opts?: CarouselOptions;
+  plugins?: CarouselPlugin;
+  orientation?: "horizontal" | "vertical";
+  setApi?: (api: CarouselApi) => void;
+};
+
+type CarouselContextProps = {
+  carouselRef: ReturnType<typeof useEmblaCarousel>[0];
+  api: ReturnType<typeof useEmblaCarousel>[1];
+  scrollPrev: () => void;
+  scrollNext: () => void;
+  canScrollPrev: boolean;
+  canScrollNext: boolean;
+} & CarouselProps;
+
+const CarouselContext = React.createContext<CarouselContextProps | null>(null);
+
+function useCarousel() {
+  const context = React.useContext(CarouselContext);
+
+  if (!context) {
+    throw new Error("useCarousel must be used within a <Carousel />");
+  }
+
+  return context;
+}
+
+const Carousel = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement> & CarouselProps>(
+  ({ orientation = "horizontal", opts, setApi, plugins, className, children, ...props }, ref) => {
+    const [carouselRef, api] = useEmblaCarousel(
+      {
+        ...opts,
+        axis: orientation === "horizontal" ? "x" : "y",
+      },
+      plugins,
+    );
+    const [canScrollPrev, setCanScrollPrev] = React.useState(false);
+    const [canScrollNext, setCanScrollNext] = React.useState(false);
+
+    const onSelect = React.useCallback((api: CarouselApi) => {
+      if (!api) {
+        return;
+      }
+
+      setCanScrollPrev(api.canScrollPrev());
+      setCanScrollNext(api.canScrollNext());
+    }, []);
+
+    const scrollPrev = React.useCallback(() => {
+      api?.scrollPrev();
+    }, [api]);
+
+    const scrollNext = React.useCallback(() => {
+      api?.scrollNext();
+    }, [api]);
+
+    const handleKeyDown = React.useCallback(
+      (event: React.KeyboardEvent<HTMLDivElement>) => {
+        if (event.key === "ArrowLeft") {
+          event.preventDefault();
+          scrollPrev();
+        } else if (event.key === "ArrowRight") {
+          event.preventDefault();
+          scrollNext();
+        }
+      },
+      [scrollPrev, scrollNext],
+    );
+
+    React.useEffect(() => {
+      if (!api || !setApi) {
+        return;
+      }
+
+      setApi(api);
+    }, [api, setApi]);
+
+    React.useEffect(() => {
+      if (!api) {
+        return;
+      }
+
+      onSelect(api);
+      api.on("reInit", onSelect);
+      api.on("select", onSelect);
+
+      return () => {
+        api?.off("select", onSelect);
+      };
+    }, [api, onSelect]);
+
+    return (
+      <CarouselContext.Provider
+        value={{
+          carouselRef,
+          api: api,
+          opts,
+          orientation: orientation || (opts?.axis === "y" ? "vertical" : "horizontal"),
+          scrollPrev,
+          scrollNext,
+          canScrollPrev,
+          canScrollNext,
+        }}
+      >
+        <div
+          ref={ref}
+          onKeyDownCapture={handleKeyDown}
+          className={cn("relative", className)}
+          role="region"
+          aria-roledescription="carousel"
+          {...props}
+        >
+          {children}
+        </div>
+      </CarouselContext.Provider>
+    );
+  },
+);
+Carousel.displayName = "Carousel";
+
+const CarouselContent = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
+  ({ className, ...props }, ref) => {
+    const { carouselRef, orientation } = useCarousel();
+
+    return (
+      <div ref={carouselRef} className="overflow-hidden">
+        <div
+          ref={ref}
+          className={cn("flex", orientation === "horizontal" ? "-ml-4" : "-mt-4 flex-col", className)}
+          {...props}
+        />
+      </div>
+    );
+  },
+);
+CarouselContent.displayName = "CarouselContent";
+
+const CarouselItem = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
+  ({ className, ...props }, ref) => {
+    const { orientation } = useCarousel();
+
+    return (
+      <div
+        ref={ref}
+        role="group"
+        aria-roledescription="slide"
+        className={cn("min-w-0 shrink-0 grow-0 basis-full", orientation === "horizontal" ? "pl-4" : "pt-4", className)}
+        {...props}
+      />
+    );
+  },
+);
+CarouselItem.displayName = "CarouselItem";
+
+const CarouselPrevious = React.forwardRef<HTMLButtonElement, React.ComponentProps<typeof Button>>(
+  ({ className, variant = "outline", size = "icon", ...props }, ref) => {
+    const { orientation, scrollPrev, canScrollPrev } = useCarousel();
+
+    return (
+      <Button
+        ref={ref}
+        variant={variant}
+        size={size}
+        className={cn(
+          "absolute h-8 w-8 rounded-full",
+          orientation === "horizontal"
+            ? "-left-12 top-1/2 -translate-y-1/2"
+            : "-top-12 left-1/2 -translate-x-1/2 rotate-90",
+          className,
+        )}
+        disabled={!canScrollPrev}
+        onClick={scrollPrev}
+        {...props}
+      >
+        <ArrowLeft className="h-4 w-4" />
+        <span className="sr-only">Previous slide</span>
+      </Button>
+    );
+  },
+);
+CarouselPrevious.displayName = "CarouselPrevious";
+
+const CarouselNext = React.forwardRef<HTMLButtonElement, React.ComponentProps<typeof Button>>(
+  ({ className, variant = "outline", size = "icon", ...props }, ref) => {
+    const { orientation, scrollNext, canScrollNext } = useCarousel();
+
+    return (
+      <Button
+        ref={ref}
+        variant={variant}
+        size={size}
+        className={cn(
+          "absolute h-8 w-8 rounded-full",
+          orientation === "horizontal"
+            ? "-right-12 top-1/2 -translate-y-1/2"
+            : "-bottom-12 left-1/2 -translate-x-1/2 rotate-90",
+          className,
+        )}
+        disabled={!canScrollNext}
+        onClick={scrollNext}
+        {...props}
+      >
+        <ArrowRight className="h-4 w-4" />
+        <span className="sr-only">Next slide</span>
+      </Button>
+    );
+  },
+);
+CarouselNext.displayName = "CarouselNext";
+
+export { type CarouselApi, Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext };
+
+```
+
+
+---
+
+## ARQUIVO: `src\components\ui\chart.tsx`
+**Linhas:** 304
+
+```typescript
+import * as React from "react";
+import * as RechartsPrimitive from "recharts";
+
+import { cn } from "@/lib/utils";
+
+// Format: { THEME_NAME: CSS_SELECTOR }
+const THEMES = { light: "", dark: ".dark" } as const;
+
+export type ChartConfig = {
+  [k in string]: {
+    label?: React.ReactNode;
+    icon?: React.ComponentType;
+  } & ({ color?: string; theme?: never } | { color?: never; theme: Record<keyof typeof THEMES, string> });
+};
+
+type ChartContextProps = {
+  config: ChartConfig;
+};
+
+const ChartContext = React.createContext<ChartContextProps | null>(null);
+
+function useChart() {
+  const context = React.useContext(ChartContext);
+
+  if (!context) {
+    throw new Error("useChart must be used within a <ChartContainer />");
+  }
+
+  return context;
+}
+
+const ChartContainer = React.forwardRef<
+  HTMLDivElement,
+  React.ComponentProps<"div"> & {
+    config: ChartConfig;
+    children: React.ComponentProps<typeof RechartsPrimitive.ResponsiveContainer>["children"];
+  }
+>(({ id, className, children, config, ...props }, ref) => {
+  const uniqueId = React.useId();
+  const chartId = `chart-${id || uniqueId.replace(/:/g, "")}`;
+
+  return (
+    <ChartContext.Provider value={{ config }}>
+      <div
+        data-chart={chartId}
+        ref={ref}
+        className={cn(
+          "flex aspect-video justify-center text-xs [&_.recharts-cartesian-axis-tick_text]:fill-muted-foreground [&_.recharts-cartesian-grid_line[stroke='#ccc']]:stroke-border/50 [&_.recharts-curve.recharts-tooltip-cursor]:stroke-border [&_.recharts-dot[stroke='#fff']]:stroke-transparent [&_.recharts-layer]:outline-none [&_.recharts-polar-grid_[stroke='#ccc']]:stroke-border [&_.recharts-radial-bar-background-sector]:fill-muted [&_.recharts-rectangle.recharts-tooltip-cursor]:fill-muted [&_.recharts-reference-line_[stroke='#ccc']]:stroke-border [&_.recharts-sector[stroke='#fff']]:stroke-transparent [&_.recharts-sector]:outline-none [&_.recharts-surface]:outline-none",
+          className,
+        )}
+        {...props}
+      >
+        <ChartStyle id={chartId} config={config} />
+        <RechartsPrimitive.ResponsiveContainer>{children}</RechartsPrimitive.ResponsiveContainer>
+      </div>
+    </ChartContext.Provider>
+  );
+});
+ChartContainer.displayName = "Chart";
+
+const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
+  const colorConfig = Object.entries(config).filter(([_, config]) => config.theme || config.color);
+
+  if (!colorConfig.length) {
+    return null;
+  }
+
+  return (
+    <style
+      dangerouslySetInnerHTML={{
+        __html: Object.entries(THEMES)
+          .map(
+            ([theme, prefix]) => `
+${prefix} [data-chart=${id}] {
+${colorConfig
+  .map(([key, itemConfig]) => {
+    const color = itemConfig.theme?.[theme as keyof typeof itemConfig.theme] || itemConfig.color;
+    return color ? `  --color-${key}: ${color};` : null;
+  })
+  .join("\n")}
+}
+`,
+          )
+          .join("\n"),
+      }}
+    />
+  );
+};
+
+const ChartTooltip = RechartsPrimitive.Tooltip;
+
+const ChartTooltipContent = React.forwardRef<
+  HTMLDivElement,
+  React.ComponentProps<typeof RechartsPrimitive.Tooltip> &
+    React.ComponentProps<"div"> & {
+      hideLabel?: boolean;
+      hideIndicator?: boolean;
+      indicator?: "line" | "dot" | "dashed";
+      nameKey?: string;
+      labelKey?: string;
+    }
+>(
+  (
+    {
+      active,
+      payload,
+      className,
+      indicator = "dot",
+      hideLabel = false,
+      hideIndicator = false,
+      label,
+      labelFormatter,
+      labelClassName,
+      formatter,
+      color,
+      nameKey,
+      labelKey,
+    },
+    ref,
+  ) => {
+    const { config } = useChart();
+
+    const tooltipLabel = React.useMemo(() => {
+      if (hideLabel || !payload?.length) {
+        return null;
+      }
+
+      const [item] = payload;
+      const key = `${labelKey || item.dataKey || item.name || "value"}`;
+      const itemConfig = getPayloadConfigFromPayload(config, item, key);
+      const value =
+        !labelKey && typeof label === "string"
+          ? config[label as keyof typeof config]?.label || label
+          : itemConfig?.label;
+
+      if (labelFormatter) {
+        return <div className={cn("font-medium", labelClassName)}>{labelFormatter(value, payload)}</div>;
+      }
+
+      if (!value) {
+        return null;
+      }
+
+      return <div className={cn("font-medium", labelClassName)}>{value}</div>;
+    }, [label, labelFormatter, payload, hideLabel, labelClassName, config, labelKey]);
+
+    if (!active || !payload?.length) {
+      return null;
+    }
+
+    const nestLabel = payload.length === 1 && indicator !== "dot";
+
+    return (
+      <div
+        ref={ref}
+        className={cn(
+          "grid min-w-[8rem] items-start gap-1.5 rounded-lg border border-border/50 bg-background px-2.5 py-1.5 text-xs shadow-xl",
+          className,
+        )}
+      >
+        {!nestLabel ? tooltipLabel : null}
+        <div className="grid gap-1.5">
+          {payload.map((item, index) => {
+            const key = `${nameKey || item.name || item.dataKey || "value"}`;
+            const itemConfig = getPayloadConfigFromPayload(config, item, key);
+            const indicatorColor = color || item.payload.fill || item.color;
+
+            return (
+              <div
+                key={item.dataKey}
+                className={cn(
+                  "flex w-full flex-wrap items-stretch gap-2 [&>svg]:h-2.5 [&>svg]:w-2.5 [&>svg]:text-muted-foreground",
+                  indicator === "dot" && "items-center",
+                )}
+              >
+                {formatter && item?.value !== undefined && item.name ? (
+                  formatter(item.value, item.name, item, index, item.payload)
+                ) : (
+                  <>
+                    {itemConfig?.icon ? (
+                      <itemConfig.icon />
+                    ) : (
+                      !hideIndicator && (
+                        <div
+                          className={cn("shrink-0 rounded-[2px] border-[--color-border] bg-[--color-bg]", {
+                            "h-2.5 w-2.5": indicator === "dot",
+                            "w-1": indicator === "line",
+                            "w-0 border-[1.5px] border-dashed bg-transparent": indicator === "dashed",
+                            "my-0.5": nestLabel && indicator === "dashed",
+                          })}
+                          style={
+                            {
+                              "--color-bg": indicatorColor,
+                              "--color-border": indicatorColor,
+                            } as React.CSSProperties
+                          }
+                        />
+                      )
+                    )}
+                    <div
+                      className={cn(
+                        "flex flex-1 justify-between leading-none",
+                        nestLabel ? "items-end" : "items-center",
+                      )}
+                    >
+                      <div className="grid gap-1.5">
+                        {nestLabel ? tooltipLabel : null}
+                        <span className="text-muted-foreground">{itemConfig?.label || item.name}</span>
+                      </div>
+                      {item.value && (
+                        <span className="font-mono font-medium tabular-nums text-foreground">
+                          {item.value.toLocaleString()}
+                        </span>
+                      )}
+                    </div>
+                  </>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  },
+);
+ChartTooltipContent.displayName = "ChartTooltip";
+
+const ChartLegend = RechartsPrimitive.Legend;
+
+const ChartLegendContent = React.forwardRef<
+  HTMLDivElement,
+  React.ComponentProps<"div"> &
+    Pick<RechartsPrimitive.LegendProps, "payload" | "verticalAlign"> & {
+      hideIcon?: boolean;
+      nameKey?: string;
+    }
+>(({ className, hideIcon = false, payload, verticalAlign = "bottom", nameKey }, ref) => {
+  const { config } = useChart();
+
+  if (!payload?.length) {
+    return null;
+  }
+
+  return (
+    <div
+      ref={ref}
+      className={cn("flex items-center justify-center gap-4", verticalAlign === "top" ? "pb-3" : "pt-3", className)}
+    >
+      {payload.map((item) => {
+        const key = `${nameKey || item.dataKey || "value"}`;
+        const itemConfig = getPayloadConfigFromPayload(config, item, key);
+
+        return (
+          <div
+            key={item.value}
+            className={cn("flex items-center gap-1.5 [&>svg]:h-3 [&>svg]:w-3 [&>svg]:text-muted-foreground")}
+          >
+            {itemConfig?.icon && !hideIcon ? (
+              <itemConfig.icon />
+            ) : (
+              <div
+                className="h-2 w-2 shrink-0 rounded-[2px]"
+                style={{
+                  backgroundColor: item.color,
+                }}
+              />
+            )}
+            {itemConfig?.label}
+          </div>
+        );
+      })}
+    </div>
+  );
+});
+ChartLegendContent.displayName = "ChartLegend";
+
+// Helper to extract item config from a payload.
+function getPayloadConfigFromPayload(config: ChartConfig, payload: unknown, key: string) {
+  if (typeof payload !== "object" || payload === null) {
+    return undefined;
+  }
+
+  const payloadPayload =
+    "payload" in payload && typeof payload.payload === "object" && payload.payload !== null
+      ? payload.payload
+      : undefined;
+
+  let configLabelKey: string = key;
+
+  if (key in payload && typeof payload[key as keyof typeof payload] === "string") {
+    configLabelKey = payload[key as keyof typeof payload] as string;
+  } else if (
+    payloadPayload &&
+    key in payloadPayload &&
+    typeof payloadPayload[key as keyof typeof payloadPayload] === "string"
+  ) {
+    configLabelKey = payloadPayload[key as keyof typeof payloadPayload] as string;
+  }
+
+  return configLabelKey in config ? config[configLabelKey] : config[key as keyof typeof config];
+}
+
+export { ChartContainer, ChartTooltip, ChartTooltipContent, ChartLegend, ChartLegendContent, ChartStyle };
+
+```
+
+
+---
+
+## ARQUIVO: `src\components\ui\checkbox.tsx`
+**Linhas:** 27
+
+```typescript
+import * as React from "react";
+import * as CheckboxPrimitive from "@radix-ui/react-checkbox";
+import { Check } from "lucide-react";
+
+import { cn } from "@/lib/utils";
+
+const Checkbox = React.forwardRef<
+  React.ElementRef<typeof CheckboxPrimitive.Root>,
+  React.ComponentPropsWithoutRef<typeof CheckboxPrimitive.Root>
+>(({ className, ...props }, ref) => (
+  <CheckboxPrimitive.Root
+    ref={ref}
+    className={cn(
+      "peer h-4 w-4 shrink-0 rounded-sm border border-primary ring-offset-background data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+      className,
+    )}
+    {...props}
+  >
+    <CheckboxPrimitive.Indicator className={cn("flex items-center justify-center text-current")}>
+      <Check className="h-4 w-4" />
+    </CheckboxPrimitive.Indicator>
+  </CheckboxPrimitive.Root>
+));
+Checkbox.displayName = CheckboxPrimitive.Root.displayName;
+
+export { Checkbox };
+
+```
+
+
+---
+
+## ARQUIVO: `src\components\ui\collapsible.tsx`
+**Linhas:** 10
+
+```typescript
+import * as CollapsiblePrimitive from "@radix-ui/react-collapsible";
+
+const Collapsible = CollapsiblePrimitive.Root;
+
+const CollapsibleTrigger = CollapsiblePrimitive.CollapsibleTrigger;
+
+const CollapsibleContent = CollapsiblePrimitive.CollapsibleContent;
+
+export { Collapsible, CollapsibleTrigger, CollapsibleContent };
+
+```
+
+
+---
+
+## ARQUIVO: `src\components\ui\command.tsx`
+**Linhas:** 133
+
+```typescript
+import * as React from "react";
+import { type DialogProps } from "@radix-ui/react-dialog";
+import { Command as CommandPrimitive } from "cmdk";
+import { Search } from "lucide-react";
+
+import { cn } from "@/lib/utils";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+
+const Command = React.forwardRef<
+  React.ElementRef<typeof CommandPrimitive>,
+  React.ComponentPropsWithoutRef<typeof CommandPrimitive>
+>(({ className, ...props }, ref) => (
+  <CommandPrimitive
+    ref={ref}
+    className={cn(
+      "flex h-full w-full flex-col overflow-hidden rounded-md bg-popover text-popover-foreground",
+      className,
+    )}
+    {...props}
+  />
+));
+Command.displayName = CommandPrimitive.displayName;
+
+interface CommandDialogProps extends DialogProps {}
+
+const CommandDialog = ({ children, ...props }: CommandDialogProps) => {
+  return (
+    <Dialog {...props}>
+      <DialogContent className="overflow-hidden p-0 shadow-lg">
+        <Command className="[&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-muted-foreground [&_[cmdk-group]:not([hidden])_~[cmdk-group]]:pt-0 [&_[cmdk-group]]:px-2 [&_[cmdk-input-wrapper]_svg]:h-5 [&_[cmdk-input-wrapper]_svg]:w-5 [&_[cmdk-input]]:h-12 [&_[cmdk-item]]:px-2 [&_[cmdk-item]]:py-3 [&_[cmdk-item]_svg]:h-5 [&_[cmdk-item]_svg]:w-5">
+          {children}
+        </Command>
+      </DialogContent>
+    </Dialog>
+  );
+};
+
+const CommandInput = React.forwardRef<
+  React.ElementRef<typeof CommandPrimitive.Input>,
+  React.ComponentPropsWithoutRef<typeof CommandPrimitive.Input>
+>(({ className, ...props }, ref) => (
+  <div className="flex items-center border-b px-3" cmdk-input-wrapper="">
+    <Search className="mr-2 h-4 w-4 shrink-0 opacity-50" />
+    <CommandPrimitive.Input
+      ref={ref}
+      className={cn(
+        "flex h-11 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50",
+        className,
+      )}
+      {...props}
+    />
+  </div>
+));
+
+CommandInput.displayName = CommandPrimitive.Input.displayName;
+
+const CommandList = React.forwardRef<
+  React.ElementRef<typeof CommandPrimitive.List>,
+  React.ComponentPropsWithoutRef<typeof CommandPrimitive.List>
+>(({ className, ...props }, ref) => (
+  <CommandPrimitive.List
+    ref={ref}
+    className={cn("max-h-[300px] overflow-y-auto overflow-x-hidden", className)}
+    {...props}
+  />
+));
+
+CommandList.displayName = CommandPrimitive.List.displayName;
+
+const CommandEmpty = React.forwardRef<
+  React.ElementRef<typeof CommandPrimitive.Empty>,
+  React.ComponentPropsWithoutRef<typeof CommandPrimitive.Empty>
+>((props, ref) => <CommandPrimitive.Empty ref={ref} className="py-6 text-center text-sm" {...props} />);
+
+CommandEmpty.displayName = CommandPrimitive.Empty.displayName;
+
+const CommandGroup = React.forwardRef<
+  React.ElementRef<typeof CommandPrimitive.Group>,
+  React.ComponentPropsWithoutRef<typeof CommandPrimitive.Group>
+>(({ className, ...props }, ref) => (
+  <CommandPrimitive.Group
+    ref={ref}
+    className={cn(
+      "overflow-hidden p-1 text-foreground [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-muted-foreground",
+      className,
+    )}
+    {...props}
+  />
+));
+
+CommandGroup.displayName = CommandPrimitive.Group.displayName;
+
+const CommandSeparator = React.forwardRef<
+  React.ElementRef<typeof CommandPrimitive.Separator>,
+  React.ComponentPropsWithoutRef<typeof CommandPrimitive.Separator>
+>(({ className, ...props }, ref) => (
+  <CommandPrimitive.Separator ref={ref} className={cn("-mx-1 h-px bg-border", className)} {...props} />
+));
+CommandSeparator.displayName = CommandPrimitive.Separator.displayName;
+
+const CommandItem = React.forwardRef<
+  React.ElementRef<typeof CommandPrimitive.Item>,
+  React.ComponentPropsWithoutRef<typeof CommandPrimitive.Item>
+>(({ className, ...props }, ref) => (
+  <CommandPrimitive.Item
+    ref={ref}
+    className={cn(
+      "relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none data-[disabled=true]:pointer-events-none data-[selected='true']:bg-accent data-[selected=true]:text-accent-foreground data-[disabled=true]:opacity-50",
+      className,
+    )}
+    {...props}
+  />
+));
+
+CommandItem.displayName = CommandPrimitive.Item.displayName;
+
+const CommandShortcut = ({ className, ...props }: React.HTMLAttributes<HTMLSpanElement>) => {
+  return <span className={cn("ml-auto text-xs tracking-widest text-muted-foreground", className)} {...props} />;
+};
+CommandShortcut.displayName = "CommandShortcut";
+
+export {
+  Command,
+  CommandDialog,
+  CommandInput,
+  CommandList,
+  CommandEmpty,
+  CommandGroup,
+  CommandItem,
+  CommandShortcut,
+  CommandSeparator,
+};
+
+```
+
+
+---
+
+## ARQUIVO: `src\components\ui\context-menu.tsx`
+**Linhas:** 179
+
+```typescript
+import * as React from "react";
+import * as ContextMenuPrimitive from "@radix-ui/react-context-menu";
+import { Check, ChevronRight, Circle } from "lucide-react";
+
+import { cn } from "@/lib/utils";
+
+const ContextMenu = ContextMenuPrimitive.Root;
+
+const ContextMenuTrigger = ContextMenuPrimitive.Trigger;
+
+const ContextMenuGroup = ContextMenuPrimitive.Group;
+
+const ContextMenuPortal = ContextMenuPrimitive.Portal;
+
+const ContextMenuSub = ContextMenuPrimitive.Sub;
+
+const ContextMenuRadioGroup = ContextMenuPrimitive.RadioGroup;
+
+const ContextMenuSubTrigger = React.forwardRef<
+  React.ElementRef<typeof ContextMenuPrimitive.SubTrigger>,
+  React.ComponentPropsWithoutRef<typeof ContextMenuPrimitive.SubTrigger> & {
+    inset?: boolean;
+  }
+>(({ className, inset, children, ...props }, ref) => (
+  <ContextMenuPrimitive.SubTrigger
+    ref={ref}
+    className={cn(
+      "flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none data-[state=open]:bg-accent data-[state=open]:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
+      inset && "pl-8",
+      className,
+    )}
+    {...props}
+  >
+    {children}
+    <ChevronRight className="ml-auto h-4 w-4" />
+  </ContextMenuPrimitive.SubTrigger>
+));
+ContextMenuSubTrigger.displayName = ContextMenuPrimitive.SubTrigger.displayName;
+
+const ContextMenuSubContent = React.forwardRef<
+  React.ElementRef<typeof ContextMenuPrimitive.SubContent>,
+  React.ComponentPropsWithoutRef<typeof ContextMenuPrimitive.SubContent>
+>(({ className, ...props }, ref) => (
+  <ContextMenuPrimitive.SubContent
+    ref={ref}
+    className={cn(
+      "z-50 min-w-[8rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
+      className,
+    )}
+    {...props}
+  />
+));
+ContextMenuSubContent.displayName = ContextMenuPrimitive.SubContent.displayName;
+
+const ContextMenuContent = React.forwardRef<
+  React.ElementRef<typeof ContextMenuPrimitive.Content>,
+  React.ComponentPropsWithoutRef<typeof ContextMenuPrimitive.Content>
+>(({ className, ...props }, ref) => (
+  <ContextMenuPrimitive.Portal>
+    <ContextMenuPrimitive.Content
+      ref={ref}
+      className={cn(
+        "z-50 min-w-[8rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md animate-in fade-in-80 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
+        className,
+      )}
+      {...props}
+    />
+  </ContextMenuPrimitive.Portal>
+));
+ContextMenuContent.displayName = ContextMenuPrimitive.Content.displayName;
+
+const ContextMenuItem = React.forwardRef<
+  React.ElementRef<typeof ContextMenuPrimitive.Item>,
+  React.ComponentPropsWithoutRef<typeof ContextMenuPrimitive.Item> & {
+    inset?: boolean;
+  }
+>(({ className, inset, ...props }, ref) => (
+  <ContextMenuPrimitive.Item
+    ref={ref}
+    className={cn(
+      "relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 focus:bg-accent focus:text-accent-foreground",
+      inset && "pl-8",
+      className,
+    )}
+    {...props}
+  />
+));
+ContextMenuItem.displayName = ContextMenuPrimitive.Item.displayName;
+
+const ContextMenuCheckboxItem = React.forwardRef<
+  React.ElementRef<typeof ContextMenuPrimitive.CheckboxItem>,
+  React.ComponentPropsWithoutRef<typeof ContextMenuPrimitive.CheckboxItem>
+>(({ className, children, checked, ...props }, ref) => (
+  <ContextMenuPrimitive.CheckboxItem
+    ref={ref}
+    className={cn(
+      "relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 focus:bg-accent focus:text-accent-foreground",
+      className,
+    )}
+    checked={checked}
+    {...props}
+  >
+    <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
+      <ContextMenuPrimitive.ItemIndicator>
+        <Check className="h-4 w-4" />
+      </ContextMenuPrimitive.ItemIndicator>
+    </span>
+    {children}
+  </ContextMenuPrimitive.CheckboxItem>
+));
+ContextMenuCheckboxItem.displayName = ContextMenuPrimitive.CheckboxItem.displayName;
+
+const ContextMenuRadioItem = React.forwardRef<
+  React.ElementRef<typeof ContextMenuPrimitive.RadioItem>,
+  React.ComponentPropsWithoutRef<typeof ContextMenuPrimitive.RadioItem>
+>(({ className, children, ...props }, ref) => (
+  <ContextMenuPrimitive.RadioItem
+    ref={ref}
+    className={cn(
+      "relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 focus:bg-accent focus:text-accent-foreground",
+      className,
+    )}
+    {...props}
+  >
+    <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
+      <ContextMenuPrimitive.ItemIndicator>
+        <Circle className="h-2 w-2 fill-current" />
+      </ContextMenuPrimitive.ItemIndicator>
+    </span>
+    {children}
+  </ContextMenuPrimitive.RadioItem>
+));
+ContextMenuRadioItem.displayName = ContextMenuPrimitive.RadioItem.displayName;
+
+const ContextMenuLabel = React.forwardRef<
+  React.ElementRef<typeof ContextMenuPrimitive.Label>,
+  React.ComponentPropsWithoutRef<typeof ContextMenuPrimitive.Label> & {
+    inset?: boolean;
+  }
+>(({ className, inset, ...props }, ref) => (
+  <ContextMenuPrimitive.Label
+    ref={ref}
+    className={cn("px-2 py-1.5 text-sm font-semibold text-foreground", inset && "pl-8", className)}
+    {...props}
+  />
+));
+ContextMenuLabel.displayName = ContextMenuPrimitive.Label.displayName;
+
+const ContextMenuSeparator = React.forwardRef<
+  React.ElementRef<typeof ContextMenuPrimitive.Separator>,
+  React.ComponentPropsWithoutRef<typeof ContextMenuPrimitive.Separator>
+>(({ className, ...props }, ref) => (
+  <ContextMenuPrimitive.Separator ref={ref} className={cn("-mx-1 my-1 h-px bg-border", className)} {...props} />
+));
+ContextMenuSeparator.displayName = ContextMenuPrimitive.Separator.displayName;
+
+const ContextMenuShortcut = ({ className, ...props }: React.HTMLAttributes<HTMLSpanElement>) => {
+  return <span className={cn("ml-auto text-xs tracking-widest text-muted-foreground", className)} {...props} />;
+};
+ContextMenuShortcut.displayName = "ContextMenuShortcut";
+
+export {
+  ContextMenu,
+  ContextMenuTrigger,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuCheckboxItem,
+  ContextMenuRadioItem,
+  ContextMenuLabel,
+  ContextMenuSeparator,
+  ContextMenuShortcut,
+  ContextMenuGroup,
+  ContextMenuPortal,
+  ContextMenuSub,
+  ContextMenuSubContent,
+  ContextMenuSubTrigger,
+  ContextMenuRadioGroup,
+};
+
+```
+
+
+---
+
+## ARQUIVO: `src\components\ui\dialog.tsx`
+**Linhas:** 96
+
+```typescript
+import * as React from "react";
+import * as DialogPrimitive from "@radix-ui/react-dialog";
+import { X } from "lucide-react";
+
+import { cn } from "@/lib/utils";
+
+const Dialog = DialogPrimitive.Root;
+
+const DialogTrigger = DialogPrimitive.Trigger;
+
+const DialogPortal = DialogPrimitive.Portal;
+
+const DialogClose = DialogPrimitive.Close;
+
+const DialogOverlay = React.forwardRef<
+  React.ElementRef<typeof DialogPrimitive.Overlay>,
+  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>
+>(({ className, ...props }, ref) => (
+  <DialogPrimitive.Overlay
+    ref={ref}
+    className={cn(
+      "fixed inset-0 z-50 bg-black/80 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
+      className,
+    )}
+    {...props}
+  />
+));
+DialogOverlay.displayName = DialogPrimitive.Overlay.displayName;
+
+const DialogContent = React.forwardRef<
+  React.ElementRef<typeof DialogPrimitive.Content>,
+  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>
+>(({ className, children, ...props }, ref) => (
+  <DialogPortal>
+    <DialogOverlay />
+    <DialogPrimitive.Content
+      ref={ref}
+      className={cn(
+        "fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg",
+        className,
+      )}
+      {...props}
+    >
+      {children}
+      <DialogPrimitive.Close className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity data-[state=open]:bg-accent data-[state=open]:text-muted-foreground hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none">
+        <X className="h-4 w-4" />
+        <span className="sr-only">Close</span>
+      </DialogPrimitive.Close>
+    </DialogPrimitive.Content>
+  </DialogPortal>
+));
+DialogContent.displayName = DialogPrimitive.Content.displayName;
+
+const DialogHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
+  <div className={cn("flex flex-col space-y-1.5 text-center sm:text-left", className)} {...props} />
+);
+DialogHeader.displayName = "DialogHeader";
+
+const DialogFooter = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
+  <div className={cn("flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2", className)} {...props} />
+);
+DialogFooter.displayName = "DialogFooter";
+
+const DialogTitle = React.forwardRef<
+  React.ElementRef<typeof DialogPrimitive.Title>,
+  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Title>
+>(({ className, ...props }, ref) => (
+  <DialogPrimitive.Title
+    ref={ref}
+    className={cn("text-lg font-semibold leading-none tracking-tight", className)}
+    {...props}
+  />
+));
+DialogTitle.displayName = DialogPrimitive.Title.displayName;
+
+const DialogDescription = React.forwardRef<
+  React.ElementRef<typeof DialogPrimitive.Description>,
+  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Description>
+>(({ className, ...props }, ref) => (
+  <DialogPrimitive.Description ref={ref} className={cn("text-sm text-muted-foreground", className)} {...props} />
+));
+DialogDescription.displayName = DialogPrimitive.Description.displayName;
+
+export {
+  Dialog,
+  DialogPortal,
+  DialogOverlay,
+  DialogClose,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogFooter,
+  DialogTitle,
+  DialogDescription,
+};
+
+```
+
+
+---
+
+## ARQUIVO: `src\components\ui\drawer.tsx`
+**Linhas:** 88
+
+```typescript
+import * as React from "react";
+import { Drawer as DrawerPrimitive } from "vaul";
+
+import { cn } from "@/lib/utils";
+
+const Drawer = ({ shouldScaleBackground = true, ...props }: React.ComponentProps<typeof DrawerPrimitive.Root>) => (
+  <DrawerPrimitive.Root shouldScaleBackground={shouldScaleBackground} {...props} />
+);
+Drawer.displayName = "Drawer";
+
+const DrawerTrigger = DrawerPrimitive.Trigger;
+
+const DrawerPortal = DrawerPrimitive.Portal;
+
+const DrawerClose = DrawerPrimitive.Close;
+
+const DrawerOverlay = React.forwardRef<
+  React.ElementRef<typeof DrawerPrimitive.Overlay>,
+  React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Overlay>
+>(({ className, ...props }, ref) => (
+  <DrawerPrimitive.Overlay ref={ref} className={cn("fixed inset-0 z-50 bg-black/80", className)} {...props} />
+));
+DrawerOverlay.displayName = DrawerPrimitive.Overlay.displayName;
+
+const DrawerContent = React.forwardRef<
+  React.ElementRef<typeof DrawerPrimitive.Content>,
+  React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Content>
+>(({ className, children, ...props }, ref) => (
+  <DrawerPortal>
+    <DrawerOverlay />
+    <DrawerPrimitive.Content
+      ref={ref}
+      className={cn(
+        "fixed inset-x-0 bottom-0 z-50 mt-24 flex h-auto flex-col rounded-t-[10px] border bg-background",
+        className,
+      )}
+      {...props}
+    >
+      <div className="mx-auto mt-4 h-2 w-[100px] rounded-full bg-muted" />
+      {children}
+    </DrawerPrimitive.Content>
+  </DrawerPortal>
+));
+DrawerContent.displayName = "DrawerContent";
+
+const DrawerHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
+  <div className={cn("grid gap-1.5 p-4 text-center sm:text-left", className)} {...props} />
+);
+DrawerHeader.displayName = "DrawerHeader";
+
+const DrawerFooter = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
+  <div className={cn("mt-auto flex flex-col gap-2 p-4", className)} {...props} />
+);
+DrawerFooter.displayName = "DrawerFooter";
+
+const DrawerTitle = React.forwardRef<
+  React.ElementRef<typeof DrawerPrimitive.Title>,
+  React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Title>
+>(({ className, ...props }, ref) => (
+  <DrawerPrimitive.Title
+    ref={ref}
+    className={cn("text-lg font-semibold leading-none tracking-tight", className)}
+    {...props}
+  />
+));
+DrawerTitle.displayName = DrawerPrimitive.Title.displayName;
+
+const DrawerDescription = React.forwardRef<
+  React.ElementRef<typeof DrawerPrimitive.Description>,
+  React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Description>
+>(({ className, ...props }, ref) => (
+  <DrawerPrimitive.Description ref={ref} className={cn("text-sm text-muted-foreground", className)} {...props} />
+));
+DrawerDescription.displayName = DrawerPrimitive.Description.displayName;
+
+export {
+  Drawer,
+  DrawerPortal,
+  DrawerOverlay,
+  DrawerTrigger,
+  DrawerClose,
+  DrawerContent,
+  DrawerHeader,
+  DrawerFooter,
+  DrawerTitle,
+  DrawerDescription,
+};
+
+```
+
+
+---
+
+## ARQUIVO: `src\components\ui\dropdown-menu.tsx`
+**Linhas:** 180
+
+```typescript
+import * as React from "react";
+import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
+import { Check, ChevronRight, Circle } from "lucide-react";
+
+import { cn } from "@/lib/utils";
+
+const DropdownMenu = DropdownMenuPrimitive.Root;
+
+const DropdownMenuTrigger = DropdownMenuPrimitive.Trigger;
+
+const DropdownMenuGroup = DropdownMenuPrimitive.Group;
+
+const DropdownMenuPortal = DropdownMenuPrimitive.Portal;
+
+const DropdownMenuSub = DropdownMenuPrimitive.Sub;
+
+const DropdownMenuRadioGroup = DropdownMenuPrimitive.RadioGroup;
+
+const DropdownMenuSubTrigger = React.forwardRef<
+  React.ElementRef<typeof DropdownMenuPrimitive.SubTrigger>,
+  React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.SubTrigger> & {
+    inset?: boolean;
+  }
+>(({ className, inset, children, ...props }, ref) => (
+  <DropdownMenuPrimitive.SubTrigger
+    ref={ref}
+    className={cn(
+      "flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none data-[state=open]:bg-accent focus:bg-accent",
+      inset && "pl-8",
+      className,
+    )}
+    {...props}
+  >
+    {children}
+    <ChevronRight className="ml-auto h-4 w-4" />
+  </DropdownMenuPrimitive.SubTrigger>
+));
+DropdownMenuSubTrigger.displayName = DropdownMenuPrimitive.SubTrigger.displayName;
+
+const DropdownMenuSubContent = React.forwardRef<
+  React.ElementRef<typeof DropdownMenuPrimitive.SubContent>,
+  React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.SubContent>
+>(({ className, ...props }, ref) => (
+  <DropdownMenuPrimitive.SubContent
+    ref={ref}
+    className={cn(
+      "z-50 min-w-[8rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-lg data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
+      className,
+    )}
+    {...props}
+  />
+));
+DropdownMenuSubContent.displayName = DropdownMenuPrimitive.SubContent.displayName;
+
+const DropdownMenuContent = React.forwardRef<
+  React.ElementRef<typeof DropdownMenuPrimitive.Content>,
+  React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Content>
+>(({ className, sideOffset = 4, ...props }, ref) => (
+  <DropdownMenuPrimitive.Portal>
+    <DropdownMenuPrimitive.Content
+      ref={ref}
+      sideOffset={sideOffset}
+      className={cn(
+        "z-50 min-w-[8rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
+        className,
+      )}
+      {...props}
+    />
+  </DropdownMenuPrimitive.Portal>
+));
+DropdownMenuContent.displayName = DropdownMenuPrimitive.Content.displayName;
+
+const DropdownMenuItem = React.forwardRef<
+  React.ElementRef<typeof DropdownMenuPrimitive.Item>,
+  React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Item> & {
+    inset?: boolean;
+  }
+>(({ className, inset, ...props }, ref) => (
+  <DropdownMenuPrimitive.Item
+    ref={ref}
+    className={cn(
+      "relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors data-[disabled]:pointer-events-none data-[disabled]:opacity-50 focus:bg-accent focus:text-accent-foreground",
+      inset && "pl-8",
+      className,
+    )}
+    {...props}
+  />
+));
+DropdownMenuItem.displayName = DropdownMenuPrimitive.Item.displayName;
+
+const DropdownMenuCheckboxItem = React.forwardRef<
+  React.ElementRef<typeof DropdownMenuPrimitive.CheckboxItem>,
+  React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.CheckboxItem>
+>(({ className, children, checked, ...props }, ref) => (
+  <DropdownMenuPrimitive.CheckboxItem
+    ref={ref}
+    className={cn(
+      "relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none transition-colors data-[disabled]:pointer-events-none data-[disabled]:opacity-50 focus:bg-accent focus:text-accent-foreground",
+      className,
+    )}
+    checked={checked}
+    {...props}
+  >
+    <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
+      <DropdownMenuPrimitive.ItemIndicator>
+        <Check className="h-4 w-4" />
+      </DropdownMenuPrimitive.ItemIndicator>
+    </span>
+    {children}
+  </DropdownMenuPrimitive.CheckboxItem>
+));
+DropdownMenuCheckboxItem.displayName = DropdownMenuPrimitive.CheckboxItem.displayName;
+
+const DropdownMenuRadioItem = React.forwardRef<
+  React.ElementRef<typeof DropdownMenuPrimitive.RadioItem>,
+  React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.RadioItem>
+>(({ className, children, ...props }, ref) => (
+  <DropdownMenuPrimitive.RadioItem
+    ref={ref}
+    className={cn(
+      "relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none transition-colors data-[disabled]:pointer-events-none data-[disabled]:opacity-50 focus:bg-accent focus:text-accent-foreground",
+      className,
+    )}
+    {...props}
+  >
+    <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
+      <DropdownMenuPrimitive.ItemIndicator>
+        <Circle className="h-2 w-2 fill-current" />
+      </DropdownMenuPrimitive.ItemIndicator>
+    </span>
+    {children}
+  </DropdownMenuPrimitive.RadioItem>
+));
+DropdownMenuRadioItem.displayName = DropdownMenuPrimitive.RadioItem.displayName;
+
+const DropdownMenuLabel = React.forwardRef<
+  React.ElementRef<typeof DropdownMenuPrimitive.Label>,
+  React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Label> & {
+    inset?: boolean;
+  }
+>(({ className, inset, ...props }, ref) => (
+  <DropdownMenuPrimitive.Label
+    ref={ref}
+    className={cn("px-2 py-1.5 text-sm font-semibold", inset && "pl-8", className)}
+    {...props}
+  />
+));
+DropdownMenuLabel.displayName = DropdownMenuPrimitive.Label.displayName;
+
+const DropdownMenuSeparator = React.forwardRef<
+  React.ElementRef<typeof DropdownMenuPrimitive.Separator>,
+  React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Separator>
+>(({ className, ...props }, ref) => (
+  <DropdownMenuPrimitive.Separator ref={ref} className={cn("-mx-1 my-1 h-px bg-muted", className)} {...props} />
+));
+DropdownMenuSeparator.displayName = DropdownMenuPrimitive.Separator.displayName;
+
+const DropdownMenuShortcut = ({ className, ...props }: React.HTMLAttributes<HTMLSpanElement>) => {
+  return <span className={cn("ml-auto text-xs tracking-widest opacity-60", className)} {...props} />;
+};
+DropdownMenuShortcut.displayName = "DropdownMenuShortcut";
+
+export {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuCheckboxItem,
+  DropdownMenuRadioItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuGroup,
+  DropdownMenuPortal,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuRadioGroup,
+};
+
+```
+
+
+---
+
+## ARQUIVO: `src\components\ui\form.tsx`
+**Linhas:** 130
+
+```typescript
+import * as React from "react";
+import * as LabelPrimitive from "@radix-ui/react-label";
+import { Slot } from "@radix-ui/react-slot";
+import { Controller, ControllerProps, FieldPath, FieldValues, FormProvider, useFormContext } from "react-hook-form";
+
+import { cn } from "@/lib/utils";
+import { Label } from "@/components/ui/label";
+
+const Form = FormProvider;
+
+type FormFieldContextValue<
+  TFieldValues extends FieldValues = FieldValues,
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
+> = {
+  name: TName;
+};
+
+const FormFieldContext = React.createContext<FormFieldContextValue>({} as FormFieldContextValue);
+
+const FormField = <
+  TFieldValues extends FieldValues = FieldValues,
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
+>({
+  ...props
+}: ControllerProps<TFieldValues, TName>) => {
+  return (
+    <FormFieldContext.Provider value={{ name: props.name }}>
+      <Controller {...props} />
+    </FormFieldContext.Provider>
+  );
+};
+
+const useFormField = () => {
+  const fieldContext = React.useContext(FormFieldContext);
+  const itemContext = React.useContext(FormItemContext);
+  const { getFieldState, formState } = useFormContext();
+
+  const fieldState = getFieldState(fieldContext.name, formState);
+
+  if (!fieldContext) {
+    throw new Error("useFormField should be used within <FormField>");
+  }
+
+  const { id } = itemContext;
+
+  return {
+    id,
+    name: fieldContext.name,
+    formItemId: `${id}-form-item`,
+    formDescriptionId: `${id}-form-item-description`,
+    formMessageId: `${id}-form-item-message`,
+    ...fieldState,
+  };
+};
+
+type FormItemContextValue = {
+  id: string;
+};
+
+const FormItemContext = React.createContext<FormItemContextValue>({} as FormItemContextValue);
+
+const FormItem = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
+  ({ className, ...props }, ref) => {
+    const id = React.useId();
+
+    return (
+      <FormItemContext.Provider value={{ id }}>
+        <div ref={ref} className={cn("space-y-2", className)} {...props} />
+      </FormItemContext.Provider>
+    );
+  },
+);
+FormItem.displayName = "FormItem";
+
+const FormLabel = React.forwardRef<
+  React.ElementRef<typeof LabelPrimitive.Root>,
+  React.ComponentPropsWithoutRef<typeof LabelPrimitive.Root>
+>(({ className, ...props }, ref) => {
+  const { error, formItemId } = useFormField();
+
+  return <Label ref={ref} className={cn(error && "text-destructive", className)} htmlFor={formItemId} {...props} />;
+});
+FormLabel.displayName = "FormLabel";
+
+const FormControl = React.forwardRef<React.ElementRef<typeof Slot>, React.ComponentPropsWithoutRef<typeof Slot>>(
+  ({ ...props }, ref) => {
+    const { error, formItemId, formDescriptionId, formMessageId } = useFormField();
+
+    return (
+      <Slot
+        ref={ref}
+        id={formItemId}
+        aria-describedby={!error ? `${formDescriptionId}` : `${formDescriptionId} ${formMessageId}`}
+        aria-invalid={!!error}
+        {...props}
+      />
+    );
+  },
+);
+FormControl.displayName = "FormControl";
+
+const FormDescription = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HTMLParagraphElement>>(
+  ({ className, ...props }, ref) => {
+    const { formDescriptionId } = useFormField();
+
+    return <p ref={ref} id={formDescriptionId} className={cn("text-sm text-muted-foreground", className)} {...props} />;
+  },
+);
+FormDescription.displayName = "FormDescription";
+
+const FormMessage = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HTMLParagraphElement>>(
+  ({ className, children, ...props }, ref) => {
+    const { error, formMessageId } = useFormField();
+    const body = error ? String(error?.message) : children;
+
+    if (!body) {
+      return null;
+    }
+
+    return (
+      <p ref={ref} id={formMessageId} className={cn("text-sm font-medium text-destructive", className)} {...props}>
+        {body}
+      </p>
+    );
+  },
+);
+FormMessage.displayName = "FormMessage";
+
+export { useFormField, Form, FormItem, FormLabel, FormControl, FormDescription, FormMessage, FormField };
+
+```
+
+
+---
+
+## ARQUIVO: `src\components\ui\hover-card.tsx`
+**Linhas:** 28
+
+```typescript
+import * as React from "react";
+import * as HoverCardPrimitive from "@radix-ui/react-hover-card";
+
+import { cn } from "@/lib/utils";
+
+const HoverCard = HoverCardPrimitive.Root;
+
+const HoverCardTrigger = HoverCardPrimitive.Trigger;
+
+const HoverCardContent = React.forwardRef<
+  React.ElementRef<typeof HoverCardPrimitive.Content>,
+  React.ComponentPropsWithoutRef<typeof HoverCardPrimitive.Content>
+>(({ className, align = "center", sideOffset = 4, ...props }, ref) => (
+  <HoverCardPrimitive.Content
+    ref={ref}
+    align={align}
+    sideOffset={sideOffset}
+    className={cn(
+      "z-50 w-64 rounded-md border bg-popover p-4 text-popover-foreground shadow-md outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
+      className,
+    )}
+    {...props}
+  />
+));
+HoverCardContent.displayName = HoverCardPrimitive.Content.displayName;
+
+export { HoverCard, HoverCardTrigger, HoverCardContent };
+
+```
+
+
+---
+
+## ARQUIVO: `src\components\ui\input-otp.tsx`
+**Linhas:** 62
+
+```typescript
+import * as React from "react";
+import { OTPInput, OTPInputContext } from "input-otp";
+import { Dot } from "lucide-react";
+
+import { cn } from "@/lib/utils";
+
+const InputOTP = React.forwardRef<React.ElementRef<typeof OTPInput>, React.ComponentPropsWithoutRef<typeof OTPInput>>(
+  ({ className, containerClassName, ...props }, ref) => (
+    <OTPInput
+      ref={ref}
+      containerClassName={cn("flex items-center gap-2 has-[:disabled]:opacity-50", containerClassName)}
+      className={cn("disabled:cursor-not-allowed", className)}
+      {...props}
+    />
+  ),
+);
+InputOTP.displayName = "InputOTP";
+
+const InputOTPGroup = React.forwardRef<React.ElementRef<"div">, React.ComponentPropsWithoutRef<"div">>(
+  ({ className, ...props }, ref) => <div ref={ref} className={cn("flex items-center", className)} {...props} />,
+);
+InputOTPGroup.displayName = "InputOTPGroup";
+
+const InputOTPSlot = React.forwardRef<
+  React.ElementRef<"div">,
+  React.ComponentPropsWithoutRef<"div"> & { index: number }
+>(({ index, className, ...props }, ref) => {
+  const inputOTPContext = React.useContext(OTPInputContext);
+  const { char, hasFakeCaret, isActive } = inputOTPContext.slots[index];
+
+  return (
+    <div
+      ref={ref}
+      className={cn(
+        "relative flex h-10 w-10 items-center justify-center border-y border-r border-input text-sm transition-all first:rounded-l-md first:border-l last:rounded-r-md",
+        isActive && "z-10 ring-2 ring-ring ring-offset-background",
+        className,
+      )}
+      {...props}
+    >
+      {char}
+      {hasFakeCaret && (
+        <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+          <div className="animate-caret-blink h-4 w-px bg-foreground duration-1000" />
+        </div>
+      )}
+    </div>
+  );
+});
+InputOTPSlot.displayName = "InputOTPSlot";
+
+const InputOTPSeparator = React.forwardRef<React.ElementRef<"div">, React.ComponentPropsWithoutRef<"div">>(
+  ({ ...props }, ref) => (
+    <div ref={ref} role="separator" {...props}>
+      <Dot />
+    </div>
+  ),
+);
+InputOTPSeparator.displayName = "InputOTPSeparator";
+
+export { InputOTP, InputOTPGroup, InputOTPSlot, InputOTPSeparator };
+
+```
+
+
+---
+
+## ARQUIVO: `src\components\ui\input.tsx`
+**Linhas:** 23
+
+```typescript
+import * as React from "react";
+
+import { cn } from "@/lib/utils";
+
+const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
+  ({ className, type, ...props }, ref) => {
+    return (
+      <input
+        type={type}
+        className={cn(
+          "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
+          className,
+        )}
+        ref={ref}
+        {...props}
+      />
+    );
+  },
+);
+Input.displayName = "Input";
+
+export { Input };
+
+```
+
+
+---
+
+## ARQUIVO: `src\components\ui\label.tsx`
+**Linhas:** 18
+
+```typescript
+import * as React from "react";
+import * as LabelPrimitive from "@radix-ui/react-label";
+import { cva, type VariantProps } from "class-variance-authority";
+
+import { cn } from "@/lib/utils";
+
+const labelVariants = cva("text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70");
+
+const Label = React.forwardRef<
+  React.ElementRef<typeof LabelPrimitive.Root>,
+  React.ComponentPropsWithoutRef<typeof LabelPrimitive.Root> & VariantProps<typeof labelVariants>
+>(({ className, ...props }, ref) => (
+  <LabelPrimitive.Root ref={ref} className={cn(labelVariants(), className)} {...props} />
+));
+Label.displayName = LabelPrimitive.Root.displayName;
+
+export { Label };
+
+```
+
+
+---
+
+## ARQUIVO: `src\components\ui\menubar.tsx`
+**Linhas:** 208
+
+```typescript
+import * as React from "react";
+import * as MenubarPrimitive from "@radix-ui/react-menubar";
+import { Check, ChevronRight, Circle } from "lucide-react";
+
+import { cn } from "@/lib/utils";
+
+const MenubarMenu = MenubarPrimitive.Menu;
+
+const MenubarGroup = MenubarPrimitive.Group;
+
+const MenubarPortal = MenubarPrimitive.Portal;
+
+const MenubarSub = MenubarPrimitive.Sub;
+
+const MenubarRadioGroup = MenubarPrimitive.RadioGroup;
+
+const Menubar = React.forwardRef<
+  React.ElementRef<typeof MenubarPrimitive.Root>,
+  React.ComponentPropsWithoutRef<typeof MenubarPrimitive.Root>
+>(({ className, ...props }, ref) => (
+  <MenubarPrimitive.Root
+    ref={ref}
+    className={cn("flex h-10 items-center space-x-1 rounded-md border bg-background p-1", className)}
+    {...props}
+  />
+));
+Menubar.displayName = MenubarPrimitive.Root.displayName;
+
+const MenubarTrigger = React.forwardRef<
+  React.ElementRef<typeof MenubarPrimitive.Trigger>,
+  React.ComponentPropsWithoutRef<typeof MenubarPrimitive.Trigger>
+>(({ className, ...props }, ref) => (
+  <MenubarPrimitive.Trigger
+    ref={ref}
+    className={cn(
+      "flex cursor-default select-none items-center rounded-sm px-3 py-1.5 text-sm font-medium outline-none data-[state=open]:bg-accent data-[state=open]:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
+      className,
+    )}
+    {...props}
+  />
+));
+MenubarTrigger.displayName = MenubarPrimitive.Trigger.displayName;
+
+const MenubarSubTrigger = React.forwardRef<
+  React.ElementRef<typeof MenubarPrimitive.SubTrigger>,
+  React.ComponentPropsWithoutRef<typeof MenubarPrimitive.SubTrigger> & {
+    inset?: boolean;
+  }
+>(({ className, inset, children, ...props }, ref) => (
+  <MenubarPrimitive.SubTrigger
+    ref={ref}
+    className={cn(
+      "flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none data-[state=open]:bg-accent data-[state=open]:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
+      inset && "pl-8",
+      className,
+    )}
+    {...props}
+  >
+    {children}
+    <ChevronRight className="ml-auto h-4 w-4" />
+  </MenubarPrimitive.SubTrigger>
+));
+MenubarSubTrigger.displayName = MenubarPrimitive.SubTrigger.displayName;
+
+const MenubarSubContent = React.forwardRef<
+  React.ElementRef<typeof MenubarPrimitive.SubContent>,
+  React.ComponentPropsWithoutRef<typeof MenubarPrimitive.SubContent>
+>(({ className, ...props }, ref) => (
+  <MenubarPrimitive.SubContent
+    ref={ref}
+    className={cn(
+      "z-50 min-w-[8rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
+      className,
+    )}
+    {...props}
+  />
+));
+MenubarSubContent.displayName = MenubarPrimitive.SubContent.displayName;
+
+const MenubarContent = React.forwardRef<
+  React.ElementRef<typeof MenubarPrimitive.Content>,
+  React.ComponentPropsWithoutRef<typeof MenubarPrimitive.Content>
+>(({ className, align = "start", alignOffset = -4, sideOffset = 8, ...props }, ref) => (
+  <MenubarPrimitive.Portal>
+    <MenubarPrimitive.Content
+      ref={ref}
+      align={align}
+      alignOffset={alignOffset}
+      sideOffset={sideOffset}
+      className={cn(
+        "z-50 min-w-[12rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md data-[state=open]:animate-in data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
+        className,
+      )}
+      {...props}
+    />
+  </MenubarPrimitive.Portal>
+));
+MenubarContent.displayName = MenubarPrimitive.Content.displayName;
+
+const MenubarItem = React.forwardRef<
+  React.ElementRef<typeof MenubarPrimitive.Item>,
+  React.ComponentPropsWithoutRef<typeof MenubarPrimitive.Item> & {
+    inset?: boolean;
+  }
+>(({ className, inset, ...props }, ref) => (
+  <MenubarPrimitive.Item
+    ref={ref}
+    className={cn(
+      "relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 focus:bg-accent focus:text-accent-foreground",
+      inset && "pl-8",
+      className,
+    )}
+    {...props}
+  />
+));
+MenubarItem.displayName = MenubarPrimitive.Item.displayName;
+
+const MenubarCheckboxItem = React.forwardRef<
+  React.ElementRef<typeof MenubarPrimitive.CheckboxItem>,
+  React.ComponentPropsWithoutRef<typeof MenubarPrimitive.CheckboxItem>
+>(({ className, children, checked, ...props }, ref) => (
+  <MenubarPrimitive.CheckboxItem
+    ref={ref}
+    className={cn(
+      "relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 focus:bg-accent focus:text-accent-foreground",
+      className,
+    )}
+    checked={checked}
+    {...props}
+  >
+    <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
+      <MenubarPrimitive.ItemIndicator>
+        <Check className="h-4 w-4" />
+      </MenubarPrimitive.ItemIndicator>
+    </span>
+    {children}
+  </MenubarPrimitive.CheckboxItem>
+));
+MenubarCheckboxItem.displayName = MenubarPrimitive.CheckboxItem.displayName;
+
+const MenubarRadioItem = React.forwardRef<
+  React.ElementRef<typeof MenubarPrimitive.RadioItem>,
+  React.ComponentPropsWithoutRef<typeof MenubarPrimitive.RadioItem>
+>(({ className, children, ...props }, ref) => (
+  <MenubarPrimitive.RadioItem
+    ref={ref}
+    className={cn(
+      "relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 focus:bg-accent focus:text-accent-foreground",
+      className,
+    )}
+    {...props}
+  >
+    <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
+      <MenubarPrimitive.ItemIndicator>
+        <Circle className="h-2 w-2 fill-current" />
+      </MenubarPrimitive.ItemIndicator>
+    </span>
+    {children}
+  </MenubarPrimitive.RadioItem>
+));
+MenubarRadioItem.displayName = MenubarPrimitive.RadioItem.displayName;
+
+const MenubarLabel = React.forwardRef<
+  React.ElementRef<typeof MenubarPrimitive.Label>,
+  React.ComponentPropsWithoutRef<typeof MenubarPrimitive.Label> & {
+    inset?: boolean;
+  }
+>(({ className, inset, ...props }, ref) => (
+  <MenubarPrimitive.Label
+    ref={ref}
+    className={cn("px-2 py-1.5 text-sm font-semibold", inset && "pl-8", className)}
+    {...props}
+  />
+));
+MenubarLabel.displayName = MenubarPrimitive.Label.displayName;
+
+const MenubarSeparator = React.forwardRef<
+  React.ElementRef<typeof MenubarPrimitive.Separator>,
+  React.ComponentPropsWithoutRef<typeof MenubarPrimitive.Separator>
+>(({ className, ...props }, ref) => (
+  <MenubarPrimitive.Separator ref={ref} className={cn("-mx-1 my-1 h-px bg-muted", className)} {...props} />
+));
+MenubarSeparator.displayName = MenubarPrimitive.Separator.displayName;
+
+const MenubarShortcut = ({ className, ...props }: React.HTMLAttributes<HTMLSpanElement>) => {
+  return <span className={cn("ml-auto text-xs tracking-widest text-muted-foreground", className)} {...props} />;
+};
+MenubarShortcut.displayname = "MenubarShortcut";
+
+export {
+  Menubar,
+  MenubarMenu,
+  MenubarTrigger,
+  MenubarContent,
+  MenubarItem,
+  MenubarSeparator,
+  MenubarLabel,
+  MenubarCheckboxItem,
+  MenubarRadioGroup,
+  MenubarRadioItem,
+  MenubarPortal,
+  MenubarSubContent,
+  MenubarSubTrigger,
+  MenubarGroup,
+  MenubarSub,
+  MenubarShortcut,
+};
+
+```
+
+
+---
+
+## ARQUIVO: `src\components\ui\navigation-menu.tsx`
+**Linhas:** 121
+
+```typescript
+import * as React from "react";
+import * as NavigationMenuPrimitive from "@radix-ui/react-navigation-menu";
+import { cva } from "class-variance-authority";
+import { ChevronDown } from "lucide-react";
+
+import { cn } from "@/lib/utils";
+
+const NavigationMenu = React.forwardRef<
+  React.ElementRef<typeof NavigationMenuPrimitive.Root>,
+  React.ComponentPropsWithoutRef<typeof NavigationMenuPrimitive.Root>
+>(({ className, children, ...props }, ref) => (
+  <NavigationMenuPrimitive.Root
+    ref={ref}
+    className={cn("relative z-10 flex max-w-max flex-1 items-center justify-center", className)}
+    {...props}
+  >
+    {children}
+    <NavigationMenuViewport />
+  </NavigationMenuPrimitive.Root>
+));
+NavigationMenu.displayName = NavigationMenuPrimitive.Root.displayName;
+
+const NavigationMenuList = React.forwardRef<
+  React.ElementRef<typeof NavigationMenuPrimitive.List>,
+  React.ComponentPropsWithoutRef<typeof NavigationMenuPrimitive.List>
+>(({ className, ...props }, ref) => (
+  <NavigationMenuPrimitive.List
+    ref={ref}
+    className={cn("group flex flex-1 list-none items-center justify-center space-x-1", className)}
+    {...props}
+  />
+));
+NavigationMenuList.displayName = NavigationMenuPrimitive.List.displayName;
+
+const NavigationMenuItem = NavigationMenuPrimitive.Item;
+
+const navigationMenuTriggerStyle = cva(
+  "group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50",
+);
+
+const NavigationMenuTrigger = React.forwardRef<
+  React.ElementRef<typeof NavigationMenuPrimitive.Trigger>,
+  React.ComponentPropsWithoutRef<typeof NavigationMenuPrimitive.Trigger>
+>(({ className, children, ...props }, ref) => (
+  <NavigationMenuPrimitive.Trigger
+    ref={ref}
+    className={cn(navigationMenuTriggerStyle(), "group", className)}
+    {...props}
+  >
+    {children}{" "}
+    <ChevronDown
+      className="relative top-[1px] ml-1 h-3 w-3 transition duration-200 group-data-[state=open]:rotate-180"
+      aria-hidden="true"
+    />
+  </NavigationMenuPrimitive.Trigger>
+));
+NavigationMenuTrigger.displayName = NavigationMenuPrimitive.Trigger.displayName;
+
+const NavigationMenuContent = React.forwardRef<
+  React.ElementRef<typeof NavigationMenuPrimitive.Content>,
+  React.ComponentPropsWithoutRef<typeof NavigationMenuPrimitive.Content>
+>(({ className, ...props }, ref) => (
+  <NavigationMenuPrimitive.Content
+    ref={ref}
+    className={cn(
+      "left-0 top-0 w-full data-[motion^=from-]:animate-in data-[motion^=to-]:animate-out data-[motion^=from-]:fade-in data-[motion^=to-]:fade-out data-[motion=from-end]:slide-in-from-right-52 data-[motion=from-start]:slide-in-from-left-52 data-[motion=to-end]:slide-out-to-right-52 data-[motion=to-start]:slide-out-to-left-52 md:absolute md:w-auto",
+      className,
+    )}
+    {...props}
+  />
+));
+NavigationMenuContent.displayName = NavigationMenuPrimitive.Content.displayName;
+
+const NavigationMenuLink = NavigationMenuPrimitive.Link;
+
+const NavigationMenuViewport = React.forwardRef<
+  React.ElementRef<typeof NavigationMenuPrimitive.Viewport>,
+  React.ComponentPropsWithoutRef<typeof NavigationMenuPrimitive.Viewport>
+>(({ className, ...props }, ref) => (
+  <div className={cn("absolute left-0 top-full flex justify-center")}>
+    <NavigationMenuPrimitive.Viewport
+      className={cn(
+        "origin-top-center relative mt-1.5 h-[var(--radix-navigation-menu-viewport-height)] w-full overflow-hidden rounded-md border bg-popover text-popover-foreground shadow-lg data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-90 md:w-[var(--radix-navigation-menu-viewport-width)]",
+        className,
+      )}
+      ref={ref}
+      {...props}
+    />
+  </div>
+));
+NavigationMenuViewport.displayName = NavigationMenuPrimitive.Viewport.displayName;
+
+const NavigationMenuIndicator = React.forwardRef<
+  React.ElementRef<typeof NavigationMenuPrimitive.Indicator>,
+  React.ComponentPropsWithoutRef<typeof NavigationMenuPrimitive.Indicator>
+>(({ className, ...props }, ref) => (
+  <NavigationMenuPrimitive.Indicator
+    ref={ref}
+    className={cn(
+      "top-full z-[1] flex h-1.5 items-end justify-center overflow-hidden data-[state=visible]:animate-in data-[state=hidden]:animate-out data-[state=hidden]:fade-out data-[state=visible]:fade-in",
+      className,
+    )}
+    {...props}
+  >
+    <div className="relative top-[60%] h-2 w-2 rotate-45 rounded-tl-sm bg-border shadow-md" />
+  </NavigationMenuPrimitive.Indicator>
+));
+NavigationMenuIndicator.displayName = NavigationMenuPrimitive.Indicator.displayName;
+
+export {
+  navigationMenuTriggerStyle,
+  NavigationMenu,
+  NavigationMenuList,
+  NavigationMenuItem,
+  NavigationMenuContent,
+  NavigationMenuTrigger,
+  NavigationMenuLink,
+  NavigationMenuIndicator,
+  NavigationMenuViewport,
+};
+
+```
+
+
+---
+
+## ARQUIVO: `src\components\ui\pagination.tsx`
+**Linhas:** 82
+
+```typescript
+import * as React from "react";
+import { ChevronLeft, ChevronRight, MoreHorizontal } from "lucide-react";
+
+import { cn } from "@/lib/utils";
+import { ButtonProps, buttonVariants } from "@/components/ui/button";
+
+const Pagination = ({ className, ...props }: React.ComponentProps<"nav">) => (
+  <nav
+    role="navigation"
+    aria-label="pagination"
+    className={cn("mx-auto flex w-full justify-center", className)}
+    {...props}
+  />
+);
+Pagination.displayName = "Pagination";
+
+const PaginationContent = React.forwardRef<HTMLUListElement, React.ComponentProps<"ul">>(
+  ({ className, ...props }, ref) => (
+    <ul ref={ref} className={cn("flex flex-row items-center gap-1", className)} {...props} />
+  ),
+);
+PaginationContent.displayName = "PaginationContent";
+
+const PaginationItem = React.forwardRef<HTMLLIElement, React.ComponentProps<"li">>(({ className, ...props }, ref) => (
+  <li ref={ref} className={cn("", className)} {...props} />
+));
+PaginationItem.displayName = "PaginationItem";
+
+type PaginationLinkProps = {
+  isActive?: boolean;
+} & Pick<ButtonProps, "size"> &
+  React.ComponentProps<"a">;
+
+const PaginationLink = ({ className, isActive, size = "icon", ...props }: PaginationLinkProps) => (
+  <a
+    aria-current={isActive ? "page" : undefined}
+    className={cn(
+      buttonVariants({
+        variant: isActive ? "outline" : "ghost",
+        size,
+      }),
+      className,
+    )}
+    {...props}
+  />
+);
+PaginationLink.displayName = "PaginationLink";
+
+const PaginationPrevious = ({ className, ...props }: React.ComponentProps<typeof PaginationLink>) => (
+  <PaginationLink aria-label="Go to previous page" size="default" className={cn("gap-1 pl-2.5", className)} {...props}>
+    <ChevronLeft className="h-4 w-4" />
+    <span>Previous</span>
+  </PaginationLink>
+);
+PaginationPrevious.displayName = "PaginationPrevious";
+
+const PaginationNext = ({ className, ...props }: React.ComponentProps<typeof PaginationLink>) => (
+  <PaginationLink aria-label="Go to next page" size="default" className={cn("gap-1 pr-2.5", className)} {...props}>
+    <span>Next</span>
+    <ChevronRight className="h-4 w-4" />
+  </PaginationLink>
+);
+PaginationNext.displayName = "PaginationNext";
+
+const PaginationEllipsis = ({ className, ...props }: React.ComponentProps<"span">) => (
+  <span aria-hidden className={cn("flex h-9 w-9 items-center justify-center", className)} {...props}>
+    <MoreHorizontal className="h-4 w-4" />
+    <span className="sr-only">More pages</span>
+  </span>
+);
+PaginationEllipsis.displayName = "PaginationEllipsis";
+
+export {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+};
+
+```
+
+
+---
+
+## ARQUIVO: `src\components\ui\popover.tsx`
+**Linhas:** 30
+
+```typescript
+import * as React from "react";
+import * as PopoverPrimitive from "@radix-ui/react-popover";
+
+import { cn } from "@/lib/utils";
+
+const Popover = PopoverPrimitive.Root;
+
+const PopoverTrigger = PopoverPrimitive.Trigger;
+
+const PopoverContent = React.forwardRef<
+  React.ElementRef<typeof PopoverPrimitive.Content>,
+  React.ComponentPropsWithoutRef<typeof PopoverPrimitive.Content>
+>(({ className, align = "center", sideOffset = 4, ...props }, ref) => (
+  <PopoverPrimitive.Portal>
+    <PopoverPrimitive.Content
+      ref={ref}
+      align={align}
+      sideOffset={sideOffset}
+      className={cn(
+        "z-50 w-72 rounded-md border bg-popover p-4 text-popover-foreground shadow-md outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
+        className,
+      )}
+      {...props}
+    />
+  </PopoverPrimitive.Portal>
+));
+PopoverContent.displayName = PopoverPrimitive.Content.displayName;
+
+export { Popover, PopoverTrigger, PopoverContent };
+
+```
+
+
+---
+
+## ARQUIVO: `src\components\ui\progress.tsx`
+**Linhas:** 24
+
+```typescript
+import * as React from "react";
+import * as ProgressPrimitive from "@radix-ui/react-progress";
+
+import { cn } from "@/lib/utils";
+
+const Progress = React.forwardRef<
+  React.ElementRef<typeof ProgressPrimitive.Root>,
+  React.ComponentPropsWithoutRef<typeof ProgressPrimitive.Root>
+>(({ className, value, ...props }, ref) => (
+  <ProgressPrimitive.Root
+    ref={ref}
+    className={cn("relative h-4 w-full overflow-hidden rounded-full bg-secondary", className)}
+    {...props}
+  >
+    <ProgressPrimitive.Indicator
+      className="h-full w-full flex-1 bg-primary transition-all"
+      style={{ transform: `translateX(-${100 - (value || 0)}%)` }}
+    />
+  </ProgressPrimitive.Root>
+));
+Progress.displayName = ProgressPrimitive.Root.displayName;
+
+export { Progress };
+
+```
+
+
+---
+
+## ARQUIVO: `src\components\ui\radio-group.tsx`
+**Linhas:** 37
+
+```typescript
+import * as React from "react";
+import * as RadioGroupPrimitive from "@radix-ui/react-radio-group";
+import { Circle } from "lucide-react";
+
+import { cn } from "@/lib/utils";
+
+const RadioGroup = React.forwardRef<
+  React.ElementRef<typeof RadioGroupPrimitive.Root>,
+  React.ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Root>
+>(({ className, ...props }, ref) => {
+  return <RadioGroupPrimitive.Root className={cn("grid gap-2", className)} {...props} ref={ref} />;
+});
+RadioGroup.displayName = RadioGroupPrimitive.Root.displayName;
+
+const RadioGroupItem = React.forwardRef<
+  React.ElementRef<typeof RadioGroupPrimitive.Item>,
+  React.ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Item>
+>(({ className, ...props }, ref) => {
+  return (
+    <RadioGroupPrimitive.Item
+      ref={ref}
+      className={cn(
+        "aspect-square h-4 w-4 rounded-full border border-primary text-primary ring-offset-background focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+        className,
+      )}
+      {...props}
+    >
+      <RadioGroupPrimitive.Indicator className="flex items-center justify-center">
+        <Circle className="h-2.5 w-2.5 fill-current text-current" />
+      </RadioGroupPrimitive.Indicator>
+    </RadioGroupPrimitive.Item>
+  );
+});
+RadioGroupItem.displayName = RadioGroupPrimitive.Item.displayName;
+
+export { RadioGroup, RadioGroupItem };
+
+```
+
+
+---
+
+## ARQUIVO: `src\components\ui\resizable.tsx`
+**Linhas:** 38
+
+```typescript
+import { GripVertical } from "lucide-react";
+import * as ResizablePrimitive from "react-resizable-panels";
+
+import { cn } from "@/lib/utils";
+
+const ResizablePanelGroup = ({ className, ...props }: React.ComponentProps<typeof ResizablePrimitive.PanelGroup>) => (
+  <ResizablePrimitive.PanelGroup
+    className={cn("flex h-full w-full data-[panel-group-direction=vertical]:flex-col", className)}
+    {...props}
+  />
+);
+
+const ResizablePanel = ResizablePrimitive.Panel;
+
+const ResizableHandle = ({
+  withHandle,
+  className,
+  ...props
+}: React.ComponentProps<typeof ResizablePrimitive.PanelResizeHandle> & {
+  withHandle?: boolean;
+}) => (
+  <ResizablePrimitive.PanelResizeHandle
+    className={cn(
+      "relative flex w-px items-center justify-center bg-border after:absolute after:inset-y-0 after:left-1/2 after:w-1 after:-translate-x-1/2 data-[panel-group-direction=vertical]:h-px data-[panel-group-direction=vertical]:w-full data-[panel-group-direction=vertical]:after:left-0 data-[panel-group-direction=vertical]:after:h-1 data-[panel-group-direction=vertical]:after:w-full data-[panel-group-direction=vertical]:after:-translate-y-1/2 data-[panel-group-direction=vertical]:after:translate-x-0 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-1 [&[data-panel-group-direction=vertical]>div]:rotate-90",
+      className,
+    )}
+    {...props}
+  >
+    {withHandle && (
+      <div className="z-10 flex h-4 w-3 items-center justify-center rounded-sm border bg-border">
+        <GripVertical className="h-2.5 w-2.5" />
+      </div>
+    )}
+  </ResizablePrimitive.PanelResizeHandle>
+);
+
+export { ResizablePanelGroup, ResizablePanel, ResizableHandle };
+
+```
+
+
+---
+
+## ARQUIVO: `src\components\ui\scroll-area.tsx`
+**Linhas:** 39
+
+```typescript
+import * as React from "react";
+import * as ScrollAreaPrimitive from "@radix-ui/react-scroll-area";
+
+import { cn } from "@/lib/utils";
+
+const ScrollArea = React.forwardRef<
+  React.ElementRef<typeof ScrollAreaPrimitive.Root>,
+  React.ComponentPropsWithoutRef<typeof ScrollAreaPrimitive.Root>
+>(({ className, children, ...props }, ref) => (
+  <ScrollAreaPrimitive.Root ref={ref} className={cn("relative overflow-hidden", className)} {...props}>
+    <ScrollAreaPrimitive.Viewport className="h-full w-full rounded-[inherit]">{children}</ScrollAreaPrimitive.Viewport>
+    <ScrollBar />
+    <ScrollAreaPrimitive.Corner />
+  </ScrollAreaPrimitive.Root>
+));
+ScrollArea.displayName = ScrollAreaPrimitive.Root.displayName;
+
+const ScrollBar = React.forwardRef<
+  React.ElementRef<typeof ScrollAreaPrimitive.ScrollAreaScrollbar>,
+  React.ComponentPropsWithoutRef<typeof ScrollAreaPrimitive.ScrollAreaScrollbar>
+>(({ className, orientation = "vertical", ...props }, ref) => (
+  <ScrollAreaPrimitive.ScrollAreaScrollbar
+    ref={ref}
+    orientation={orientation}
+    className={cn(
+      "flex touch-none select-none transition-colors",
+      orientation === "vertical" && "h-full w-2.5 border-l border-l-transparent p-[1px]",
+      orientation === "horizontal" && "h-2.5 flex-col border-t border-t-transparent p-[1px]",
+      className,
+    )}
+    {...props}
+  >
+    <ScrollAreaPrimitive.ScrollAreaThumb className="relative flex-1 rounded-full bg-border" />
+  </ScrollAreaPrimitive.ScrollAreaScrollbar>
+));
+ScrollBar.displayName = ScrollAreaPrimitive.ScrollAreaScrollbar.displayName;
+
+export { ScrollArea, ScrollBar };
+
+```
+
+
+---
+
+## ARQUIVO: `src\components\ui\select.tsx`
+**Linhas:** 144
+
+```typescript
+import * as React from "react";
+import * as SelectPrimitive from "@radix-ui/react-select";
+import { Check, ChevronDown, ChevronUp } from "lucide-react";
+
+import { cn } from "@/lib/utils";
+
+const Select = SelectPrimitive.Root;
+
+const SelectGroup = SelectPrimitive.Group;
+
+const SelectValue = SelectPrimitive.Value;
+
+const SelectTrigger = React.forwardRef<
+  React.ElementRef<typeof SelectPrimitive.Trigger>,
+  React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger>
+>(({ className, children, ...props }, ref) => (
+  <SelectPrimitive.Trigger
+    ref={ref}
+    className={cn(
+      "flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1",
+      className,
+    )}
+    {...props}
+  >
+    {children}
+    <SelectPrimitive.Icon asChild>
+      <ChevronDown className="h-4 w-4 opacity-50" />
+    </SelectPrimitive.Icon>
+  </SelectPrimitive.Trigger>
+));
+SelectTrigger.displayName = SelectPrimitive.Trigger.displayName;
+
+const SelectScrollUpButton = React.forwardRef<
+  React.ElementRef<typeof SelectPrimitive.ScrollUpButton>,
+  React.ComponentPropsWithoutRef<typeof SelectPrimitive.ScrollUpButton>
+>(({ className, ...props }, ref) => (
+  <SelectPrimitive.ScrollUpButton
+    ref={ref}
+    className={cn("flex cursor-default items-center justify-center py-1", className)}
+    {...props}
+  >
+    <ChevronUp className="h-4 w-4" />
+  </SelectPrimitive.ScrollUpButton>
+));
+SelectScrollUpButton.displayName = SelectPrimitive.ScrollUpButton.displayName;
+
+const SelectScrollDownButton = React.forwardRef<
+  React.ElementRef<typeof SelectPrimitive.ScrollDownButton>,
+  React.ComponentPropsWithoutRef<typeof SelectPrimitive.ScrollDownButton>
+>(({ className, ...props }, ref) => (
+  <SelectPrimitive.ScrollDownButton
+    ref={ref}
+    className={cn("flex cursor-default items-center justify-center py-1", className)}
+    {...props}
+  >
+    <ChevronDown className="h-4 w-4" />
+  </SelectPrimitive.ScrollDownButton>
+));
+SelectScrollDownButton.displayName = SelectPrimitive.ScrollDownButton.displayName;
+
+const SelectContent = React.forwardRef<
+  React.ElementRef<typeof SelectPrimitive.Content>,
+  React.ComponentPropsWithoutRef<typeof SelectPrimitive.Content>
+>(({ className, children, position = "popper", ...props }, ref) => (
+  <SelectPrimitive.Portal>
+    <SelectPrimitive.Content
+      ref={ref}
+      className={cn(
+        "relative z-50 max-h-96 min-w-[8rem] overflow-hidden rounded-md border bg-popover text-popover-foreground shadow-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
+        position === "popper" &&
+          "data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1",
+        className,
+      )}
+      position={position}
+      {...props}
+    >
+      <SelectScrollUpButton />
+      <SelectPrimitive.Viewport
+        className={cn(
+          "p-1",
+          position === "popper" &&
+            "h-[var(--radix-select-trigger-height)] w-full min-w-[var(--radix-select-trigger-width)]",
+        )}
+      >
+        {children}
+      </SelectPrimitive.Viewport>
+      <SelectScrollDownButton />
+    </SelectPrimitive.Content>
+  </SelectPrimitive.Portal>
+));
+SelectContent.displayName = SelectPrimitive.Content.displayName;
+
+const SelectLabel = React.forwardRef<
+  React.ElementRef<typeof SelectPrimitive.Label>,
+  React.ComponentPropsWithoutRef<typeof SelectPrimitive.Label>
+>(({ className, ...props }, ref) => (
+  <SelectPrimitive.Label ref={ref} className={cn("py-1.5 pl-8 pr-2 text-sm font-semibold", className)} {...props} />
+));
+SelectLabel.displayName = SelectPrimitive.Label.displayName;
+
+const SelectItem = React.forwardRef<
+  React.ElementRef<typeof SelectPrimitive.Item>,
+  React.ComponentPropsWithoutRef<typeof SelectPrimitive.Item>
+>(({ className, children, ...props }, ref) => (
+  <SelectPrimitive.Item
+    ref={ref}
+    className={cn(
+      "relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 focus:bg-accent focus:text-accent-foreground",
+      className,
+    )}
+    {...props}
+  >
+    <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
+      <SelectPrimitive.ItemIndicator>
+        <Check className="h-4 w-4" />
+      </SelectPrimitive.ItemIndicator>
+    </span>
+
+    <SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText>
+  </SelectPrimitive.Item>
+));
+SelectItem.displayName = SelectPrimitive.Item.displayName;
+
+const SelectSeparator = React.forwardRef<
+  React.ElementRef<typeof SelectPrimitive.Separator>,
+  React.ComponentPropsWithoutRef<typeof SelectPrimitive.Separator>
+>(({ className, ...props }, ref) => (
+  <SelectPrimitive.Separator ref={ref} className={cn("-mx-1 my-1 h-px bg-muted", className)} {...props} />
+));
+SelectSeparator.displayName = SelectPrimitive.Separator.displayName;
+
+export {
+  Select,
+  SelectGroup,
+  SelectValue,
+  SelectTrigger,
+  SelectContent,
+  SelectLabel,
+  SelectItem,
+  SelectSeparator,
+  SelectScrollUpButton,
+  SelectScrollDownButton,
+};
+
+```
+
+
+---
+
+## ARQUIVO: `src\components\ui\separator.tsx`
+**Linhas:** 21
+
+```typescript
+import * as React from "react";
+import * as SeparatorPrimitive from "@radix-ui/react-separator";
+
+import { cn } from "@/lib/utils";
+
+const Separator = React.forwardRef<
+  React.ElementRef<typeof SeparatorPrimitive.Root>,
+  React.ComponentPropsWithoutRef<typeof SeparatorPrimitive.Root>
+>(({ className, orientation = "horizontal", decorative = true, ...props }, ref) => (
+  <SeparatorPrimitive.Root
+    ref={ref}
+    decorative={decorative}
+    orientation={orientation}
+    className={cn("shrink-0 bg-border", orientation === "horizontal" ? "h-[1px] w-full" : "h-full w-[1px]", className)}
+    {...props}
+  />
+));
+Separator.displayName = SeparatorPrimitive.Root.displayName;
+
+export { Separator };
+
+```
+
+
+---
+
+## ARQUIVO: `src\components\ui\sheet.tsx`
+**Linhas:** 108
+
+```typescript
+import * as SheetPrimitive from "@radix-ui/react-dialog";
+import { cva, type VariantProps } from "class-variance-authority";
+import { X } from "lucide-react";
+import * as React from "react";
+
+import { cn } from "@/lib/utils";
+
+const Sheet = SheetPrimitive.Root;
+
+const SheetTrigger = SheetPrimitive.Trigger;
+
+const SheetClose = SheetPrimitive.Close;
+
+const SheetPortal = SheetPrimitive.Portal;
+
+const SheetOverlay = React.forwardRef<
+  React.ElementRef<typeof SheetPrimitive.Overlay>,
+  React.ComponentPropsWithoutRef<typeof SheetPrimitive.Overlay>
+>(({ className, ...props }, ref) => (
+  <SheetPrimitive.Overlay
+    className={cn(
+      "fixed inset-0 z-50 bg-black/80 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
+      className,
+    )}
+    {...props}
+    ref={ref}
+  />
+));
+SheetOverlay.displayName = SheetPrimitive.Overlay.displayName;
+
+const sheetVariants = cva(
+  "fixed z-50 gap-4 bg-background p-6 shadow-lg transition ease-in-out data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:duration-300 data-[state=open]:duration-500",
+  {
+    variants: {
+      side: {
+        top: "inset-x-0 top-0 border-b data-[state=closed]:slide-out-to-top data-[state=open]:slide-in-from-top",
+        bottom:
+          "inset-x-0 bottom-0 border-t data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom",
+        left: "inset-y-0 left-0 h-full w-3/4 border-r data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left sm:max-w-sm",
+        right:
+          "inset-y-0 right-0 h-full w-3/4  border-l data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right sm:max-w-sm",
+      },
+    },
+    defaultVariants: {
+      side: "right",
+    },
+  },
+);
+
+interface SheetContentProps
+  extends React.ComponentPropsWithoutRef<typeof SheetPrimitive.Content>,
+    VariantProps<typeof sheetVariants> {}
+
+const SheetContent = React.forwardRef<React.ElementRef<typeof SheetPrimitive.Content>, SheetContentProps>(
+  ({ side = "right", className, children, ...props }, ref) => (
+    <SheetPortal>
+      <SheetOverlay />
+      <SheetPrimitive.Content ref={ref} className={cn(sheetVariants({ side }), className)} {...props}>
+        {children}
+        <SheetPrimitive.Close className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity data-[state=open]:bg-secondary hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none">
+          <X className="h-4 w-4" />
+          <span className="sr-only">Close</span>
+        </SheetPrimitive.Close>
+      </SheetPrimitive.Content>
+    </SheetPortal>
+  ),
+);
+SheetContent.displayName = SheetPrimitive.Content.displayName;
+
+const SheetHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
+  <div className={cn("flex flex-col space-y-2 text-center sm:text-left", className)} {...props} />
+);
+SheetHeader.displayName = "SheetHeader";
+
+const SheetFooter = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
+  <div className={cn("flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2", className)} {...props} />
+);
+SheetFooter.displayName = "SheetFooter";
+
+const SheetTitle = React.forwardRef<
+  React.ElementRef<typeof SheetPrimitive.Title>,
+  React.ComponentPropsWithoutRef<typeof SheetPrimitive.Title>
+>(({ className, ...props }, ref) => (
+  <SheetPrimitive.Title ref={ref} className={cn("text-lg font-semibold text-foreground", className)} {...props} />
+));
+SheetTitle.displayName = SheetPrimitive.Title.displayName;
+
+const SheetDescription = React.forwardRef<
+  React.ElementRef<typeof SheetPrimitive.Description>,
+  React.ComponentPropsWithoutRef<typeof SheetPrimitive.Description>
+>(({ className, ...props }, ref) => (
+  <SheetPrimitive.Description ref={ref} className={cn("text-sm text-muted-foreground", className)} {...props} />
+));
+SheetDescription.displayName = SheetPrimitive.Description.displayName;
+
+export {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetOverlay,
+  SheetPortal,
+  SheetTitle,
+  SheetTrigger,
+};
+
+```
+
+
+---
+
+## ARQUIVO: `src\components\ui\sidebar.tsx`
+**Linhas:** 638
+
+```typescript
+import * as React from "react";
+import { Slot } from "@radix-ui/react-slot";
+import { VariantProps, cva } from "class-variance-authority";
+import { PanelLeft } from "lucide-react";
+
+import { useIsMobile } from "@/hooks/use-mobile";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Separator } from "@/components/ui/separator";
+import { Sheet, SheetContent } from "@/components/ui/sheet";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+
+const SIDEBAR_COOKIE_NAME = "sidebar:state";
+const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
+const SIDEBAR_WIDTH = "16rem";
+const SIDEBAR_WIDTH_MOBILE = "18rem";
+const SIDEBAR_WIDTH_ICON = "3rem";
+const SIDEBAR_KEYBOARD_SHORTCUT = "b";
+
+type SidebarContext = {
+  state: "expanded" | "collapsed";
+  open: boolean;
+  setOpen: (open: boolean) => void;
+  openMobile: boolean;
+  setOpenMobile: (open: boolean) => void;
+  isMobile: boolean;
+  toggleSidebar: () => void;
+};
+
+const SidebarContext = React.createContext<SidebarContext | null>(null);
+
+function useSidebar() {
+  const context = React.useContext(SidebarContext);
+  if (!context) {
+    throw new Error("useSidebar must be used within a SidebarProvider.");
+  }
+
+  return context;
+}
+
+const SidebarProvider = React.forwardRef<
+  HTMLDivElement,
+  React.ComponentProps<"div"> & {
+    defaultOpen?: boolean;
+    open?: boolean;
+    onOpenChange?: (open: boolean) => void;
+  }
+>(({ defaultOpen = true, open: openProp, onOpenChange: setOpenProp, className, style, children, ...props }, ref) => {
+  const isMobile = useIsMobile();
+  const [openMobile, setOpenMobile] = React.useState(false);
+
+  // This is the internal state of the sidebar.
+  // We use openProp and setOpenProp for control from outside the component.
+  const [_open, _setOpen] = React.useState(defaultOpen);
+  const open = openProp ?? _open;
+  const setOpen = React.useCallback(
+    (value: boolean | ((value: boolean) => boolean)) => {
+      const openState = typeof value === "function" ? value(open) : value;
+      if (setOpenProp) {
+        setOpenProp(openState);
+      } else {
+        _setOpen(openState);
+      }
+
+      // This sets the cookie to keep the sidebar state.
+      document.cookie = `${SIDEBAR_COOKIE_NAME}=${openState}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}`;
+    },
+    [setOpenProp, open],
+  );
+
+  // Helper to toggle the sidebar.
+  const toggleSidebar = React.useCallback(() => {
+    return isMobile ? setOpenMobile((open) => !open) : setOpen((open) => !open);
+  }, [isMobile, setOpen, setOpenMobile]);
+
+  // Adds a keyboard shortcut to toggle the sidebar.
+  React.useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === SIDEBAR_KEYBOARD_SHORTCUT && (event.metaKey || event.ctrlKey)) {
+        event.preventDefault();
+        toggleSidebar();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [toggleSidebar]);
+
+  // We add a state so that we can do data-state="expanded" or "collapsed".
+  // This makes it easier to style the sidebar with Tailwind classes.
+  const state = open ? "expanded" : "collapsed";
+
+  const contextValue = React.useMemo<SidebarContext>(
+    () => ({
+      state,
+      open,
+      setOpen,
+      isMobile,
+      openMobile,
+      setOpenMobile,
+      toggleSidebar,
+    }),
+    [state, open, setOpen, isMobile, openMobile, setOpenMobile, toggleSidebar],
+  );
+
+  return (
+    <SidebarContext.Provider value={contextValue}>
+      <TooltipProvider delayDuration={0}>
+        <div
+          style={
+            {
+              "--sidebar-width": SIDEBAR_WIDTH,
+              "--sidebar-width-icon": SIDEBAR_WIDTH_ICON,
+              ...style,
+            } as React.CSSProperties
+          }
+          className={cn("group/sidebar-wrapper flex min-h-svh w-full has-[[data-variant=inset]]:bg-sidebar", className)}
+          ref={ref}
+          {...props}
+        >
+          {children}
+        </div>
+      </TooltipProvider>
+    </SidebarContext.Provider>
+  );
+});
+SidebarProvider.displayName = "SidebarProvider";
+
+const Sidebar = React.forwardRef<
+  HTMLDivElement,
+  React.ComponentProps<"div"> & {
+    side?: "left" | "right";
+    variant?: "sidebar" | "floating" | "inset";
+    collapsible?: "offcanvas" | "icon" | "none";
+  }
+>(({ side = "left", variant = "sidebar", collapsible = "offcanvas", className, children, ...props }, ref) => {
+  const { isMobile, state, openMobile, setOpenMobile } = useSidebar();
+
+  if (collapsible === "none") {
+    return (
+      <div
+        className={cn("flex h-full w-[--sidebar-width] flex-col bg-sidebar text-sidebar-foreground", className)}
+        ref={ref}
+        {...props}
+      >
+        {children}
+      </div>
+    );
+  }
+
+  if (isMobile) {
+    return (
+      <Sheet open={openMobile} onOpenChange={setOpenMobile} {...props}>
+        <SheetContent
+          data-sidebar="sidebar"
+          data-mobile="true"
+          className="w-[--sidebar-width] bg-sidebar p-0 text-sidebar-foreground [&>button]:hidden"
+          style={
+            {
+              "--sidebar-width": SIDEBAR_WIDTH_MOBILE,
+            } as React.CSSProperties
+          }
+          side={side}
+        >
+          <div className="flex h-full w-full flex-col">{children}</div>
+        </SheetContent>
+      </Sheet>
+    );
+  }
+
+  return (
+    <div
+      ref={ref}
+      className="group peer hidden text-sidebar-foreground md:block"
+      data-state={state}
+      data-collapsible={state === "collapsed" ? collapsible : ""}
+      data-variant={variant}
+      data-side={side}
+    >
+      {/* This is what handles the sidebar gap on desktop */}
+      <div
+        className={cn(
+          "relative h-svh w-[--sidebar-width] bg-transparent transition-[width] duration-200 ease-linear",
+          "group-data-[collapsible=offcanvas]:w-0",
+          "group-data-[side=right]:rotate-180",
+          variant === "floating" || variant === "inset"
+            ? "group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)_+_theme(spacing.4))]"
+            : "group-data-[collapsible=icon]:w-[--sidebar-width-icon]",
+        )}
+      />
+      <div
+        className={cn(
+          "fixed inset-y-0 z-10 hidden h-svh w-[--sidebar-width] transition-[left,right,width] duration-200 ease-linear md:flex",
+          side === "left"
+            ? "left-0 group-data-[collapsible=offcanvas]:left-[calc(var(--sidebar-width)*-1)]"
+            : "right-0 group-data-[collapsible=offcanvas]:right-[calc(var(--sidebar-width)*-1)]",
+          // Adjust the padding for floating and inset variants.
+          variant === "floating" || variant === "inset"
+            ? "p-2 group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)_+_theme(spacing.4)_+2px)]"
+            : "group-data-[collapsible=icon]:w-[--sidebar-width-icon] group-data-[side=left]:border-r group-data-[side=right]:border-l",
+          className,
+        )}
+        {...props}
+      >
+        <div
+          data-sidebar="sidebar"
+          className="flex h-full w-full flex-col bg-sidebar group-data-[variant=floating]:rounded-lg group-data-[variant=floating]:border group-data-[variant=floating]:border-sidebar-border group-data-[variant=floating]:shadow"
+        >
+          {children}
+        </div>
+      </div>
+    </div>
+  );
+});
+Sidebar.displayName = "Sidebar";
+
+const SidebarTrigger = React.forwardRef<React.ElementRef<typeof Button>, React.ComponentProps<typeof Button>>(
+  ({ className, onClick, ...props }, ref) => {
+    const { toggleSidebar } = useSidebar();
+
+    return (
+      <Button
+        ref={ref}
+        data-sidebar="trigger"
+        variant="ghost"
+        size="icon"
+        className={cn("h-7 w-7", className)}
+        onClick={(event) => {
+          onClick?.(event);
+          toggleSidebar();
+        }}
+        {...props}
+      >
+        <PanelLeft />
+        <span className="sr-only">Toggle Sidebar</span>
+      </Button>
+    );
+  },
+);
+SidebarTrigger.displayName = "SidebarTrigger";
+
+const SidebarRail = React.forwardRef<HTMLButtonElement, React.ComponentProps<"button">>(
+  ({ className, ...props }, ref) => {
+    const { toggleSidebar } = useSidebar();
+
+    return (
+      <button
+        ref={ref}
+        data-sidebar="rail"
+        aria-label="Toggle Sidebar"
+        tabIndex={-1}
+        onClick={toggleSidebar}
+        title="Toggle Sidebar"
+        className={cn(
+          "absolute inset-y-0 z-20 hidden w-4 -translate-x-1/2 transition-all ease-linear after:absolute after:inset-y-0 after:left-1/2 after:w-[2px] group-data-[side=left]:-right-4 group-data-[side=right]:left-0 hover:after:bg-sidebar-border sm:flex",
+          "[[data-side=left]_&]:cursor-w-resize [[data-side=right]_&]:cursor-e-resize",
+          "[[data-side=left][data-state=collapsed]_&]:cursor-e-resize [[data-side=right][data-state=collapsed]_&]:cursor-w-resize",
+          "group-data-[collapsible=offcanvas]:translate-x-0 group-data-[collapsible=offcanvas]:after:left-full group-data-[collapsible=offcanvas]:hover:bg-sidebar",
+          "[[data-side=left][data-collapsible=offcanvas]_&]:-right-2",
+          "[[data-side=right][data-collapsible=offcanvas]_&]:-left-2",
+          className,
+        )}
+        {...props}
+      />
+    );
+  },
+);
+SidebarRail.displayName = "SidebarRail";
+
+const SidebarInset = React.forwardRef<HTMLDivElement, React.ComponentProps<"main">>(({ className, ...props }, ref) => {
+  return (
+    <main
+      ref={ref}
+      className={cn(
+        "relative flex min-h-svh flex-1 flex-col bg-background",
+        "peer-data-[variant=inset]:min-h-[calc(100svh-theme(spacing.4))] md:peer-data-[variant=inset]:m-2 md:peer-data-[state=collapsed]:peer-data-[variant=inset]:ml-2 md:peer-data-[variant=inset]:ml-0 md:peer-data-[variant=inset]:rounded-xl md:peer-data-[variant=inset]:shadow",
+        className,
+      )}
+      {...props}
+    />
+  );
+});
+SidebarInset.displayName = "SidebarInset";
+
+const SidebarInput = React.forwardRef<React.ElementRef<typeof Input>, React.ComponentProps<typeof Input>>(
+  ({ className, ...props }, ref) => {
+    return (
+      <Input
+        ref={ref}
+        data-sidebar="input"
+        className={cn(
+          "h-8 w-full bg-background shadow-none focus-visible:ring-2 focus-visible:ring-sidebar-ring",
+          className,
+        )}
+        {...props}
+      />
+    );
+  },
+);
+SidebarInput.displayName = "SidebarInput";
+
+const SidebarHeader = React.forwardRef<HTMLDivElement, React.ComponentProps<"div">>(({ className, ...props }, ref) => {
+  return <div ref={ref} data-sidebar="header" className={cn("flex flex-col gap-2 p-2", className)} {...props} />;
+});
+SidebarHeader.displayName = "SidebarHeader";
+
+const SidebarFooter = React.forwardRef<HTMLDivElement, React.ComponentProps<"div">>(({ className, ...props }, ref) => {
+  return <div ref={ref} data-sidebar="footer" className={cn("flex flex-col gap-2 p-2", className)} {...props} />;
+});
+SidebarFooter.displayName = "SidebarFooter";
+
+const SidebarSeparator = React.forwardRef<React.ElementRef<typeof Separator>, React.ComponentProps<typeof Separator>>(
+  ({ className, ...props }, ref) => {
+    return (
+      <Separator
+        ref={ref}
+        data-sidebar="separator"
+        className={cn("mx-2 w-auto bg-sidebar-border", className)}
+        {...props}
+      />
+    );
+  },
+);
+SidebarSeparator.displayName = "SidebarSeparator";
+
+const SidebarContent = React.forwardRef<HTMLDivElement, React.ComponentProps<"div">>(({ className, ...props }, ref) => {
+  return (
+    <div
+      ref={ref}
+      data-sidebar="content"
+      className={cn(
+        "flex min-h-0 flex-1 flex-col gap-2 overflow-auto group-data-[collapsible=icon]:overflow-hidden",
+        className,
+      )}
+      {...props}
+    />
+  );
+});
+SidebarContent.displayName = "SidebarContent";
+
+const SidebarGroup = React.forwardRef<HTMLDivElement, React.ComponentProps<"div">>(({ className, ...props }, ref) => {
+  return (
+    <div
+      ref={ref}
+      data-sidebar="group"
+      className={cn("relative flex w-full min-w-0 flex-col p-2", className)}
+      {...props}
+    />
+  );
+});
+SidebarGroup.displayName = "SidebarGroup";
+
+const SidebarGroupLabel = React.forwardRef<HTMLDivElement, React.ComponentProps<"div"> & { asChild?: boolean }>(
+  ({ className, asChild = false, ...props }, ref) => {
+    const Comp = asChild ? Slot : "div";
+
+    return (
+      <Comp
+        ref={ref}
+        data-sidebar="group-label"
+        className={cn(
+          "flex h-8 shrink-0 items-center rounded-md px-2 text-xs font-medium text-sidebar-foreground/70 outline-none ring-sidebar-ring transition-[margin,opa] duration-200 ease-linear focus-visible:ring-2 [&>svg]:size-4 [&>svg]:shrink-0",
+          "group-data-[collapsible=icon]:-mt-8 group-data-[collapsible=icon]:opacity-0",
+          className,
+        )}
+        {...props}
+      />
+    );
+  },
+);
+SidebarGroupLabel.displayName = "SidebarGroupLabel";
+
+const SidebarGroupAction = React.forwardRef<HTMLButtonElement, React.ComponentProps<"button"> & { asChild?: boolean }>(
+  ({ className, asChild = false, ...props }, ref) => {
+    const Comp = asChild ? Slot : "button";
+
+    return (
+      <Comp
+        ref={ref}
+        data-sidebar="group-action"
+        className={cn(
+          "absolute right-3 top-3.5 flex aspect-square w-5 items-center justify-center rounded-md p-0 text-sidebar-foreground outline-none ring-sidebar-ring transition-transform hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 [&>svg]:size-4 [&>svg]:shrink-0",
+          // Increases the hit area of the button on mobile.
+          "after:absolute after:-inset-2 after:md:hidden",
+          "group-data-[collapsible=icon]:hidden",
+          className,
+        )}
+        {...props}
+      />
+    );
+  },
+);
+SidebarGroupAction.displayName = "SidebarGroupAction";
+
+const SidebarGroupContent = React.forwardRef<HTMLDivElement, React.ComponentProps<"div">>(
+  ({ className, ...props }, ref) => (
+    <div ref={ref} data-sidebar="group-content" className={cn("w-full text-sm", className)} {...props} />
+  ),
+);
+SidebarGroupContent.displayName = "SidebarGroupContent";
+
+const SidebarMenu = React.forwardRef<HTMLUListElement, React.ComponentProps<"ul">>(({ className, ...props }, ref) => (
+  <ul ref={ref} data-sidebar="menu" className={cn("flex w-full min-w-0 flex-col gap-1", className)} {...props} />
+));
+SidebarMenu.displayName = "SidebarMenu";
+
+const SidebarMenuItem = React.forwardRef<HTMLLIElement, React.ComponentProps<"li">>(({ className, ...props }, ref) => (
+  <li ref={ref} data-sidebar="menu-item" className={cn("group/menu-item relative", className)} {...props} />
+));
+SidebarMenuItem.displayName = "SidebarMenuItem";
+
+const sidebarMenuButtonVariants = cva(
+  "peer/menu-button flex w-full items-center gap-2 overflow-hidden rounded-md p-2 text-left text-sm outline-none ring-sidebar-ring transition-[width,height,padding] hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 group-has-[[data-sidebar=menu-action]]/menu-item:pr-8 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:bg-sidebar-accent data-[active=true]:font-medium data-[active=true]:text-sidebar-accent-foreground data-[state=open]:hover:bg-sidebar-accent data-[state=open]:hover:text-sidebar-accent-foreground group-data-[collapsible=icon]:!size-8 group-data-[collapsible=icon]:!p-2 [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0",
+  {
+    variants: {
+      variant: {
+        default: "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
+        outline:
+          "bg-background shadow-[0_0_0_1px_hsl(var(--sidebar-border))] hover:bg-sidebar-accent hover:text-sidebar-accent-foreground hover:shadow-[0_0_0_1px_hsl(var(--sidebar-accent))]",
+      },
+      size: {
+        default: "h-8 text-sm",
+        sm: "h-7 text-xs",
+        lg: "h-12 text-sm group-data-[collapsible=icon]:!p-0",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+      size: "default",
+    },
+  },
+);
+
+const SidebarMenuButton = React.forwardRef<
+  HTMLButtonElement,
+  React.ComponentProps<"button"> & {
+    asChild?: boolean;
+    isActive?: boolean;
+    tooltip?: string | React.ComponentProps<typeof TooltipContent>;
+  } & VariantProps<typeof sidebarMenuButtonVariants>
+>(({ asChild = false, isActive = false, variant = "default", size = "default", tooltip, className, ...props }, ref) => {
+  const Comp = asChild ? Slot : "button";
+  const { isMobile, state } = useSidebar();
+
+  const button = (
+    <Comp
+      ref={ref}
+      data-sidebar="menu-button"
+      data-size={size}
+      data-active={isActive}
+      className={cn(sidebarMenuButtonVariants({ variant, size }), className)}
+      {...props}
+    />
+  );
+
+  if (!tooltip) {
+    return button;
+  }
+
+  if (typeof tooltip === "string") {
+    tooltip = {
+      children: tooltip,
+    };
+  }
+
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>{button}</TooltipTrigger>
+      <TooltipContent side="right" align="center" hidden={state !== "collapsed" || isMobile} {...tooltip} />
+    </Tooltip>
+  );
+});
+SidebarMenuButton.displayName = "SidebarMenuButton";
+
+const SidebarMenuAction = React.forwardRef<
+  HTMLButtonElement,
+  React.ComponentProps<"button"> & {
+    asChild?: boolean;
+    showOnHover?: boolean;
+  }
+>(({ className, asChild = false, showOnHover = false, ...props }, ref) => {
+  const Comp = asChild ? Slot : "button";
+
+  return (
+    <Comp
+      ref={ref}
+      data-sidebar="menu-action"
+      className={cn(
+        "absolute right-1 top-1.5 flex aspect-square w-5 items-center justify-center rounded-md p-0 text-sidebar-foreground outline-none ring-sidebar-ring transition-transform peer-hover/menu-button:text-sidebar-accent-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 [&>svg]:size-4 [&>svg]:shrink-0",
+        // Increases the hit area of the button on mobile.
+        "after:absolute after:-inset-2 after:md:hidden",
+        "peer-data-[size=sm]/menu-button:top-1",
+        "peer-data-[size=default]/menu-button:top-1.5",
+        "peer-data-[size=lg]/menu-button:top-2.5",
+        "group-data-[collapsible=icon]:hidden",
+        showOnHover &&
+          "group-focus-within/menu-item:opacity-100 group-hover/menu-item:opacity-100 data-[state=open]:opacity-100 peer-data-[active=true]/menu-button:text-sidebar-accent-foreground md:opacity-0",
+        className,
+      )}
+      {...props}
+    />
+  );
+});
+SidebarMenuAction.displayName = "SidebarMenuAction";
+
+const SidebarMenuBadge = React.forwardRef<HTMLDivElement, React.ComponentProps<"div">>(
+  ({ className, ...props }, ref) => (
+    <div
+      ref={ref}
+      data-sidebar="menu-badge"
+      className={cn(
+        "pointer-events-none absolute right-1 flex h-5 min-w-5 select-none items-center justify-center rounded-md px-1 text-xs font-medium tabular-nums text-sidebar-foreground",
+        "peer-hover/menu-button:text-sidebar-accent-foreground peer-data-[active=true]/menu-button:text-sidebar-accent-foreground",
+        "peer-data-[size=sm]/menu-button:top-1",
+        "peer-data-[size=default]/menu-button:top-1.5",
+        "peer-data-[size=lg]/menu-button:top-2.5",
+        "group-data-[collapsible=icon]:hidden",
+        className,
+      )}
+      {...props}
+    />
+  ),
+);
+SidebarMenuBadge.displayName = "SidebarMenuBadge";
+
+const SidebarMenuSkeleton = React.forwardRef<
+  HTMLDivElement,
+  React.ComponentProps<"div"> & {
+    showIcon?: boolean;
+  }
+>(({ className, showIcon = false, ...props }, ref) => {
+  // Random width between 50 to 90%.
+  const width = React.useMemo(() => {
+    return `${Math.floor(Math.random() * 40) + 50}%`;
+  }, []);
+
+  return (
+    <div
+      ref={ref}
+      data-sidebar="menu-skeleton"
+      className={cn("flex h-8 items-center gap-2 rounded-md px-2", className)}
+      {...props}
+    >
+      {showIcon && <Skeleton className="size-4 rounded-md" data-sidebar="menu-skeleton-icon" />}
+      <Skeleton
+        className="h-4 max-w-[--skeleton-width] flex-1"
+        data-sidebar="menu-skeleton-text"
+        style={
+          {
+            "--skeleton-width": width,
+          } as React.CSSProperties
+        }
+      />
+    </div>
+  );
+});
+SidebarMenuSkeleton.displayName = "SidebarMenuSkeleton";
+
+const SidebarMenuSub = React.forwardRef<HTMLUListElement, React.ComponentProps<"ul">>(
+  ({ className, ...props }, ref) => (
+    <ul
+      ref={ref}
+      data-sidebar="menu-sub"
+      className={cn(
+        "mx-3.5 flex min-w-0 translate-x-px flex-col gap-1 border-l border-sidebar-border px-2.5 py-0.5",
+        "group-data-[collapsible=icon]:hidden",
+        className,
+      )}
+      {...props}
+    />
+  ),
+);
+SidebarMenuSub.displayName = "SidebarMenuSub";
+
+const SidebarMenuSubItem = React.forwardRef<HTMLLIElement, React.ComponentProps<"li">>(({ ...props }, ref) => (
+  <li ref={ref} {...props} />
+));
+SidebarMenuSubItem.displayName = "SidebarMenuSubItem";
+
+const SidebarMenuSubButton = React.forwardRef<
+  HTMLAnchorElement,
+  React.ComponentProps<"a"> & {
+    asChild?: boolean;
+    size?: "sm" | "md";
+    isActive?: boolean;
+  }
+>(({ asChild = false, size = "md", isActive, className, ...props }, ref) => {
+  const Comp = asChild ? Slot : "a";
+
+  return (
+    <Comp
+      ref={ref}
+      data-sidebar="menu-sub-button"
+      data-size={size}
+      data-active={isActive}
+      className={cn(
+        "flex h-7 min-w-0 -translate-x-px items-center gap-2 overflow-hidden rounded-md px-2 text-sidebar-foreground outline-none ring-sidebar-ring aria-disabled:pointer-events-none aria-disabled:opacity-50 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0 [&>svg]:text-sidebar-accent-foreground",
+        "data-[active=true]:bg-sidebar-accent data-[active=true]:text-sidebar-accent-foreground",
+        size === "sm" && "text-xs",
+        size === "md" && "text-sm",
+        "group-data-[collapsible=icon]:hidden",
+        className,
+      )}
+      {...props}
+    />
+  );
+});
+SidebarMenuSubButton.displayName = "SidebarMenuSubButton";
+
+export {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupAction,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarInput,
+  SidebarInset,
+  SidebarMenu,
+  SidebarMenuAction,
+  SidebarMenuBadge,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarMenuSkeleton,
+  SidebarMenuSub,
+  SidebarMenuSubButton,
+  SidebarMenuSubItem,
+  SidebarProvider,
+  SidebarRail,
+  SidebarSeparator,
+  SidebarTrigger,
+  useSidebar,
+};
+
+```
+
+
+---
+
+## ARQUIVO: `src\components\ui\skeleton.tsx`
+**Linhas:** 8
+
+```typescript
+import { cn } from "@/lib/utils";
+
+function Skeleton({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
+  return <div className={cn("animate-pulse rounded-md bg-muted", className)} {...props} />;
+}
+
+export { Skeleton };
+
+```
+
+
+---
+
+## ARQUIVO: `src\components\ui\slider.tsx`
+**Linhas:** 24
+
+```typescript
+import * as React from "react";
+import * as SliderPrimitive from "@radix-ui/react-slider";
+
+import { cn } from "@/lib/utils";
+
+const Slider = React.forwardRef<
+  React.ElementRef<typeof SliderPrimitive.Root>,
+  React.ComponentPropsWithoutRef<typeof SliderPrimitive.Root>
+>(({ className, ...props }, ref) => (
+  <SliderPrimitive.Root
+    ref={ref}
+    className={cn("relative flex w-full touch-none select-none items-center", className)}
+    {...props}
+  >
+    <SliderPrimitive.Track className="relative h-2 w-full grow overflow-hidden rounded-full bg-secondary">
+      <SliderPrimitive.Range className="absolute h-full bg-primary" />
+    </SliderPrimitive.Track>
+    <SliderPrimitive.Thumb className="block h-5 w-5 rounded-full border-2 border-primary bg-background ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50" />
+  </SliderPrimitive.Root>
+));
+Slider.displayName = SliderPrimitive.Root.displayName;
+
+export { Slider };
+
+```
+
+
+---
+
+## ARQUIVO: `src\components\ui\sonner.tsx`
+**Linhas:** 28
+
+```typescript
+import { useTheme } from "next-themes";
+import { Toaster as Sonner, toast } from "sonner";
+
+type ToasterProps = React.ComponentProps<typeof Sonner>;
+
+const Toaster = ({ ...props }: ToasterProps) => {
+  const { theme = "system" } = useTheme();
+
+  return (
+    <Sonner
+      theme={theme as ToasterProps["theme"]}
+      className="toaster group"
+      toastOptions={{
+        classNames: {
+          toast:
+            "group toast group-[.toaster]:bg-background group-[.toaster]:text-foreground group-[.toaster]:border-border group-[.toaster]:shadow-lg",
+          description: "group-[.toast]:text-muted-foreground",
+          actionButton: "group-[.toast]:bg-primary group-[.toast]:text-primary-foreground",
+          cancelButton: "group-[.toast]:bg-muted group-[.toast]:text-muted-foreground",
+        },
+      }}
+      {...props}
+    />
+  );
+};
+
+export { Toaster, toast };
+
+```
+
+
+---
+
+## ARQUIVO: `src\components\ui\switch.tsx`
+**Linhas:** 28
+
+```typescript
+import * as React from "react";
+import * as SwitchPrimitives from "@radix-ui/react-switch";
+
+import { cn } from "@/lib/utils";
+
+const Switch = React.forwardRef<
+  React.ElementRef<typeof SwitchPrimitives.Root>,
+  React.ComponentPropsWithoutRef<typeof SwitchPrimitives.Root>
+>(({ className, ...props }, ref) => (
+  <SwitchPrimitives.Root
+    className={cn(
+      "peer inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors data-[state=checked]:bg-primary data-[state=unchecked]:bg-input focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50",
+      className,
+    )}
+    {...props}
+    ref={ref}
+  >
+    <SwitchPrimitives.Thumb
+      className={cn(
+        "pointer-events-none block h-5 w-5 rounded-full bg-background shadow-lg ring-0 transition-transform data-[state=checked]:translate-x-5 data-[state=unchecked]:translate-x-0",
+      )}
+    />
+  </SwitchPrimitives.Root>
+));
+Switch.displayName = SwitchPrimitives.Root.displayName;
+
+export { Switch };
+
+```
+
+
+---
+
+## ARQUIVO: `src\components\ui\table.tsx`
+**Linhas:** 73
+
+```typescript
+import * as React from "react";
+
+import { cn } from "@/lib/utils";
+
+const Table = React.forwardRef<HTMLTableElement, React.HTMLAttributes<HTMLTableElement>>(
+  ({ className, ...props }, ref) => (
+    <div className="relative w-full overflow-auto">
+      <table ref={ref} className={cn("w-full caption-bottom text-sm", className)} {...props} />
+    </div>
+  ),
+);
+Table.displayName = "Table";
+
+const TableHeader = React.forwardRef<HTMLTableSectionElement, React.HTMLAttributes<HTMLTableSectionElement>>(
+  ({ className, ...props }, ref) => <thead ref={ref} className={cn("[&_tr]:border-b", className)} {...props} />,
+);
+TableHeader.displayName = "TableHeader";
+
+const TableBody = React.forwardRef<HTMLTableSectionElement, React.HTMLAttributes<HTMLTableSectionElement>>(
+  ({ className, ...props }, ref) => (
+    <tbody ref={ref} className={cn("[&_tr:last-child]:border-0", className)} {...props} />
+  ),
+);
+TableBody.displayName = "TableBody";
+
+const TableFooter = React.forwardRef<HTMLTableSectionElement, React.HTMLAttributes<HTMLTableSectionElement>>(
+  ({ className, ...props }, ref) => (
+    <tfoot ref={ref} className={cn("border-t bg-muted/50 font-medium [&>tr]:last:border-b-0", className)} {...props} />
+  ),
+);
+TableFooter.displayName = "TableFooter";
+
+const TableRow = React.forwardRef<HTMLTableRowElement, React.HTMLAttributes<HTMLTableRowElement>>(
+  ({ className, ...props }, ref) => (
+    <tr
+      ref={ref}
+      className={cn("border-b transition-colors data-[state=selected]:bg-muted hover:bg-muted/50", className)}
+      {...props}
+    />
+  ),
+);
+TableRow.displayName = "TableRow";
+
+const TableHead = React.forwardRef<HTMLTableCellElement, React.ThHTMLAttributes<HTMLTableCellElement>>(
+  ({ className, ...props }, ref) => (
+    <th
+      ref={ref}
+      className={cn(
+        "h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0",
+        className,
+      )}
+      {...props}
+    />
+  ),
+);
+TableHead.displayName = "TableHead";
+
+const TableCell = React.forwardRef<HTMLTableCellElement, React.TdHTMLAttributes<HTMLTableCellElement>>(
+  ({ className, ...props }, ref) => (
+    <td ref={ref} className={cn("p-4 align-middle [&:has([role=checkbox])]:pr-0", className)} {...props} />
+  ),
+);
+TableCell.displayName = "TableCell";
+
+const TableCaption = React.forwardRef<HTMLTableCaptionElement, React.HTMLAttributes<HTMLTableCaptionElement>>(
+  ({ className, ...props }, ref) => (
+    <caption ref={ref} className={cn("mt-4 text-sm text-muted-foreground", className)} {...props} />
+  ),
+);
+TableCaption.displayName = "TableCaption";
+
+export { Table, TableHeader, TableBody, TableFooter, TableHead, TableRow, TableCell, TableCaption };
+
+```
+
+
+---
+
+## ARQUIVO: `src\components\ui\tabs.tsx`
+**Linhas:** 54
+
+```typescript
+import * as React from "react";
+import * as TabsPrimitive from "@radix-ui/react-tabs";
+
+import { cn } from "@/lib/utils";
+
+const Tabs = TabsPrimitive.Root;
+
+const TabsList = React.forwardRef<
+  React.ElementRef<typeof TabsPrimitive.List>,
+  React.ComponentPropsWithoutRef<typeof TabsPrimitive.List>
+>(({ className, ...props }, ref) => (
+  <TabsPrimitive.List
+    ref={ref}
+    className={cn(
+      "inline-flex h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground",
+      className,
+    )}
+    {...props}
+  />
+));
+TabsList.displayName = TabsPrimitive.List.displayName;
+
+const TabsTrigger = React.forwardRef<
+  React.ElementRef<typeof TabsPrimitive.Trigger>,
+  React.ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger>
+>(({ className, ...props }, ref) => (
+  <TabsPrimitive.Trigger
+    ref={ref}
+    className={cn(
+      "inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+      className,
+    )}
+    {...props}
+  />
+));
+TabsTrigger.displayName = TabsPrimitive.Trigger.displayName;
+
+const TabsContent = React.forwardRef<
+  React.ElementRef<typeof TabsPrimitive.Content>,
+  React.ComponentPropsWithoutRef<typeof TabsPrimitive.Content>
+>(({ className, ...props }, ref) => (
+  <TabsPrimitive.Content
+    ref={ref}
+    className={cn(
+      "mt-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+      className,
+    )}
+    {...props}
+  />
+));
+TabsContent.displayName = TabsPrimitive.Content.displayName;
+
+export { Tabs, TabsList, TabsTrigger, TabsContent };
+
+```
+
+
+---
+
+## ARQUIVO: `src\components\ui\textarea.tsx`
+**Linhas:** 22
+
+```typescript
+import * as React from "react";
+
+import { cn } from "@/lib/utils";
+
+export interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {}
+
+const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(({ className, ...props }, ref) => {
+  return (
+    <textarea
+      className={cn(
+        "flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+        className,
+      )}
+      ref={ref}
+      {...props}
+    />
+  );
+});
+Textarea.displayName = "Textarea";
+
+export { Textarea };
+
+```
+
+
+---
+
+## ARQUIVO: `src\components\ui\toast.tsx`
+**Linhas:** 112
+
+```typescript
+import * as React from "react";
+import * as ToastPrimitives from "@radix-ui/react-toast";
+import { cva, type VariantProps } from "class-variance-authority";
+import { X } from "lucide-react";
+
+import { cn } from "@/lib/utils";
+
+const ToastProvider = ToastPrimitives.Provider;
+
+const ToastViewport = React.forwardRef<
+  React.ElementRef<typeof ToastPrimitives.Viewport>,
+  React.ComponentPropsWithoutRef<typeof ToastPrimitives.Viewport>
+>(({ className, ...props }, ref) => (
+  <ToastPrimitives.Viewport
+    ref={ref}
+    className={cn(
+      "fixed top-0 z-[100] flex max-h-screen w-full flex-col-reverse p-4 sm:bottom-0 sm:right-0 sm:top-auto sm:flex-col md:max-w-[420px]",
+      className,
+    )}
+    {...props}
+  />
+));
+ToastViewport.displayName = ToastPrimitives.Viewport.displayName;
+
+const toastVariants = cva(
+  "group pointer-events-auto relative flex w-full items-center justify-between space-x-4 overflow-hidden rounded-md border p-6 pr-8 shadow-lg transition-all data-[swipe=cancel]:translate-x-0 data-[swipe=end]:translate-x-[var(--radix-toast-swipe-end-x)] data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)] data-[swipe=move]:transition-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[swipe=end]:animate-out data-[state=closed]:fade-out-80 data-[state=closed]:slide-out-to-right-full data-[state=open]:slide-in-from-top-full data-[state=open]:sm:slide-in-from-bottom-full",
+  {
+    variants: {
+      variant: {
+        default: "border bg-background text-foreground",
+        destructive: "destructive group border-destructive bg-destructive text-destructive-foreground",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+    },
+  },
+);
+
+const Toast = React.forwardRef<
+  React.ElementRef<typeof ToastPrimitives.Root>,
+  React.ComponentPropsWithoutRef<typeof ToastPrimitives.Root> & VariantProps<typeof toastVariants>
+>(({ className, variant, ...props }, ref) => {
+  return <ToastPrimitives.Root ref={ref} className={cn(toastVariants({ variant }), className)} {...props} />;
+});
+Toast.displayName = ToastPrimitives.Root.displayName;
+
+const ToastAction = React.forwardRef<
+  React.ElementRef<typeof ToastPrimitives.Action>,
+  React.ComponentPropsWithoutRef<typeof ToastPrimitives.Action>
+>(({ className, ...props }, ref) => (
+  <ToastPrimitives.Action
+    ref={ref}
+    className={cn(
+      "inline-flex h-8 shrink-0 items-center justify-center rounded-md border bg-transparent px-3 text-sm font-medium ring-offset-background transition-colors group-[.destructive]:border-muted/40 hover:bg-secondary group-[.destructive]:hover:border-destructive/30 group-[.destructive]:hover:bg-destructive group-[.destructive]:hover:text-destructive-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 group-[.destructive]:focus:ring-destructive disabled:pointer-events-none disabled:opacity-50",
+      className,
+    )}
+    {...props}
+  />
+));
+ToastAction.displayName = ToastPrimitives.Action.displayName;
+
+const ToastClose = React.forwardRef<
+  React.ElementRef<typeof ToastPrimitives.Close>,
+  React.ComponentPropsWithoutRef<typeof ToastPrimitives.Close>
+>(({ className, ...props }, ref) => (
+  <ToastPrimitives.Close
+    ref={ref}
+    className={cn(
+      "absolute right-2 top-2 rounded-md p-1 text-foreground/50 opacity-0 transition-opacity group-hover:opacity-100 group-[.destructive]:text-red-300 hover:text-foreground group-[.destructive]:hover:text-red-50 focus:opacity-100 focus:outline-none focus:ring-2 group-[.destructive]:focus:ring-red-400 group-[.destructive]:focus:ring-offset-red-600",
+      className,
+    )}
+    toast-close=""
+    {...props}
+  >
+    <X className="h-4 w-4" />
+  </ToastPrimitives.Close>
+));
+ToastClose.displayName = ToastPrimitives.Close.displayName;
+
+const ToastTitle = React.forwardRef<
+  React.ElementRef<typeof ToastPrimitives.Title>,
+  React.ComponentPropsWithoutRef<typeof ToastPrimitives.Title>
+>(({ className, ...props }, ref) => (
+  <ToastPrimitives.Title ref={ref} className={cn("text-sm font-semibold", className)} {...props} />
+));
+ToastTitle.displayName = ToastPrimitives.Title.displayName;
+
+const ToastDescription = React.forwardRef<
+  React.ElementRef<typeof ToastPrimitives.Description>,
+  React.ComponentPropsWithoutRef<typeof ToastPrimitives.Description>
+>(({ className, ...props }, ref) => (
+  <ToastPrimitives.Description ref={ref} className={cn("text-sm opacity-90", className)} {...props} />
+));
+ToastDescription.displayName = ToastPrimitives.Description.displayName;
+
+type ToastProps = React.ComponentPropsWithoutRef<typeof Toast>;
+
+type ToastActionElement = React.ReactElement<typeof ToastAction>;
+
+export {
+  type ToastProps,
+  type ToastActionElement,
+  ToastProvider,
+  ToastViewport,
+  Toast,
+  ToastTitle,
+  ToastDescription,
+  ToastClose,
+  ToastAction,
+};
+
+```
+
+
+---
+
+## ARQUIVO: `src\components\ui\toaster.tsx`
+**Linhas:** 25
+
+```typescript
+import { useToast } from "@/hooks/use-toast";
+import { Toast, ToastClose, ToastDescription, ToastProvider, ToastTitle, ToastViewport } from "@/components/ui/toast";
+
+export function Toaster() {
+  const { toasts } = useToast();
+
+  return (
+    <ToastProvider>
+      {toasts.map(function ({ id, title, description, action, ...props }) {
+        return (
+          <Toast key={id} {...props}>
+            <div className="grid gap-1">
+              {title && <ToastTitle>{title}</ToastTitle>}
+              {description && <ToastDescription>{description}</ToastDescription>}
+            </div>
+            {action}
+            <ToastClose />
+          </Toast>
+        );
+      })}
+      <ToastViewport />
+    </ToastProvider>
+  );
+}
+
+```
+
+
+---
+
+## ARQUIVO: `src\components\ui\toggle-group.tsx`
+**Linhas:** 50
+
+```typescript
+import * as React from "react";
+import * as ToggleGroupPrimitive from "@radix-ui/react-toggle-group";
+import { type VariantProps } from "class-variance-authority";
+
+import { cn } from "@/lib/utils";
+import { toggleVariants } from "@/components/ui/toggle";
+
+const ToggleGroupContext = React.createContext<VariantProps<typeof toggleVariants>>({
+  size: "default",
+  variant: "default",
+});
+
+const ToggleGroup = React.forwardRef<
+  React.ElementRef<typeof ToggleGroupPrimitive.Root>,
+  React.ComponentPropsWithoutRef<typeof ToggleGroupPrimitive.Root> & VariantProps<typeof toggleVariants>
+>(({ className, variant, size, children, ...props }, ref) => (
+  <ToggleGroupPrimitive.Root ref={ref} className={cn("flex items-center justify-center gap-1", className)} {...props}>
+    <ToggleGroupContext.Provider value={{ variant, size }}>{children}</ToggleGroupContext.Provider>
+  </ToggleGroupPrimitive.Root>
+));
+
+ToggleGroup.displayName = ToggleGroupPrimitive.Root.displayName;
+
+const ToggleGroupItem = React.forwardRef<
+  React.ElementRef<typeof ToggleGroupPrimitive.Item>,
+  React.ComponentPropsWithoutRef<typeof ToggleGroupPrimitive.Item> & VariantProps<typeof toggleVariants>
+>(({ className, children, variant, size, ...props }, ref) => {
+  const context = React.useContext(ToggleGroupContext);
+
+  return (
+    <ToggleGroupPrimitive.Item
+      ref={ref}
+      className={cn(
+        toggleVariants({
+          variant: context.variant || variant,
+          size: context.size || size,
+        }),
+        className,
+      )}
+      {...props}
+    >
+      {children}
+    </ToggleGroupPrimitive.Item>
+  );
+});
+
+ToggleGroupItem.displayName = ToggleGroupPrimitive.Item.displayName;
+
+export { ToggleGroup, ToggleGroupItem };
+
+```
+
+
+---
+
+## ARQUIVO: `src\components\ui\toggle.tsx`
+**Linhas:** 38
+
+```typescript
+import * as React from "react";
+import * as TogglePrimitive from "@radix-ui/react-toggle";
+import { cva, type VariantProps } from "class-variance-authority";
+
+import { cn } from "@/lib/utils";
+
+const toggleVariants = cva(
+  "inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors hover:bg-muted hover:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=on]:bg-accent data-[state=on]:text-accent-foreground",
+  {
+    variants: {
+      variant: {
+        default: "bg-transparent",
+        outline: "border border-input bg-transparent hover:bg-accent hover:text-accent-foreground",
+      },
+      size: {
+        default: "h-10 px-3",
+        sm: "h-9 px-2.5",
+        lg: "h-11 px-5",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+      size: "default",
+    },
+  },
+);
+
+const Toggle = React.forwardRef<
+  React.ElementRef<typeof TogglePrimitive.Root>,
+  React.ComponentPropsWithoutRef<typeof TogglePrimitive.Root> & VariantProps<typeof toggleVariants>
+>(({ className, variant, size, ...props }, ref) => (
+  <TogglePrimitive.Root ref={ref} className={cn(toggleVariants({ variant, size, className }))} {...props} />
+));
+
+Toggle.displayName = TogglePrimitive.Root.displayName;
+
+export { Toggle, toggleVariants };
+
+```
+
+
+---
+
+## ARQUIVO: `src\components\ui\tooltip.tsx`
+**Linhas:** 29
+
+```typescript
+import * as React from "react";
+import * as TooltipPrimitive from "@radix-ui/react-tooltip";
+
+import { cn } from "@/lib/utils";
+
+const TooltipProvider = TooltipPrimitive.Provider;
+
+const Tooltip = TooltipPrimitive.Root;
+
+const TooltipTrigger = TooltipPrimitive.Trigger;
+
+const TooltipContent = React.forwardRef<
+  React.ElementRef<typeof TooltipPrimitive.Content>,
+  React.ComponentPropsWithoutRef<typeof TooltipPrimitive.Content>
+>(({ className, sideOffset = 4, ...props }, ref) => (
+  <TooltipPrimitive.Content
+    ref={ref}
+    sideOffset={sideOffset}
+    className={cn(
+      "z-50 overflow-hidden rounded-md border bg-popover px-3 py-1.5 text-sm text-popover-foreground shadow-md animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
+      className,
+    )}
+    {...props}
+  />
+));
+TooltipContent.displayName = TooltipPrimitive.Content.displayName;
+
+export { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider };
+
+```
+
+
+---
+
+## ARQUIVO: `src\components\ui\use-toast.ts`
+**Linhas:** 4
+
+```typescript
+import { useToast, toast } from "@/hooks/use-toast";
+
+export { useToast, toast };
+
+```
+
+
+---
+
+## ARQUIVO: `src\components\About.tsx`
+**Linhas:** 63
+
+```typescript
+import { Camera, Eye, Heart } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
+
+const About = () => {
+  const { t } = useLanguage();
+
+  return (
+    <section className="bg-secondary py-24 px-4 md:px-8">
+      <div className="max-w-4xl mx-auto">
+        <div className="text-center mb-16">
+          <h2 className="text-4xl md:text-5xl font-light tracking-tight mb-6">
+            {t('about.workTitle')}
+          </h2>
+          <div className="w-24 h-1 bg-accent mx-auto mb-8" />
+        </div>
+
+        <div className="grid md:grid-cols-3 gap-12 mb-16">
+          <div className="text-center">
+            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-accent/10 text-accent mb-6">
+              <Eye size={28} strokeWidth={1.5} />
+            </div>
+            <h3 className="text-xl font-light mb-3">{t('about.vision.title')}</h3>
+            <p className="text-muted-foreground font-light leading-relaxed">
+              {t('about.vision.description')}
+            </p>
+          </div>
+
+          <div className="text-center">
+            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-accent/10 text-accent mb-6">
+              <Camera size={28} strokeWidth={1.5} />
+            </div>
+            <h3 className="text-xl font-light mb-3">{t('about.technique.title')}</h3>
+            <p className="text-muted-foreground font-light leading-relaxed">
+              {t('about.technique.description')}
+            </p>
+          </div>
+
+          <div className="text-center">
+            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-accent/10 text-accent mb-6">
+              <Heart size={28} strokeWidth={1.5} />
+            </div>
+            <h3 className="text-xl font-light mb-3">{t('about.passion.title')}</h3>
+            <p className="text-muted-foreground font-light leading-relaxed">
+              {t('about.passion.description')}
+            </p>
+          </div>
+        </div>
+
+        <div className="max-w-2xl mx-auto text-center">
+          <p className="text-lg text-foreground/80 font-light leading-relaxed mb-6">
+            {t('about.paragraph1')}
+          </p>
+          <p className="text-muted-foreground font-light leading-relaxed">
+            {t('about.paragraph2')}
+          </p>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default About;
+
+```
+
+
+---
+
+## ARQUIVO: `src\components\AllCommentsManagement.tsx`
+**Linhas:** 238
+
+```typescript
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth, useAdminComments, useAllComments, deleteComment as deleteCommentFn, addReply } from '@/hooks/useSupabaseData';
+import type { Comment } from '@/hooks/useSupabaseData';
+import { supabase, uploadImage, deleteImage, PHOTOGRAPHY_BUCKET, DESIGN_BUCKET, HERO_BUCKET } from '@/lib/supabase';
+import type { PhotographyItem, DesignProject, HeroImage } from '@/lib/supabase';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { useToast } from '@/hooks/use-toast';
+import { extractExifData, formatDateForInput, formatExifAsDescription } from '@/lib/exifExtractor';
+import { Calendar, Edit, Loader2, LogOut, Plus, Tag, Trash2, Upload, MessageCircle, Check, X as XIcon } from 'lucide-react';
+import TagInput from '@/components/TagInput';
+import BatchUpload from '@/components/BatchUpload';
+import {
+    Accordion,
+    AccordionContent,
+    AccordionItem,
+    AccordionTrigger,
+} from "@/components/ui/accordion";
+
+// All Comments Management Component
+const AllCommentsManagement = () => {
+    const { allComments, loading, refreshComments } = useAllComments();
+    const { user } = useAuth();
+    const { toast } = useToast();
+    const [filter, setFilter] = useState<'all' | 'approved' | 'pending'>('all');
+    const [replyingTo, setReplyingTo] = useState<string | null>(null);
+    const [replyContent, setReplyContent] = useState('');
+    const [isSubmittingReply, setIsSubmittingReply] = useState(false);
+
+    const handleDelete = async (id: string) => {
+        if (!confirm('Tem certeza que deseja deletar este comentário?')) return;
+        try {
+            await deleteCommentFn(id);
+            toast({ title: 'Comentário Deletado', description: 'O comentário foi removido com sucesso.' });
+            await refreshComments();
+        } catch (error: any) {
+            console.error('Delete error:', error);
+            toast({
+                title: 'Erro ao Deletar',
+                description: error.message || 'Falha ao deletar comentário. Verifique as permissões no Supabase.',
+                variant: 'destructive'
+            });
+        }
+    };
+
+    const handleReply = async (parentId: string, itemId: string, type: 'photography' | 'design') => {
+        if (!replyContent.trim()) return;
+
+        setIsSubmittingReply(true);
+        try {
+            await addReply(parentId, replyContent, itemId, type);
+            toast({ title: 'Resposta Enviada', description: 'Sua resposta foi publicada.' });
+            setReplyingTo(null);
+            setReplyContent('');
+            await refreshComments();
+        } catch (error: any) {
+            toast({
+                title: 'Erro',
+                description: error.message || 'Falha ao enviar resposta.',
+                variant: 'destructive'
+            });
+        } finally {
+            setIsSubmittingReply(false);
+        }
+    };
+
+    // Filter comments
+    const filteredComments = allComments.filter(comment => {
+        if (filter === 'all') return true;
+        if (filter === 'approved') return comment.approved;
+        if (filter === 'pending') return !comment.approved;
+        return true;
+    });
+
+    return (
+        <div className="space-y-6">
+            <div className="flex justify-between items-center">
+                <h2 className="text-2xl font-display font-bold">Todos os Comentários</h2>
+                <div className="flex gap-2">
+                    <Button
+                        variant={filter === 'all' ? 'default' : 'outline'}
+                        size="sm"
+                        onClick={() => setFilter('all')}
+                    >
+                        Todos
+                    </Button>
+                    <Button
+                        variant={filter === 'approved' ? 'default' : 'outline'}
+                        size="sm"
+                        onClick={() => setFilter('approved')}
+                    >
+                        Aprovados
+                    </Button>
+                    <Button
+                        variant={filter === 'pending' ? 'default' : 'outline'}
+                        size="sm"
+                        onClick={() => setFilter('pending')}
+                    >
+                        Pendentes
+                    </Button>
+                    <Button onClick={() => refreshComments()} variant="outline" size="sm">
+                        Atualizar
+                    </Button>
+                </div>
+            </div>
+
+            {loading ? (
+                <div className="text-center py-10">
+                    <Loader2 className="h-8 w-8 animate-spin mx-auto text-muted-foreground" />
+                    <p className="mt-2 text-muted-foreground">Carregando comentários...</p>
+                </div>
+            ) : filteredComments.length === 0 ? (
+                <div className="text-center py-20 bg-secondary/20 rounded-lg">
+                    <MessageCircle className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+                    <p className="text-lg font-medium">Nenhum comentário encontrado</p>
+                    <p className="text-muted-foreground">Tente ajustar os filtros.</p>
+                </div>
+            ) : (
+                <div className="grid gap-4">
+                    {filteredComments.map((comment: Comment) => {
+                        const itemType = comment.photo_id ? 'photography' : 'design';
+                        const itemId = (comment.photo_id || comment.project_id) as string;
+
+                        return (
+                            <Card key={comment.id}>
+                                <CardContent className="p-6">
+                                    <div className="space-y-4">
+                                        {/* Comment Header */}
+                                        <div className="flex items-start justify-between">
+                                            <div className="space-y-2 flex-1">
+                                                <div className="flex items-center gap-2 flex-wrap">
+                                                    <span className="font-semibold text-lg">
+                                                        {comment.user_name || 'Anônimo'}
+                                                    </span>
+                                                    {comment.is_admin && (
+                                                        <span className="text-xs bg-accent text-accent-foreground px-2 py-0.5 rounded-full font-bold">
+                                                            ADMIN
+                                                        </span>
+                                                    )}
+                                                    {comment.approved ? (
+                                                        <span className="text-xs bg-green-500/10 text-green-500 px-2 py-0.5 rounded-full">
+                                                            Aprovado
+                                                        </span>
+                                                    ) : (
+                                                        <span className="text-xs bg-yellow-500/10 text-yellow-500 px-2 py-0.5 rounded-full">
+                                                            Pendente
+                                                        </span>
+                                                    )}
+                                                </div>
+                                                <p className="text-sm text-muted-foreground">
+                                                    {new Date(comment.created_at).toLocaleString('pt-BR')}
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        {/* Comment Content */}
+                                        <p className="text-foreground/90 bg-secondary/30 p-3 rounded-md">
+                                            "{comment.content}"
+                                        </p>
+
+                                        {/* Actions */}
+                                        <div className="flex gap-2 flex-wrap">
+                                            <Button
+                                                variant="outline"
+                                                size="sm"
+                                                onClick={() => {
+                                                    setReplyingTo(replyingTo === comment.id ? null : comment.id);
+                                                    setReplyContent('');
+                                                }}
+                                            >
+                                                <MessageCircle className="mr-2 h-4 w-4" />
+                                                Responder
+                                            </Button>
+                                            <Button
+                                                variant="destructive"
+                                                size="sm"
+                                                onClick={() => handleDelete(comment.id)}
+                                            >
+                                                <Trash2 className="mr-2 h-4 w-4" />
+                                                Deletar
+                                            </Button>
+                                        </div>
+
+                                        {/* Reply Form */}
+                                        {replyingTo === comment.id && (
+                                            <div className="mt-4 p-4 bg-secondary/20 rounded-md space-y-3">
+                                                <label className="block text-sm font-medium">Resposta do Admin:</label>
+                                                <Textarea
+                                                    value={replyContent}
+                                                    onChange={(e) => setReplyContent(e.target.value)}
+                                                    placeholder="Digite sua resposta..."
+                                                    className="min-h-[100px]"
+                                                />
+                                                <div className="flex gap-2">
+                                                    <Button
+                                                        onClick={() => handleReply(comment.id, itemId, itemType)}
+                                                        disabled={isSubmittingReply || !replyContent.trim()}
+                                                        size="sm"
+                                                    >
+                                                        {isSubmittingReply ? (
+                                                            <>
+                                                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                                                Enviando...
+                                                            </>
+                                                        ) : (
+                                                            'Enviar Resposta'
+                                                        )}
+                                                    </Button>
+                                                    <Button
+                                                        variant="outline"
+                                                        size="sm"
+                                                        onClick={() => {
+                                                            setReplyingTo(null);
+                                                            setReplyContent('');
+                                                        }}
+                                                    >
+                                                        Cancelar
+                                                    </Button>
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        );
+                    })}
+                </div>
+            )}
+        </div>
+    );
+};
+
+export default AllCommentsManagement;
+
+```
+
+
+---
+
+## ARQUIVO: `src\components\BatchUpload.tsx`
+**Linhas:** 377
+
+```typescript
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useToast } from '@/hooks/use-toast';
+import { uploadImage, PHOTOGRAPHY_BUCKET, DESIGN_BUCKET, HERO_BUCKET, supabase } from '@/lib/supabase';
+import { Loader2, Upload, X, Calendar, Tag } from 'lucide-react';
+import TagInput from '@/components/TagInput';
+
+type UploadType = 'photography' | 'design' | 'hero';
+
+interface BatchUploadProps {
+    type: UploadType;
+    onComplete: () => void;
+    onCancel: () => void;
+}
+
+const BatchUpload = ({ type, onComplete, onCancel }: BatchUploadProps) => {
+    const { toast } = useToast();
+    const [files, setFiles] = useState<File[]>([]);
+    const [uploading, setUploading] = useState(false);
+    const [uploadProgress, setUploadProgress] = useState(0);
+
+    // Common fields for all uploads
+    const [eventName, setEventName] = useState('');
+    const [eventDate, setEventDate] = useState('');
+    const [tags, setTags] = useState<string[]>([]);
+
+    // Photography-specific
+    const [category, setCategory] = useState<string>('portraits');
+
+    // Design-specific
+    const [designCategory, setDesignCategory] = useState<string>('logos');
+    const [projectTitle, setProjectTitle] = useState('');
+    const [projectDescription, setProjectDescription] = useState('');
+    const [projectYear, setProjectYear] = useState(new Date().getFullYear());
+    const [client, setClient] = useState('');
+
+    // Hero-specific
+    const [heroPage, setHeroPage] = useState<string>('home');
+    const [heroActive, setHeroActive] = useState(true);
+
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files) {
+            setFiles(Array.from(e.target.files));
+        }
+    };
+
+    const removeFile = (index: number) => {
+        setFiles(files.filter((_, i) => i !== index));
+    };
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (files.length === 0) return;
+
+        setUploading(true);
+        setUploadProgress(0);
+
+        try {
+            if (type === 'photography') {
+                await uploadPhotographyBatch();
+            } else if (type === 'design') {
+                await uploadDesignBatch();
+            } else if (type === 'hero') {
+                await uploadHeroBatch();
+            }
+
+            toast({
+                title: 'Success!',
+                description: `${files.length} arquivo(s) enviado(s) com sucesso!`,
+            });
+
+            onComplete();
+        } catch (error: any) {
+            toast({
+                title: 'Error',
+                description: error.message,
+                variant: 'destructive',
+            });
+        } finally {
+            setUploading(false);
+        }
+    };
+
+    const uploadPhotographyBatch = async () => {
+        const total = files.length;
+
+        for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+            const url = await uploadImage(PHOTOGRAPHY_BUCKET, file);
+
+            await supabase.from('photography').insert({
+                url,
+                title: file.name.replace(/\.[^/.]+$/, ''), // Remove extension
+                category,
+                description: `Evento: ${eventName || 'N/A'}`,
+                event_name: eventName || null,
+                event_date: eventDate || null,
+                tags: tags.length > 0 ? tags : null,
+                year: eventDate ? new Date(eventDate).getFullYear() : new Date().getFullYear(),
+            });
+
+            setUploadProgress(((i + 1) / total) * 100);
+        }
+    };
+
+    const uploadDesignBatch = async () => {
+        // For design, upload all files as a single project
+        const imageUrls = [];
+        const total = files.length;
+
+        for (let i = 0; i < files.length; i++) {
+            const url = await uploadImage(DESIGN_BUCKET, files[i]);
+            imageUrls.push(url);
+            setUploadProgress(((i + 1) / total) * 100);
+        }
+
+        await supabase.from('design_projects').insert({
+            images: imageUrls,
+            category: designCategory,
+            title: projectTitle,
+            description: projectDescription + (eventName ? `\nEvento: ${eventName}` : ''),
+            year: projectYear,
+            client: client || null,
+            event_name: eventName || null,
+            event_date: eventDate || null,
+        });
+    };
+
+    const uploadHeroBatch = async () => {
+        const total = files.length;
+
+        for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+            const url = await uploadImage(HERO_BUCKET, file);
+
+            await supabase.from('hero_images').insert({
+                url,
+                page: heroPage,
+                active: heroActive,
+                event_name: eventName || null,
+                event_date: eventDate || null,
+            });
+
+            setUploadProgress(((i + 1) / total) * 100);
+        }
+    };
+
+    return (
+        <Card>
+            <CardHeader>
+                <CardTitle>
+                    Upload em Lote - {type === 'photography' ? 'Fotografia' : type === 'design' ? 'Design' : 'Hero'}
+                </CardTitle>
+            </CardHeader>
+            <CardContent>
+                <form onSubmit={handleSubmit} className="space-y-4">
+                    {/* File Selection */}
+                    <div>
+                        <label className="block text-sm font-medium mb-2">
+                            Selecionar Arquivos ({files.length} selecionados)
+                        </label>
+                        <Input
+                            type="file"
+                            accept="image/*"
+                            multiple
+                            onChange={handleFileChange}
+                            required
+                        />
+                    </div>
+
+                    {/* Preview selected files */}
+                    {files.length > 0 && (
+                        <div className="grid grid-cols-4 gap-2 max-h-40 overflow-y-auto p-2 border rounded">
+                            {files.map((file, index) => (
+                                <div key={index} className="relative group">
+                                    <img
+                                        src={URL.createObjectURL(file)}
+                                        alt={file.name}
+                                        className="w-full h-20 object-cover rounded"
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => removeFile(index)}
+                                        className="absolute top-1 right-1 bg-destructive text-destructive-foreground rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                                    >
+                                        <X size={14} />
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+
+                    {/* Common Fields */}
+                    <div className="grid grid-cols-2 gap-4">
+                        <div>
+                            <label className="block text-sm font-medium mb-2 flex items-center gap-2">
+                                <Calendar size={16} />
+                                Nome do Evento (opcional)
+                            </label>
+                            <Input
+                                value={eventName}
+                                onChange={(e) => setEventName(e.target.value)}
+                                placeholder="Ex: Casamento João e Maria"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium mb-2">Data do Evento (opcional)</label>
+                            <Input
+                                type="date"
+                                value={eventDate}
+                                onChange={(e) => setEventDate(e.target.value)}
+                            />
+                        </div>
+                    </div>
+
+                    {/* Photography-specific fields */}
+                    {type === 'photography' && (
+                        <>
+                            <div>
+                                <label className="block text-sm font-medium mb-2">Categoria</label>
+                                <select
+                                    value={category}
+                                    onChange={(e) => setCategory(e.target.value)}
+                                    className="w-full px-4 py-2 rounded-md border border-input bg-background"
+                                >
+                                    <option value="portraits">Retratos</option>
+                                    <option value="urban">Urbano</option>
+                                    <option value="nature">Natureza</option>
+                                    <option value="art">Arte</option>
+                                    <option value="events">Eventos</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium mb-2 flex items-center gap-2">
+                                    <Tag size={16} />
+                                    Tags (aplicadas a todas as fotos)
+                                </label>
+                                <TagInput
+                                    tags={tags}
+                                    onChange={setTags}
+                                    placeholder="Ex: casamento, festa, família"
+                                />
+                            </div>
+                        </>
+                    )}
+
+                    {/* Design-specific fields */}
+                    {type === 'design' && (
+                        <>
+                            <div>
+                                <label className="block text-sm font-medium mb-2">Categoria</label>
+                                <select
+                                    value={designCategory}
+                                    onChange={(e) => setDesignCategory(e.target.value)}
+                                    className="w-full px-4 py-2 rounded-md border border-input bg-background"
+                                >
+                                    <option value="logos">Logos</option>
+                                    <option value="visual_identity">Identidade Visual</option>
+                                    <option value="social_media">Redes Sociais</option>
+                                    <option value="posters">Pôsteres</option>
+                                    <option value="special">Especial</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium mb-2">Título do Projeto</label>
+                                <Input
+                                    value={projectTitle}
+                                    onChange={(e) => setProjectTitle(e.target.value)}
+                                    required
+                                    placeholder="Ex: Identidade Visual Empresa X"
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium mb-2">Descrição</label>
+                                <Input
+                                    value={projectDescription}
+                                    onChange={(e) => setProjectDescription(e.target.value)}
+                                    required
+                                />
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label className="block text-sm font-medium mb-2">Ano</label>
+                                    <Input
+                                        type="number"
+                                        value={projectYear}
+                                        onChange={(e) => setProjectYear(parseInt(e.target.value))}
+                                        required
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium mb-2">Cliente (opcional)</label>
+                                    <Input
+                                        value={client}
+                                        onChange={(e) => setClient(e.target.value)}
+                                    />
+                                </div>
+                            </div>
+                        </>
+                    )}
+
+                    {/* Hero-specific fields */}
+                    {type === 'hero' && (
+                        <>
+                            <div>
+                                <label className="block text-sm font-medium mb-2">Página</label>
+                                <select
+                                    value={heroPage}
+                                    onChange={(e) => setHeroPage(e.target.value)}
+                                    className="w-full px-4 py-2 rounded-md border border-input bg-background"
+                                >
+                                    <option value="home">Home</option>
+                                    <option value="photography">Photography</option>
+                                    <option value="design">Design</option>
+                                    <option value="about">About</option>
+                                    <option value="services">Services</option>
+                                    <option value="contact">Contact</option>
+                                </select>
+                            </div>
+
+                            <div className="flex items-center gap-2">
+                                <input
+                                    type="checkbox"
+                                    checked={heroActive}
+                                    onChange={(e) => setHeroActive(e.target.checked)}
+                                    id="heroActive"
+                                />
+                                <label htmlFor="heroActive" className="text-sm font-medium">
+                                    Ativar imagens
+                                </label>
+                            </div>
+                        </>
+                    )}
+
+                    {/* Progress bar */}
+                    {uploading && (
+                        <div className="w-full bg-secondary rounded-full h-2.5">
+                            <div
+                                className="bg-accent h-2.5 rounded-full transition-all duration-300"
+                                style={{ width: `${uploadProgress}%` }}
+                            />
+                        </div>
+                    )}
+
+                    {/* Action Buttons */}
+                    <div className="flex gap-4">
+                        <Button type="submit" disabled={uploading || files.length === 0} className="flex-1">
+                            {uploading ? (
+                                <>
+                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                    Enviando {Math.round(uploadProgress)}%
+                                </>
+                            ) : (
+                                <>
+                                    <Upload className="mr-2 h-4 w-4" />
+                                    Enviar {files.length} arquivo(s)
+                                </>
+                            )}
+                        </Button>
+                        <Button type="button" variant="outline" onClick={onCancel} disabled={uploading}>
+                            Cancelar
+                        </Button>
+                    </div>
+                </form>
+            </CardContent>
+        </Card>
+    );
+};
+
+export default BatchUpload;
+
+```
+
+
+---
+
+## ARQUIVO: `src\components\CommentsSection.tsx`
+**Linhas:** 236
+
+```typescript
+import { useState } from 'react';
+import { useComments, useAuth } from '@/hooks/useSupabaseData';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Loader2, Send, User, Reply, BadgeCheck } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
+import { formatDistanceToNow } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
+
+interface CommentsSectionProps {
+    itemId: string;
+    type: 'photography' | 'design';
+    className?: string;
+}
+
+const CommentsSection = ({ itemId, type, className }: CommentsSectionProps) => {
+    const { comments, loading, addComment } = useComments(itemId, type);
+    const { user } = useAuth();
+    const { toast } = useToast();
+    const [newComment, setNewComment] = useState('');
+    const [userName, setUserName] = useState('');
+    const [submitting, setSubmitting] = useState(false);
+    const [showSuccess, setShowSuccess] = useState(false);
+    const [replyingTo, setReplyingTo] = useState<string | null>(null);
+    const [replyContent, setReplyContent] = useState('');
+
+    const isAdmin = !!user;
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!newComment.trim()) return;
+
+        setSubmitting(true);
+        try {
+            await addComment(newComment, userName || 'Anônimo');
+            setNewComment('');
+            setShowSuccess(true);
+            setTimeout(() => setShowSuccess(false), 5000);
+            toast({
+                title: "Comentário enviado",
+                description: "Seu comentário foi enviado e aguarda aprovação do administrador.",
+            });
+        } catch (error) {
+            console.error('Error submitting comment:', error);
+        } finally {
+            setSubmitting(false);
+        }
+    };
+
+    const handleReply = async (commentId: string) => {
+        if (!replyContent.trim()) return;
+
+        setSubmitting(true);
+        try {
+            await addComment(replyContent, 'Tiago', commentId, true);
+            setReplyContent('');
+            setReplyingTo(null);
+            toast({
+                title: "Resposta enviada",
+                description: "Sua resposta foi publicada com sucesso.",
+            });
+        } catch (error) {
+            console.error('Error submitting reply:', error);
+            toast({
+                title: "Erro",
+                description: "Falha ao enviar resposta.",
+                variant: "destructive"
+            });
+        } finally {
+            setSubmitting(false);
+        }
+    };
+
+    return (
+        <div className={`space-y-6 ${className}`}>
+            <h3 className="text-lg font-semibold">Comentários ({comments.length})</h3>
+
+            {/* Comment Form */}
+            <form onSubmit={handleSubmit} className="space-y-3">
+                <div className="flex flex-col gap-3">
+                    <Input
+                        placeholder="Seu nome (opcional)"
+                        value={userName}
+                        onChange={(e) => setUserName(e.target.value)}
+                        className="w-full bg-secondary/50"
+                    />
+                    <div className="flex gap-2">
+                        <Input
+                            placeholder="Adicione um comentário..."
+                            value={newComment}
+                            onChange={(e) => setNewComment(e.target.value)}
+                            className="flex-1 bg-secondary/50"
+                            required
+                        />
+                        <Button type="submit" size="icon" disabled={submitting || !newComment.trim()}>
+                            {submitting ? (
+                                <Loader2 className="h-4 w-4 animate-spin" />
+                            ) : (
+                                <Send className="h-4 w-4" />
+                            )}
+                        </Button>
+                    </div>
+                </div>
+                {showSuccess && (
+                    <div className="bg-green-500/10 border border-green-500/20 text-green-500 p-3 rounded-md text-sm text-center animate-in fade-in slide-in-from-top-2">
+                        Comentário feito! Aguardando aprovação.
+                    </div>
+                )}
+            </form>
+
+            {/* Comments List */}
+            <div className="space-y-4 max-h-[500px] overflow-y-auto pr-2 custom-scrollbar">
+                {loading ? (
+                    <div className="flex justify-center py-4">
+                        <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+                    </div>
+                ) : comments.length === 0 ? (
+                    <p className="text-sm text-muted-foreground text-center py-4">
+                        Seja o primeiro a comentar!
+                    </p>
+                ) : (
+                    comments.map((comment) => (
+                        <div key={comment.id} className="space-y-3">
+                            {/* Main Comment */}
+                            <div className="flex gap-3 bg-secondary/20 p-3 rounded-lg">
+                                <div className="h-8 w-8 rounded-full bg-accent/20 flex items-center justify-center flex-shrink-0">
+                                    <User className="h-4 w-4 text-accent" />
+                                </div>
+                                <div className="flex-1">
+                                    <div className="flex justify-between items-start">
+                                        <div className="flex items-center gap-2">
+                                            <span className="text-sm font-medium">{comment.user_name}</span>
+                                            {comment.is_admin && (
+                                                <span className="flex items-center gap-1 text-xs bg-accent/20 text-accent px-2 py-0.5 rounded-full">
+                                                    <BadgeCheck className="h-3 w-3" />
+                                                    Tiago
+                                                </span>
+                                            )}
+                                        </div>
+                                        <span className="text-xs text-muted-foreground">
+                                            {formatDistanceToNow(new Date(comment.created_at), {
+                                                addSuffix: true,
+                                                locale: ptBR
+                                            })}
+                                        </span>
+                                    </div>
+                                    <p className="text-sm mt-1 text-foreground/90">{comment.content}</p>
+
+                                    {/* Reply Button (Admin Only) */}
+                                    {isAdmin && !comment.is_admin && (
+                                        <Button
+                                            variant="ghost"
+                                            size="sm"
+                                            className="mt-2 h-7 text-xs"
+                                            onClick={() => setReplyingTo(replyingTo === comment.id ? null : comment.id)}
+                                        >
+                                            <Reply className="h-3 w-3 mr-1" />
+                                            Responder
+                                        </Button>
+                                    )}
+
+                                    {/* Reply Input (Admin Only) */}
+                                    {isAdmin && replyingTo === comment.id && (
+                                        <div className="mt-3 flex gap-2">
+                                            <Input
+                                                placeholder="Escreva sua resposta..."
+                                                value={replyContent}
+                                                onChange={(e) => setReplyContent(e.target.value)}
+                                                className="flex-1 bg-background"
+                                                autoFocus
+                                            />
+                                            <Button
+                                                size="sm"
+                                                onClick={() => handleReply(comment.id)}
+                                                disabled={submitting || !replyContent.trim()}
+                                            >
+                                                {submitting ? (
+                                                    <Loader2 className="h-4 w-4 animate-spin" />
+                                                ) : (
+                                                    <Send className="h-4 w-4" />
+                                                )}
+                                            </Button>
+                                            <Button
+                                                size="sm"
+                                                variant="ghost"
+                                                onClick={() => {
+                                                    setReplyingTo(null);
+                                                    setReplyContent('');
+                                                }}
+                                            >
+                                                Cancelar
+                                            </Button>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+
+                            {/* Replies (Nested) */}
+                            {comment.replies && comment.replies.length > 0 && (
+                                <div className="ml-11 space-y-2">
+                                    {comment.replies.map((reply) => (
+                                        <div key={reply.id} className="flex gap-3 bg-secondary/10 p-3 rounded-lg border-l-2 border-accent/30">
+                                            <div className="h-7 w-7 rounded-full bg-accent/20 flex items-center justify-center flex-shrink-0">
+                                                <BadgeCheck className="h-4 w-4 text-accent" />
+                                            </div>
+                                            <div className="flex-1">
+                                                <div className="flex justify-between items-start">
+                                                    <div className="flex items-center gap-2">
+                                                        <span className="text-sm font-medium">Tiago</span>
+                                                        <span className="text-xs bg-accent/20 text-accent px-2 py-0.5 rounded-full">
+                                                            Admin
+                                                        </span>
+                                                    </div>
+                                                    <span className="text-xs text-muted-foreground">
+                                                        {formatDistanceToNow(new Date(reply.created_at), {
+                                                            addSuffix: true,
+                                                            locale: ptBR
+                                                        })}
+                                                    </span>
+                                                </div>
+                                                <p className="text-sm mt-1 text-foreground/90">{reply.content}</p>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    ))
+                )}
+            </div>
+        </div>
+    );
+};
+
+export default CommentsSection;
+
+```
+
+
+---
+
+## ARQUIVO: `src\components\DesignGrid.tsx`
+**Linhas:** 166
+
+```typescript
+import { useState } from "react";
+import { useDesignProjects } from "@/hooks/useSupabaseData";
+import type { DesignProject } from "@/lib/supabase";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { useImageProtection } from "@/hooks/useImageProtection";
+import ProtectedImage from "./ProtectedImage";
+import ProjectModal from "./ProjectModal";
+import InteractionBar from "./InteractionBar";
+
+interface DesignGridProps {
+    showHeader?: boolean;
+    showFilters?: boolean;
+    limit?: number;
+}
+
+const DesignGrid = ({ showHeader = true, showFilters = true, limit }: DesignGridProps) => {
+    const { t } = useLanguage();
+
+    // Enable image protection
+    useImageProtection();
+    const [selectedProject, setSelectedProject] = useState<DesignProject | null>(null);
+    const [filter, setFilter] = useState("Todos");
+
+    // Fetch projects using Supabase hook
+    const { projects, loading } = useDesignProjects(
+        filter === "Todos" ? undefined : filter
+    );
+
+    const categories = {
+        logos: t('design.categories.logos'),
+        visual_identity: t('design.categories.visualIdentity'),
+        social_media: t('design.categories.socialMedia'),
+        posters: t('design.categories.posters'),
+        special: t('design.categories.special')
+    };
+
+    const categoryList = ["Todos", "logos", "visual_identity", "social_media", "posters", "special"];
+    const categoryLabels: Record<string, string> = {
+        "Todos": t('design.categories.all'),
+        "logos": t('design.categories.logos'),
+        "visual_identity": t('design.categories.visualIdentity'),
+        "social_media": t('design.categories.socialMedia'),
+        "posters": t('design.categories.posters'),
+        "special": t('design.categories.special')
+    };
+
+    const filteredProjects = filter === "Todos"
+        ? projects
+        : projects.filter(p => p.category === filter);
+
+    // Apply limit if specified
+    const displayProjects = limit ? filteredProjects.slice(0, limit) : filteredProjects;
+
+    if (loading) {
+        return (
+            <div className="flex items-center justify-center min-h-[400px]">
+                <p className="text-muted-foreground">{t('portfolio.loading')}</p>
+            </div>
+        );
+    }
+
+    return (
+        <section id="design-gallery" className="py-20 px-4 md:px-8">
+            <div className="max-w-7xl mx-auto">
+                {showHeader && (
+                    <div className="text-center mb-16">
+                        <h2 className="text-4xl md:text-5xl font-light tracking-tight mb-6">
+                            {t('design.title')}
+                        </h2>
+                        <p className="text-muted-foreground text-lg font-light max-w-2xl mx-auto">
+                            {t('design.description')}
+                        </p>
+                    </div>
+                )}
+
+                {/* Category Filter */}
+                {showFilters && (
+                    <div className="flex flex-wrap justify-center gap-4 mb-12">
+                        {categoryList.map((category) => (
+                            <button
+                                key={category}
+                                onClick={() => setFilter(category)}
+                                className={`px-6 py-2 rounded-full text-sm font-medium tracking-wide transition-all duration-300 ${filter === category
+                                    ? "bg-accent text-accent-foreground shadow-lg shadow-accent/30"
+                                    : "bg-secondary text-secondary-foreground hover:bg-accent/20"
+                                    }`}
+                            >
+                                {categoryLabels[category]}
+                            </button>
+                        ))}
+                    </div>
+                )}
+
+                {/* Projects Grid */}
+                {displayProjects.length === 0 ? (
+                    <div className="text-center py-20">
+                        <p className="text-muted-foreground">
+                            {t('design.noProjects') || 'Nenhum projeto encontrado'}
+                        </p>
+                    </div>
+                ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        {displayProjects.map((project, index) => (
+                            <div
+                                key={project.id}
+                                className="group animate-fade-in"
+                                style={{ animationDelay: `${index * 100}ms` }}
+                            >
+                                <div className="relative aspect-[4/3] overflow-hidden rounded-lg bg-secondary">
+                                    <ProtectedImage
+                                        src={project.images[0]}
+                                        alt={project.title}
+                                        loading="lazy"
+                                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                                        onImageClick={() => setSelectedProject(project)}
+                                    />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
+                                        <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
+                                            <p className="text-sm font-light text-accent mb-2">
+                                                {categories[project.category as keyof typeof categories]}
+                                            </p>
+                                            <h3 className="text-xl font-display font-semibold">
+                                                {project.title}
+                                            </h3>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="mt-4">
+                                    <p className="text-sm text-accent font-medium">
+                                        {categories[project.category as keyof typeof categories]}
+                                    </p>
+                                    <h3 className="text-lg font-display font-semibold mt-1">
+                                        {project.title}
+                                    </h3>
+                                    <p className="text-sm text-muted-foreground mt-1">
+                                        {project.year} {project.client && `• ${project.client}`}
+                                    </p>
+
+                                    <InteractionBar
+                                        itemId={project.id}
+                                        type="design"
+                                        initialLikes={project.likes_count}
+                                        initialComments={project.comments_count}
+                                        initialShares={project.shares_count}
+                                        variant="light"
+                                        className="mt-4 pt-4 border-t border-border/50"
+                                    />
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                )}
+            </div>
+
+            {selectedProject && (
+                <ProjectModal
+                    project={selectedProject}
+                    onClose={() => setSelectedProject(null)}
+                />
+            )}
+        </section>
+    );
+};
+
+export default DesignGrid;
+
+```
+
+
+---
+
+## ARQUIVO: `src\components\DualPortfolioGrid.tsx`
+**Linhas:** 190
+
+```typescript
+import { useState } from "react";
+import { usePhotography, useDesignProjects } from "@/hooks/useSupabaseData";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { useImageProtection } from "@/hooks/useImageProtection";
+import ProtectedImage from "./ProtectedImage";
+import type { PhotographyItem, DesignProject } from "@/lib/supabase";
+
+const DualPortfolioGrid = () => {
+    const { t } = useLanguage();
+    useImageProtection();
+
+    const [photoFilter, setPhotoFilter] = useState<string>("all");
+    const [designFilter, setDesignFilter] = useState<string>("all");
+
+    const { photos, loading: photosLoading } = usePhotography(photoFilter === "all" ? undefined : photoFilter);
+    const { projects, loading: projectsLoading } = useDesignProjects(designFilter === "all" ? undefined : designFilter);
+
+    const photoCategories = [
+        { key: "all", label: "Todos" },
+        { key: "portraits", label: "Retratos" },
+        { key: "urban", label: "Urbano" },
+        { key: "nature", label: "Natureza" },
+        { key: "art", label: "Arte" },
+        { key: "events", label: "Eventos" }
+    ];
+
+    const designCategories = [
+        { key: "all", label: "Todos" },
+        { key: "logos", label: "Logos" },
+        { key: "visual_identity", label: "Identidade Visual" },
+        { key: "social_media", label: "Redes Sociais" },
+        { key: "posters", label: "Pôsteres" },
+        { key: "special", label: "Projetos Especiais" }
+    ];
+
+    return (
+        <section id="dual-portfolio" className="min-h-screen bg-background py-20 px-4 md:px-8">
+            <div className="max-w-7xl mx-auto">
+                {/* Main Title */}
+                <h1 className="text-4xl md:text-6xl font-light tracking-tight text-center mb-16">
+                    Portfólio
+                </h1>
+
+                {/* Two Column Layout */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-8">
+                    {/* Photography Section */}
+                    <div className="space-y-6">
+                        {/* Photography Header */}
+                        <div className="text-center lg:text-left">
+                            <h2 className="text-2xl md:text-3xl font-display font-semibold mb-3 text-accent">
+                                Fotografia
+                            </h2>
+                            <p className="text-muted-foreground text-sm md:text-base font-light mb-6">
+                                Uma coleção de momentos capturados através de diferentes perspectivas
+                            </p>
+
+                            {/* Photography Filters */}
+                            <div className="flex flex-wrap gap-3 justify-center lg:justify-start">
+                                {photoCategories.map((category) => (
+                                    <button
+                                        key={category.key}
+                                        onClick={() => setPhotoFilter(category.key)}
+                                        className={`px-4 py-2 rounded-full text-xs md:text-sm font-medium tracking-wide transition-all duration-300 ${photoFilter === category.key
+                                                ? "bg-accent text-accent-foreground shadow-lg shadow-accent/30"
+                                                : "bg-secondary text-secondary-foreground hover:bg-accent/20"
+                                            }`}
+                                    >
+                                        {category.label}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* Photography Grid */}
+                        {photosLoading ? (
+                            <div className="text-center py-20">
+                                <p className="text-muted-foreground">Carregando...</p>
+                            </div>
+                        ) : (
+                            <div className="grid grid-cols-2 gap-4">
+                                {photos.slice(0, 12).map((photo, index) => (
+                                    <div
+                                        key={photo.id}
+                                        className="group relative aspect-square overflow-hidden rounded-lg animate-fade-in"
+                                        style={{ animationDelay: `${index * 50}ms` }}
+                                    >
+                                        <ProtectedImage
+                                            src={photo.url}
+                                            alt={photo.title}
+                                            loading="lazy"
+                                            className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+                                            onImageClick={() => { }}
+                                        />
+                                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-all duration-500 flex items-center justify-center pointer-events-none">
+                                            <span className="text-white opacity-0 group-hover:opacity-100 transition-opacity duration-500 text-sm tracking-wider font-light">
+                                                {photo.category}
+                                            </span>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+
+                        {/* View More Button */}
+                        <div className="text-center lg:text-left pt-6">
+                            <a
+                                href="/photography"
+                                className="inline-block px-6 py-3 bg-accent text-accent-foreground rounded-full font-medium hover:bg-accent/90 transition-all duration-300 hover:scale-105 text-sm"
+                            >
+                                Ver mais fotografias
+                            </a>
+                        </div>
+                    </div>
+
+                    {/* Design Section */}
+                    <div className="space-y-6">
+                        {/* Design Header */}
+                        <div className="text-center lg:text-left">
+                            <h2 className="text-2xl md:text-3xl font-display font-semibold mb-3 text-accent">
+                                Design Gráfico
+                            </h2>
+                            <p className="text-muted-foreground text-sm md:text-base font-light mb-6">
+                                Identidades visuais modernas, branding e peças de design que criam forte impacto visual e experiências memoráveis de marca
+                            </p>
+
+                            {/* Design Filters */}
+                            <div className="flex flex-wrap gap-3 justify-center lg:justify-start">
+                                {designCategories.map((category) => (
+                                    <button
+                                        key={category.key}
+                                        onClick={() => setDesignFilter(category.key)}
+                                        className={`px-4 py-2 rounded-full text-xs md:text-sm font-medium tracking-wide transition-all duration-300 ${designFilter === category.key
+                                                ? "bg-accent text-accent-foreground shadow-lg shadow-accent/30"
+                                                : "bg-secondary text-secondary-foreground hover:bg-accent/20"
+                                            }`}
+                                    >
+                                        {category.label}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* Design Grid */}
+                        {projectsLoading ? (
+                            <div className="text-center py-20">
+                                <p className="text-muted-foreground">Carregando...</p>
+                            </div>
+                        ) : (
+                            <div className="grid grid-cols-2 gap-4">
+                                {projects.slice(0, 12).map((project, index) => (
+                                    <div
+                                        key={project.id}
+                                        className="group relative aspect-square overflow-hidden rounded-lg animate-fade-in"
+                                        style={{ animationDelay: `${index * 50}ms` }}
+                                    >
+                                        <ProtectedImage
+                                            src={project.images[0]}
+                                            alt={project.title}
+                                            loading="lazy"
+                                            className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+                                            onImageClick={() => { }}
+                                        />
+                                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-all duration-500 flex items-center justify-center pointer-events-none">
+                                            <span className="text-white opacity-0 group-hover:opacity-100 transition-opacity duration-500 text-sm tracking-wider font-light">
+                                                {project.category}
+                                            </span>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+
+                        {/* View More Button */}
+                        <div className="text-center lg:text-left pt-6">
+                            <a
+                                href="/design"
+                                className="inline-block px-6 py-3 bg-accent text-accent-foreground rounded-full font-medium hover:bg-accent/90 transition-all duration-300 hover:scale-105 text-sm"
+                            >
+                                Ver mais projetos
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    );
+};
+
+export default DualPortfolioGrid;
+
+```
+
+
+---
+
+## ARQUIVO: `src\components\Footer.tsx`
+**Linhas:** 69
+
+```typescript
+import { Mail, Instagram, Camera } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
+
+const Footer = () => {
+  const { t } = useLanguage();
+
+  return (
+    <footer className="bg-primary text-primary-foreground py-16 px-4 md:px-8">
+      <div className="max-w-7xl mx-auto">
+        <div className="grid md:grid-cols-3 gap-12 mb-12">
+          {/* Brand */}
+          <div>
+            <div className="flex items-center gap-2 mb-4">
+              <Camera size={24} strokeWidth={1.5} />
+              <span className="text-xl font-light tracking-wide">{t('footer.brand')}</span>
+            </div>
+            <p className="text-primary-foreground/70 font-light leading-relaxed">
+              {t('footer.tagline')}
+            </p>
+          </div>
+
+          {/* Contact */}
+          <div>
+            <h3 className="text-lg font-light mb-4 tracking-wide">{t('footer.contactTitle')}</h3>
+            <div className="space-y-3">
+              <a
+                href="mailto:contato@portfolio.com"
+                className="flex items-center gap-3 text-primary-foreground/70 hover:text-primary-foreground transition-colors font-light"
+              >
+                <Mail size={18} strokeWidth={1.5} />
+                <span>contato@portfolio.com</span>
+              </a>
+              <a
+                href="https://instagram.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-3 text-primary-foreground/70 hover:text-primary-foreground transition-colors font-light"
+              >
+                <Instagram size={18} strokeWidth={1.5} />
+                <span>@portfolio</span>
+              </a>
+            </div>
+          </div>
+
+          {/* Services */}
+          <div>
+            <h3 className="text-lg font-light mb-4 tracking-wide">{t('footer.servicesTitle')}</h3>
+            <ul className="space-y-2 text-primary-foreground/70 font-light">
+              <li>{t('footer.portraitPhotography')}</li>
+              <li>{t('footer.urbanPhotography')}</li>
+              <li>{t('footer.naturePhotography')}</li>
+              <li>{t('footer.events')}</li>
+              <li>{t('footer.commercialProjects')}</li>
+            </ul>
+          </div>
+        </div>
+
+        <div className="border-t border-primary-foreground/10 pt-8 text-center">
+          <p className="text-primary-foreground/60 font-light text-sm">
+            © {new Date().getFullYear()} Portfolio. {t('footer.allRightsReserved')}.
+          </p>
+        </div>
+      </div>
+    </footer>
+  );
+};
+
+export default Footer;
+
+```
+
+
+---
+
+## ARQUIVO: `src\components\Hero.tsx`
+**Linhas:** 134
+
+```typescript
+import { useState, useEffect } from "react";
+import { ArrowDown } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { supabase } from "@/lib/supabase";
+import type { HeroImage } from "@/lib/supabase";
+
+// Fisher-Yates shuffle algorithm for randomizing arrays
+function shuffleArray<T>(array: T[]): T[] {
+  const shuffled = [...array];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+}
+
+interface HeroProps {
+  page?: string;
+}
+
+const Hero = ({ page = 'home' }: HeroProps) => {
+  const { t } = useLanguage();
+  const [heroImages, setHeroImages] = useState<HeroImage[]>([]);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  useEffect(() => {
+    const fetchHeroImages = async () => {
+      // Fetch all active hero images
+      const { data, error } = await supabase
+        .from('hero_images')
+        .select('*')
+        .eq('active', true);
+
+      if (error) {
+        console.error('Error fetching hero images:', error);
+        return;
+      }
+
+      if (data && data.length > 0) {
+        // Filter on the client side to handle null values properly
+        let filtered;
+        if (page === 'home') {
+          // For home page, include images with page='home' OR page=null
+          filtered = data.filter(img => !img.page || img.page === 'home');
+        } else {
+          // For other pages, only include exact matches
+          filtered = data.filter(img => img.page === page);
+        }
+
+        // Randomize the filtered images
+        setHeroImages(shuffleArray(filtered));
+      }
+    };
+
+    fetchHeroImages();
+  }, [page]);
+
+  useEffect(() => {
+    if (heroImages.length <= 1) return;
+
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prev) => (prev + 1) % heroImages.length);
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [heroImages]);
+
+  const scrollToGallery = () => {
+    const gallery = document.getElementById('gallery');
+    gallery?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  return (
+    <section className="relative h-screen w-full overflow-hidden bg-gradient-to-br from-black via-purple-900/20 to-black">
+      {/* Background Images Slideshow */}
+      {heroImages.length > 0 && heroImages.map((image, index) => (
+        <div
+          key={image.id}
+          className={`absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat transition-opacity duration-1000 ${index === currentImageIndex ? 'opacity-100' : 'opacity-0'
+            }`}
+          style={{ backgroundImage: `url(${image.url})` }}
+        />
+      ))}
+
+      {/* Much stronger overlay for maximum text readability */}
+      <div className="absolute inset-0 bg-black/60" />
+      <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/60" />
+
+      <div className="relative h-full flex flex-col items-center justify-center text-center px-4">
+        <h1 className="text-4xl md:text-6xl lg:text-7xl font-display font-bold tracking-tight text-white mb-4 animate-in fade-in slide-in-from-bottom-4 duration-700 drop-shadow-[0_4px_16px_rgba(0,0,0,0.9)] [text-shadow:_0_2px_10px_rgb(0_0_0_/_80%)]" style={{ animationDelay: '200ms' }}>
+          {t('hero.title')}
+        </h1>
+        <p className="text-xl md:text-2xl text-white font-light mb-3 animate-in fade-in slide-in-from-bottom-4 duration-700 drop-shadow-[0_3px_12px_rgba(0,0,0,0.9)] [text-shadow:_0_2px_8px_rgb(0_0_0_/_70%)]" style={{ animationDelay: '400ms' }}>
+          {t('hero.subtitle')}
+        </p>
+        <p className="text-base md:text-lg text-white max-w-3xl mb-10 font-light tracking-wide animate-in fade-in slide-in-from-bottom-4 duration-700 drop-shadow-[0_2px_10px_rgba(0,0,0,0.9)] [text-shadow:_0_2px_6px_rgb(0_0_0_/_60%)]" style={{ animationDelay: '600ms' }}>
+          {t('hero.description')}
+        </p>
+
+        <div className="flex flex-col sm:flex-row gap-4 justify-center animate-in fade-in slide-in-from-bottom-4 duration-700" style={{ animationDelay: '800ms' }}>
+          <a
+            href="/photography"
+            className="px-8 py-3 bg-accent text-accent-foreground rounded-full font-medium hover:bg-accent/90 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-accent/50"
+          >
+            {t('nav.photography')}
+          </a>
+          <a
+            href="/design"
+            className="px-8 py-3 bg-accent text-accent-foreground rounded-full font-medium hover:bg-accent/90 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-accent/50"
+          >
+            {t('nav.graphicDesign')}
+          </a>
+          <a
+            href="/contact"
+            className="px-8 py-3 border-2 border-white text-white rounded-full font-medium hover:bg-white hover:text-foreground transition-all duration-300 hover:scale-105"
+          >
+            {t('hero.requestQuote')}
+          </a>
+        </div>
+
+        <button
+          onClick={scrollToGallery}
+          className="absolute bottom-12 left-1/2 -translate-x-1/2 text-white/80 hover:text-white transition-all duration-300 animate-bounce"
+          aria-label="Scroll to gallery"
+        >
+          <ArrowDown size={32} strokeWidth={1.5} />
+        </button>
+      </div>
+    </section>
+  );
+};
+
+export default Hero;
+
+```
+
+
+---
+
+## ARQUIVO: `src\components\InteractionBar.tsx`
+**Linhas:** 170
+
+```typescript
+import { useState, useEffect } from 'react';
+import { Heart, MessageCircle, Share2 } from 'lucide-react';
+import { incrementLikes, incrementShares } from '@/hooks/useSupabaseData';
+import { cn } from '@/lib/utils';
+import { useToast } from '@/hooks/use-toast';
+
+interface InteractionBarProps {
+    itemId: string;
+    type: 'photography' | 'design';
+    initialLikes?: number;
+    initialComments?: number;
+    initialShares?: number;
+    onCommentClick?: () => void;
+    className?: string;
+    variant?: 'light' | 'dark';
+}
+
+const InteractionBar = ({
+    itemId,
+    type,
+    initialLikes = 0,
+    initialComments = 0,
+    initialShares = 0,
+    onCommentClick,
+    className,
+    variant = 'dark'
+}: InteractionBarProps) => {
+    const { toast } = useToast();
+    const [likes, setLikes] = useState(initialLikes);
+    const [shares, setShares] = useState(initialShares);
+    const [isLiked, setIsLiked] = useState(false);
+
+    // Check local storage for liked status
+    useEffect(() => {
+        const likedItems = JSON.parse(localStorage.getItem('liked_items') || '{}');
+        // We still set isLiked to true if they have liked it, to show the visual state
+        // But we won't block the action based on this state alone
+        if (likedItems[itemId]) {
+            setIsLiked(true);
+        }
+    }, [itemId]);
+
+    // Sync state with props when data loads
+    useEffect(() => {
+        setLikes(initialLikes);
+    }, [initialLikes]);
+
+    useEffect(() => {
+        setShares(initialShares);
+    }, [initialShares]);
+
+    const handleLike = async (e: React.MouseEvent) => {
+        e.stopPropagation();
+
+        const likedItems = JSON.parse(localStorage.getItem('liked_items') || '{}');
+        const lastLiked = likedItems[itemId];
+        const now = Date.now();
+        const COOLDOWN = 10 * 60 * 1000; // 10 minutes
+
+        // Check if currently in cooldown
+        if (lastLiked && typeof lastLiked === 'number' && (now - lastLiked < COOLDOWN)) {
+            const remaining = Math.ceil((COOLDOWN - (now - lastLiked)) / 60000);
+            toast({
+                title: "Aguarde um pouco",
+                description: `Você poderá curtir novamente em ${remaining} minutos.`,
+                variant: "destructive"
+            });
+            return;
+        }
+
+        // Optimistic update
+        setLikes(prev => prev + 1);
+        setIsLiked(true);
+
+        // Save timestamp to local storage
+        likedItems[itemId] = now;
+        localStorage.setItem('liked_items', JSON.stringify(likedItems));
+
+        // API call
+        await incrementLikes(itemId, type);
+    };
+
+    const handleShare = async (e: React.MouseEvent) => {
+        e.stopPropagation();
+
+        // Optimistic update
+        setShares(prev => prev + 1);
+        await incrementShares(itemId, type);
+
+        const url = window.location.href;
+
+        if (navigator.share) {
+            try {
+                await navigator.share({
+                    title: 'Check out this portfolio item!',
+                    text: 'I found this amazing work on Tiago Damasceno Portfolio',
+                    url: url
+                });
+            } catch (err) {
+                console.log('Error sharing:', err);
+            }
+        } else {
+            // Fallback to clipboard
+            navigator.clipboard.writeText(url);
+            toast({
+                title: "Link copiado!",
+                description: "O link foi copiado para sua área de transferência.",
+            });
+        }
+    };
+
+    const textColor = variant === 'light' ? 'text-foreground' : 'text-white';
+    const iconColor = variant === 'light' ? 'text-foreground/80' : 'text-white/80';
+    const hoverColor = 'hover:text-accent';
+
+    return (
+        <div className={cn("flex items-center gap-6", className)}>
+            <button
+                onClick={handleLike}
+                className={cn(
+                    "flex items-center gap-2 transition-colors group",
+                    isLiked ? "text-red-500" : iconColor,
+                    !isLiked && hoverColor
+                )}
+            >
+                <Heart
+                    className={cn(
+                        "h-5 w-5 transition-transform group-active:scale-125",
+                        isLiked && "fill-current"
+                    )}
+                />
+                <span className="text-sm font-medium">{likes}</span>
+            </button>
+
+            <button
+                onClick={(e) => {
+                    e.stopPropagation();
+                    onCommentClick?.();
+                }}
+                className={cn(
+                    "flex items-center gap-2 transition-colors group",
+                    iconColor,
+                    hoverColor
+                )}
+            >
+                <MessageCircle className="h-5 w-5" />
+                {initialComments > 0 && (
+                    <span className="text-sm font-medium">{initialComments}</span>
+                )}
+            </button>
+
+            <button
+                onClick={handleShare}
+                className={cn(
+                    "flex items-center gap-2 transition-colors group",
+                    iconColor,
+                    hoverColor
+                )}
+            >
+                <Share2 className="h-5 w-5" />
+                {shares > 0 && (
+                    <span className="text-sm font-medium">{shares}</span>
+                )}
+            </button>
+        </div>
+    );
+};
+
+export default InteractionBar;
+
+```
+
+
+---
+
+## ARQUIVO: `src\components\LanguageSelector.tsx`
+**Linhas:** 68
+
+```typescript
+import { Globe } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import { useLanguage } from "@/contexts/LanguageContext";
+
+const languages = [
+    { code: 'pt', name: 'Português', flag: '🇧🇷' },
+    { code: 'en', name: 'English', flag: '🇺🇸' },
+    { code: 'es', name: 'Español', flag: '🇪🇸' },
+    { code: 'fr', name: 'Français', flag: '🇫🇷' },
+    // { code: 'de', name: 'Deutsch', flag: '🇩🇪' }, // Temporarily disabled
+];
+
+
+const LanguageSelector = () => {
+    const { language, setLanguage } = useLanguage();
+    const [isOpen, setIsOpen] = useState(false);
+    const dropdownRef = useRef<HTMLDivElement>(null);
+
+    const currentLanguage = languages.find(lang => lang.code === language);
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+                setIsOpen(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
+
+    return (
+        <div className="relative" ref={dropdownRef}>
+            <button
+                onClick={() => setIsOpen(!isOpen)}
+                className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-accent/10 transition-colors text-foreground/80 hover:text-accent"
+                aria-label="Select language"
+            >
+                <Globe size={20} strokeWidth={1.5} />
+                <span className="text-sm font-medium hidden sm:block">
+                    {currentLanguage?.flag} {currentLanguage?.code.toUpperCase()}
+                </span>
+            </button>
+
+            {isOpen && (
+                <div className="absolute right-0 mt-2 w-48 bg-background border border-border rounded-lg shadow-lg overflow-hidden z-50">
+                    {languages.map((lang) => (
+                        <button
+                            key={lang.code}
+                            onClick={() => {
+                                setLanguage(lang.code as any);
+                                setIsOpen(false);
+                            }}
+                            className={`w-full px-4 py-3 text-left hover:bg-accent/10 transition-colors flex items-center gap-3 ${language === lang.code ? 'bg-accent/20 text-accent' : 'text-foreground/80'
+                                }`}
+                        >
+                            <span className="text-xl">{lang.flag}</span>
+                            <span className="text-sm font-medium">{lang.name}</span>
+                        </button>
+                    ))}
+                </div>
+            )}
+        </div>
+    );
+};
+
+export default LanguageSelector;
+
+```
+
+
+---
+
+## ARQUIVO: `src\components\Lightbox.tsx`
+**Linhas:** 172
+
+```typescript
+import { useState, useEffect } from "react";
+import { X, ChevronLeft, ChevronRight, MessageCircle } from "lucide-react";
+import ProtectedImage from "./ProtectedImage";
+import InteractionBar from "./InteractionBar";
+import CommentsSection from "./CommentsSection";
+
+export interface Photo {
+  id: string;
+  src: string;
+  alt: string;
+  category: string;
+  description?: string;
+  camera_model?: string;
+  lens_model?: string;
+  iso?: number;
+  aperture?: string;
+  shutter_speed?: string;
+  focal_length?: string;
+  likes_count?: number;
+  comments_count?: number;
+  shares_count?: number;
+}
+
+
+interface LightboxProps {
+  photo: Photo;
+  photos: Photo[];
+  onClose: () => void;
+  onNavigate: (photo: Photo) => void;
+}
+
+const Lightbox = ({ photo, photos, onClose, onNavigate }: LightboxProps) => {
+  const currentIndex = photos.findIndex((p) => p.id === photo.id);
+  const [showComments, setShowComments] = useState(false);
+
+  const handlePrevious = () => {
+    const newIndex = currentIndex > 0 ? currentIndex - 1 : photos.length - 1;
+    onNavigate(photos[newIndex]);
+  };
+
+  const handleNext = () => {
+    const newIndex = currentIndex < photos.length - 1 ? currentIndex + 1 : 0;
+    onNavigate(photos[newIndex]);
+  };
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+      if (e.key === "ArrowLeft") handlePrevious();
+      if (e.key === "ArrowRight") handleNext();
+    };
+
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.body.style.overflow = "unset";
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [currentIndex, onClose, handlePrevious, handleNext]);
+
+  return (
+    <div
+      className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center animate-fade-in"
+      onClick={onClose}
+    >
+      {/* Close Button */}
+      <button
+        onClick={onClose}
+        className="absolute top-4 right-4 text-white/80 hover:text-white transition-colors z-50"
+        aria-label="Close lightbox"
+      >
+        <X size={32} strokeWidth={1.5} />
+      </button>
+
+      {/* Previous Button */}
+      <button
+        onClick={(e) => {
+          e.stopPropagation();
+          handlePrevious();
+        }}
+        className="absolute left-6 text-white/80 hover:text-white transition-colors z-10 hidden md:block"
+        aria-label="Previous photo"
+      >
+        <ChevronLeft size={48} strokeWidth={1.5} />
+      </button>
+
+      {/* Next Button */}
+      <button
+        onClick={(e) => {
+          e.stopPropagation();
+          handleNext();
+        }}
+        className="absolute right-6 text-white/80 hover:text-white transition-colors z-10 hidden md:block"
+        aria-label="Next photo"
+      >
+        <ChevronRight size={48} strokeWidth={1.5} />
+      </button>
+
+      <div
+        className={`relative max-w-7xl max-h-[90vh] mx-auto px-4 flex flex-col md:flex-row items-center gap-8 transition-all duration-300 ${showComments ? 'w-full' : ''}`}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className={`flex flex-col items-center transition-all duration-300 ${showComments ? 'md:w-2/3' : 'w-full'}`}>
+          <ProtectedImage
+            src={photo.src}
+            alt={photo.alt}
+            className="max-w-full max-h-[70vh] object-contain animate-scale-in"
+            loading="eager"
+          />
+
+          {/* Info & Metadata */}
+          <div className="text-center mt-4 space-y-2 w-full">
+            <div className="flex justify-center mb-4">
+              <InteractionBar
+                itemId={photo.id}
+                type="photography"
+                initialLikes={photo.likes_count}
+                initialComments={photo.comments_count}
+                initialShares={photo.shares_count}
+                onCommentClick={() => setShowComments(!showComments)}
+                variant="dark"
+              />
+            </div>
+
+            <p className="text-white/90 text-sm tracking-wider font-light">
+              {photo.category} • {currentIndex + 1} / {photos.length}
+            </p>
+
+            {photo.description && (
+              <p className="text-white/70 text-sm max-w-2xl mx-auto line-clamp-2">
+                {photo.description}
+              </p>
+            )}
+
+            {/* EXIF Data Display */}
+            {(photo.camera_model || photo.aperture || photo.iso) && (
+              <div className="flex flex-wrap justify-center gap-4 text-xs text-white/50 font-mono mt-2">
+                {photo.camera_model && <span>{photo.camera_model}</span>}
+                {photo.lens_model && <span>{photo.lens_model}</span>}
+                {photo.focal_length && <span>{photo.focal_length}</span>}
+                {photo.aperture && <span>{photo.aperture}</span>}
+                {photo.shutter_speed && <span>{photo.shutter_speed}</span>}
+                {photo.iso && <span>ISO {photo.iso}</span>}
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Comments Sidebar */}
+        {showComments && (
+          <div className="w-full md:w-1/3 bg-background/95 backdrop-blur-sm rounded-lg p-6 h-[70vh] overflow-hidden flex flex-col animate-in slide-in-from-right duration-300">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-semibold text-foreground">Comentários</h3>
+              <button onClick={() => setShowComments(false)} className="text-muted-foreground hover:text-foreground">
+                <X size={20} />
+              </button>
+            </div>
+            <CommentsSection
+              itemId={photo.id}
+              type="photography"
+              className="flex-1 overflow-hidden flex flex-col"
+            />
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default Lightbox;
+
+```
+
+
+---
+
+## ARQUIVO: `src\components\Navigation.tsx`
+**Linhas:** 153
+
+```typescript
+import { useState, useEffect } from "react";
+import { Menu, X, Lock } from "lucide-react";
+import { Link, useLocation } from "react-router-dom";
+import LanguageSelector from "./LanguageSelector";
+import { useLanguage } from "@/contexts/LanguageContext";
+import SearchBar from "./SearchBar";
+
+const Navigation = () => {
+    const [isOpen, setIsOpen] = useState(false);
+    const [isScrolled, setIsScrolled] = useState(false);
+    const location = useLocation();
+    const { t } = useLanguage();
+
+    useEffect(() => {
+        const handleScroll = () => {
+            setIsScrolled(window.scrollY > 50);
+        };
+
+        window.addEventListener("scroll", handleScroll);
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, []);
+
+    useEffect(() => {
+        setIsOpen(false);
+    }, [location]);
+
+    const navLinks = [
+        { name: t('nav.home'), path: "/" },
+        { name: t('nav.photography'), path: "/photography" },
+        { name: t('nav.graphicDesign'), path: "/design" },
+        { name: t('nav.about'), path: "/about" },
+        { name: t('nav.services'), path: "/services" },
+        { name: "Ranking", path: "/ranking" },
+        { name: t('nav.contact'), path: "/contact" },
+    ];
+
+    return (
+        <nav
+            className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled
+                ? "bg-background/95 backdrop-blur-md shadow-lg border-b border-border"
+                : "bg-transparent"
+                }`}
+        >
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="flex items-center justify-between h-20">
+                    {/* Logo */}
+                    <Link
+                        to="/"
+                        className="flex items-center gap-3 hover:opacity-80 transition-opacity"
+                    >
+                        <span className="text-lg font-medium tracking-tight text-foreground">
+                            tdfoco
+                        </span>
+                    </Link>
+
+
+
+                    {/* Desktop Navigation */}
+                    <div className="hidden md:flex items-center space-x-4">
+                        <div className="flex items-center space-x-6">
+                            {navLinks.map((link) => (
+                                <Link
+                                    key={link.path}
+                                    to={link.path}
+                                    className={`text-sm font-medium tracking-wide transition-all duration-300 relative group ${location.pathname === link.path
+                                        ? "text-accent"
+                                        : "text-foreground/80 hover:text-accent"
+                                        }`}
+                                >
+                                    {link.name}
+                                    <span
+                                        className={`absolute -bottom-1 left-0 h-0.5 bg-accent transition-all duration-300 ${location.pathname === link.path ? "w-full" : "w-0 group-hover:w-full"
+                                            }`}
+                                    />
+                                </Link>
+                            ))}
+                        </div>
+                        <div className="flex items-center gap-3">
+                            <div className="w-56">
+                                <SearchBar />
+                            </div>
+                            <LanguageSelector />
+                            <Link
+                                to="/admin"
+                                className="text-foreground/80 hover:text-accent transition-colors p-2"
+                                aria-label="Admin Panel"
+                            >
+                                <Lock className="h-4 w-4" />
+                            </Link>
+                        </div>
+                    </div>
+
+                    {/* Mobile menu button */}
+                    <button
+                        onClick={() => setIsOpen(!isOpen)}
+                        className="md:hidden p-2 rounded-lg hover:bg-accent/10 transition-colors"
+                        aria-label="Toggle menu"
+                    >
+                        {isOpen ? (
+                            <X className="h-6 w-6 text-foreground" />
+                        ) : (
+                            <Menu className="h-6 w-6 text-foreground" />
+                        )}
+                    </button>
+                </div>
+            </div>
+
+            {/* Mobile Navigation */}
+            <div
+                className={`md:hidden transition-all duration-300 ease-in-out ${isOpen
+                    ? "max-h-[32rem] opacity-100 border-b border-border"
+                    : "max-h-0 opacity-0 overflow-hidden"
+                    }`}
+            >
+                <div className="px-4 pt-4 pb-6 space-y-2 bg-background/95 backdrop-blur-md">
+                    {/* Search Bar in Mobile */}
+                    <div className="mb-4">
+                        <SearchBar />
+                    </div>
+
+                    {/* Navigation Links */}
+                    {navLinks.map((link) => (
+                        <Link
+                            key={link.path}
+                            to={link.path}
+                            className={`block px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 ${location.pathname === link.path
+                                ? "bg-accent text-accent-foreground"
+                                : "text-foreground/80 hover:bg-accent/10 hover:text-accent"
+                                }`}
+                        >
+                            {link.name}
+                        </Link>
+                    ))}
+
+                    {/* Language & Admin */}
+                    <div className="flex items-center justify-between pt-4 border-t border-border mt-4">
+                        <LanguageSelector />
+                        <Link
+                            to="/admin"
+                            className="flex items-center gap-2 text-foreground/80 hover:text-accent transition-colors px-3 py-2 rounded-lg hover:bg-accent/10"
+                        >
+                            <Lock className="h-4 w-4" />
+                            <span className="text-sm font-medium">Admin</span>
+                        </Link>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    );
+};
+
+export default Navigation;
+
+```
+
+
+---
+
+## ARQUIVO: `src\components\NavLink.tsx`
+**Linhas:** 29
+
+```typescript
+import { NavLink as RouterNavLink, NavLinkProps } from "react-router-dom";
+import { forwardRef } from "react";
+import { cn } from "@/lib/utils";
+
+interface NavLinkCompatProps extends Omit<NavLinkProps, "className"> {
+  className?: string;
+  activeClassName?: string;
+  pendingClassName?: string;
+}
+
+const NavLink = forwardRef<HTMLAnchorElement, NavLinkCompatProps>(
+  ({ className, activeClassName, pendingClassName, to, ...props }, ref) => {
+    return (
+      <RouterNavLink
+        ref={ref}
+        to={to}
+        className={({ isActive, isPending }) =>
+          cn(className, isActive && activeClassName, isPending && pendingClassName)
+        }
+        {...props}
+      />
+    );
+  },
+);
+
+NavLink.displayName = "NavLink";
+
+export { NavLink };
+
+```
+
+
+---
+
+## ARQUIVO: `src\components\PhotoGrid.tsx`
+**Linhas:** 156
+
+```typescript
+import { useState } from "react";
+import { usePhotography } from "@/hooks/useSupabaseData";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { useImageProtection } from "@/hooks/useImageProtection";
+import ProtectedImage from "./ProtectedImage";
+import Lightbox, { Photo } from "./Lightbox";
+import InteractionBar from "./InteractionBar";
+
+interface PhotoGridProps {
+  showHeader?: boolean;
+  showFilters?: boolean;
+  limit?: number;
+}
+
+const PhotoGrid = ({ showHeader = true, showFilters = true, limit }: PhotoGridProps) => {
+  const { t } = useLanguage();
+  const [selectedPhoto, setSelectedPhoto] = useState<Photo | null>(null);
+  const [filter, setFilter] = useState<string>("all");
+
+  // Enable image protection
+  useImageProtection();
+
+  const { photos: supabasePhotos, loading } = usePhotography(filter === "all" ? undefined : filter);
+
+  const categories = [
+    { key: "all", label: t('portfolio.categories.all') },
+    { key: "portraits", label: t('portfolio.categories.portraits') },
+    { key: "urban", label: t('portfolio.categories.urban') },
+    { key: "nature", label: t('portfolio.categories.nature') },
+    { key: "art", label: t('portfolio.categories.art') },
+    { key: "events", label: t('portfolio.categories.events') }
+  ];
+
+  // Transform Supabase photos to Photo format
+  const photos: Photo[] = supabasePhotos.map(photo => ({
+    id: photo.id,
+    src: photo.url,
+    alt: photo.title,
+    category: photo.category.charAt(0).toUpperCase() + photo.category.slice(1),
+    description: photo.description,
+    camera_model: photo.camera_model,
+    lens_model: photo.lens_model,
+    iso: photo.iso,
+    aperture: photo.aperture,
+    shutter_speed: photo.shutter_speed,
+    focal_length: photo.focal_length,
+    likes_count: photo.likes_count,
+    comments_count: photo.comments_count,
+    shares_count: photo.shares_count
+  }));
+
+  const filteredPhotos = filter === "all"
+    ? photos
+    : photos.filter(photo => photo.category.toLowerCase() === filter);
+
+  // Apply limit if specified
+  const displayPhotos = limit ? filteredPhotos.slice(0, limit) : filteredPhotos;
+
+  return (
+    <section id="gallery" className="min-h-screen bg-background py-20 px-4 md:px-8">
+      <div className="max-w-7xl mx-auto">
+        {showHeader && (
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-light tracking-tight mb-6">
+              {t('portfolio.title')}
+            </h2>
+            <p className="text-muted-foreground text-lg font-light max-w-2xl mx-auto">
+              {t('portfolio.description')}
+            </p>
+          </div>
+        )}
+
+        {/* Category Filter */}
+        {showFilters && (
+          <div className="flex flex-wrap justify-center gap-4 mb-12">
+            {categories.map((category) => (
+              <button
+                key={category.key}
+                onClick={() => setFilter(category.key)}
+                className={`px-6 py-2 rounded-full text-sm font-light tracking-wide transition-all duration-300 ${filter === category.key
+                  ? "bg-accent text-accent-foreground"
+                  : "bg-secondary text-secondary-foreground hover:bg-accent/20"
+                  }`}
+              >
+                {category.label}
+              </button>
+            ))}
+          </div>
+        )}
+
+        {/* Photo Grid */}
+        {loading ? (
+          <div className="text-center py-20">
+            <p className="text-muted-foreground">{t('portfolio.loading')}</p>
+          </div>
+        ) : displayPhotos.length === 0 ? (
+          <div className="text-center py-20">
+            <p className="text-muted-foreground">
+              {t('portfolio.noPhotos')}
+            </p>
+            <a href="/admin" className="inline-block mt-4 px-6 py-2 bg-accent text-accent-foreground rounded-full hover:bg-accent/90 transition-colors">
+              {t('portfolio.goToAdmin')}
+            </a>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {displayPhotos.map((photo, index) => (
+              <div
+                key={photo.id}
+                className="group animate-fade-in"
+                style={{ animationDelay: `${index * 100}ms` }}
+              >
+                <div className="relative aspect-[4/5] md:aspect-square overflow-hidden rounded-lg mb-3">
+                  <ProtectedImage
+                    src={photo.src}
+                    alt={photo.alt}
+                    loading="lazy"
+                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    onImageClick={() => setSelectedPhoto(photo)}
+                  />
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-all duration-500 flex items-center justify-center pointer-events-none">
+                    <span className="text-white opacity-0 group-hover:opacity-100 transition-opacity duration-500 text-sm tracking-wider font-light">
+                      {photo.category}
+                    </span>
+                  </div>
+                </div>
+
+                <InteractionBar
+                  itemId={photo.id}
+                  type="photography"
+                  initialLikes={photo.likes_count}
+                  initialComments={photo.comments_count}
+                  initialShares={photo.shares_count}
+                  variant="light"
+                  className="justify-between px-1"
+                />
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {selectedPhoto && (
+        <Lightbox
+          photo={selectedPhoto}
+          photos={displayPhotos}
+          onClose={() => setSelectedPhoto(null)}
+          onNavigate={setSelectedPhoto}
+        />
+      )}
+    </section>
+  );
+};
+
+export default PhotoGrid;
+
+```
+
+
+---
+
+## ARQUIVO: `src\components\ProjectModal.tsx`
+**Linhas:** 120
+
+```typescript
+import { useState } from 'react';
+import { X, ChevronLeft, ChevronRight } from 'lucide-react';
+import { DesignProject } from '@/lib/supabase';
+import ProtectedImage from './ProtectedImage';
+import InteractionBar from './InteractionBar';
+import CommentsSection from './CommentsSection';
+
+interface ProjectModalProps {
+    project: DesignProject;
+    onClose: () => void;
+}
+
+const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
+    const [currentImageIndex, setCurrentImageIndex] = useState(0);
+    const [showComments, setShowComments] = useState(false);
+
+    const handleNext = () => {
+        setCurrentImageIndex((prev) => (prev < project.images.length - 1 ? prev + 1 : 0));
+    };
+
+    const handlePrev = () => {
+        setCurrentImageIndex((prev) => (prev > 0 ? prev - 1 : project.images.length - 1));
+    };
+
+    return (
+        <div className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center animate-fade-in p-4 overflow-y-auto">
+            <button
+                onClick={onClose}
+                className="fixed top-4 right-4 text-white/80 hover:text-white transition-colors z-50"
+            >
+                <X size={32} />
+            </button>
+
+            <div className="bg-background rounded-lg max-w-6xl w-full min-h-[80vh] flex flex-col md:flex-row overflow-hidden shadow-2xl">
+                {/* Image Section */}
+                <div className={`relative bg-black flex items-center justify-center transition-all duration-300 ${showComments ? 'md:w-1/2' : 'md:w-2/3'}`}>
+                    <ProtectedImage
+                        src={project.images[currentImageIndex]}
+                        alt={`${project.title} - Image ${currentImageIndex + 1}`}
+                        className="max-h-[70vh] max-w-full object-contain"
+                    />
+
+                    {project.images.length > 1 && (
+                        <>
+                            <button
+                                onClick={handlePrev}
+                                className="absolute left-4 text-white/80 hover:text-white bg-black/50 rounded-full p-2"
+                            >
+                                <ChevronLeft size={24} />
+                            </button>
+                            <button
+                                onClick={handleNext}
+                                className="absolute right-4 text-white/80 hover:text-white bg-black/50 rounded-full p-2"
+                            >
+                                <ChevronRight size={24} />
+                            </button>
+                            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
+                                {project.images.map((_, idx) => (
+                                    <div
+                                        key={idx}
+                                        className={`w-2 h-2 rounded-full transition-colors ${idx === currentImageIndex ? 'bg-white' : 'bg-white/30'}`}
+                                    />
+                                ))}
+                            </div>
+                        </>
+                    )}
+                </div>
+
+                {/* Info Section */}
+                <div className={`flex flex-col p-8 transition-all duration-300 ${showComments ? 'md:w-1/2' : 'md:w-1/3'} bg-background`}>
+                    <div className="flex-1 overflow-y-auto custom-scrollbar">
+                        <span className="text-accent text-sm font-medium uppercase tracking-wider">
+                            {project.category}
+                        </span>
+                        <h2 className="text-3xl font-display font-bold mt-2 mb-4">{project.title}</h2>
+
+                        <div className="flex items-center gap-4 text-sm text-muted-foreground mb-6">
+                            <span>{project.year}</span>
+                            {project.client && (
+                                <>
+                                    <span>•</span>
+                                    <span>{project.client}</span>
+                                </>
+                            )}
+                        </div>
+
+                        <p className="text-muted-foreground leading-relaxed mb-8">
+                            {project.description}
+                        </p>
+
+                        <div className="border-t border-border pt-6">
+                            <InteractionBar
+                                itemId={project.id}
+                                type="design"
+                                initialLikes={project.likes_count}
+                                initialComments={project.comments_count}
+                                initialShares={project.shares_count}
+                                onCommentClick={() => setShowComments(!showComments)}
+                                variant="light"
+                                className="mb-6"
+                            />
+
+                            {showComments && (
+                                <div className="animate-in slide-in-from-bottom duration-300">
+                                    <CommentsSection
+                                        itemId={project.id}
+                                        type="design"
+                                    />
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default ProjectModal;
+
+```
+
+
+---
+
+## ARQUIVO: `src\components\ProtectedImage.tsx`
+**Linhas:** 77
+
+```typescript
+import { useState } from 'react';
+
+interface ProtectedImageProps {
+    src: string;
+    alt: string;
+    className?: string;
+    loading?: 'lazy' | 'eager';
+    onImageClick?: () => void;
+}
+
+const ProtectedImage = ({
+    src,
+    alt,
+    className = '',
+    loading = 'lazy',
+    onImageClick
+}: ProtectedImageProps) => {
+    const [showCopyrightMessage, setShowCopyrightMessage] = useState(false);
+
+    const handleContextMenu = (e: React.MouseEvent) => {
+        e.preventDefault();
+        setShowCopyrightMessage(true);
+        setTimeout(() => setShowCopyrightMessage(false), 2000);
+        return false;
+    };
+
+    const handleDragStart = (e: React.DragEvent) => {
+        e.preventDefault();
+        return false;
+    };
+
+    const handleClick = () => {
+        if (onImageClick) {
+            onImageClick();
+        }
+    };
+
+    return (
+        <div className="relative inline-block w-full h-full">
+            {/* Transparent overlay to prevent direct image interaction */}
+            <div
+                className="absolute inset-0 z-10 cursor-pointer"
+                onContextMenu={handleContextMenu}
+                onDragStart={handleDragStart}
+                onClick={handleClick}
+            />
+
+            {/* The actual image */}
+            <img
+                src={src}
+                alt={alt}
+                loading={loading}
+                className={`select-none pointer-events-none ${className}`}
+                draggable="false"
+                onContextMenu={handleContextMenu}
+                onDragStart={handleDragStart}
+                style={{
+                    userSelect: 'none',
+                    WebkitUserSelect: 'none',
+                    MozUserSelect: 'none',
+                    msUserSelect: 'none',
+                }}
+            />
+
+            {/* Copyright message tooltip */}
+            {showCopyrightMessage && (
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 bg-black/90 text-white px-6 py-3 rounded-lg shadow-xl animate-fade-in">
+                    <p className="text-sm font-medium">© Imagem Protegida</p>
+                    <p className="text-xs text-white/70 mt-1">Todos os direitos reservados</p>
+                </div>
+            )}
+        </div>
+    );
+};
+
+export default ProtectedImage;
+
+```
+
+
+---
+
+## ARQUIVO: `src\components\RankingSection.tsx`
+**Linhas:** 181
+
+```typescript
+import { useTopRated } from '@/hooks/useSupabaseData';
+import { useLanguage } from '@/contexts/LanguageContext';
+import ProtectedImage from './ProtectedImage';
+import { Heart, MessageCircle } from 'lucide-react';
+import { useState } from 'react';
+import Lightbox, { Photo } from './Lightbox';
+import ProjectModal from './ProjectModal';
+import type { DesignProject } from '@/lib/supabase';
+import InteractionBar from './InteractionBar';
+
+const RankingSection = () => {
+    const { t } = useLanguage();
+    const { topPhotos, topProjects, loading } = useTopRated(3);
+    const [selectedPhoto, setSelectedPhoto] = useState<Photo | null>(null);
+    const [selectedProject, setSelectedProject] = useState<DesignProject | null>(null);
+
+    if (loading) return null;
+
+    // Transform photos for lightbox
+    const lightboxPhotos: Photo[] = topPhotos.map(photo => ({
+        id: photo.id,
+        src: photo.url,
+        alt: photo.title,
+        category: photo.category,
+        description: photo.description,
+        likes_count: photo.likes_count,
+        comments_count: photo.comments_count,
+        shares_count: photo.shares_count
+    }));
+
+    return (
+        <section className="py-20 bg-secondary/30">
+            <div className="max-w-7xl mx-auto px-4 md:px-8">
+                <div className="text-center mb-16">
+                    <h2 className="text-3xl md:text-4xl font-light tracking-tight mb-4">
+                        Destaques da Comunidade
+                    </h2>
+                    <p className="text-muted-foreground">
+                        Os trabalhos mais curtidos e comentados por vocês
+                    </p>
+                </div>
+
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                    {/* Top Photos */}
+                    <div>
+                        <h3 className="text-xl font-medium mb-6 flex items-center gap-2">
+                            <span className="w-8 h-[1px] bg-accent"></span>
+                            Fotografia
+                        </h3>
+                        <div className="space-y-6">
+                            {topPhotos.map((photo, index) => (
+                                <div
+                                    key={photo.id}
+                                    className="flex gap-4 bg-background p-4 rounded-lg shadow-sm hover:shadow-md transition-all cursor-pointer group"
+                                    onClick={() => {
+                                        const p = lightboxPhotos.find(lp => lp.id === photo.id);
+                                        if (p) setSelectedPhoto(p);
+                                    }}
+                                >
+                                    <div className="w-24 h-24 flex-shrink-0 overflow-hidden rounded-md">
+                                        <ProtectedImage
+                                            src={photo.url}
+                                            alt={photo.title}
+                                            className="w-full h-full object-cover transition-transform group-hover:scale-110"
+                                        />
+                                    </div>
+                                    <div className="flex-1 flex flex-col justify-center">
+                                        <div className="flex items-center gap-2 mb-1">
+                                            <span className="text-xs font-bold text-accent px-2 py-0.5 rounded-full bg-accent/10">
+                                                #{index + 1}
+                                            </span>
+                                            <span className="text-xs text-muted-foreground uppercase tracking-wider">
+                                                {photo.category}
+                                            </span>
+                                        </div>
+                                        <h4 className="font-medium truncate">{photo.title}</h4>
+                                        <div className="flex items-center gap-4 mt-3 text-sm text-muted-foreground">
+                                            <div className="flex items-center gap-1">
+                                                <Heart className="w-4 h-4 text-red-500 fill-current" />
+                                                <span>{photo.likes_count || 0}</span>
+                                            </div>
+                                            <div className="flex items-center gap-1">
+                                                <MessageCircle className="w-4 h-4" />
+                                                <span>{photo.comments_count || 0}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <InteractionBar
+                                        itemId={photo.id}
+                                        type="photography"
+                                        initialLikes={photo.likes_count}
+                                        initialComments={photo.comments_count}
+                                        initialShares={photo.shares_count}
+                                        variant="light"
+                                        className="mt-4 pt-4 border-t border-border/50"
+                                    />
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Top Projects */}
+                    <div>
+                        <h3 className="text-xl font-medium mb-6 flex items-center gap-2">
+                            <span className="w-8 h-[1px] bg-accent"></span>
+                            Design
+                        </h3>
+                        <div className="space-y-6">
+                            {topProjects.map((project, index) => (
+                                <div
+                                    key={project.id}
+                                    className="flex gap-4 bg-background p-4 rounded-lg shadow-sm hover:shadow-md transition-all cursor-pointer group"
+                                    onClick={() => setSelectedProject(project)}
+                                >
+                                    <div className="w-24 h-24 flex-shrink-0 overflow-hidden rounded-md">
+                                        <ProtectedImage
+                                            src={project.images[0]}
+                                            alt={project.title}
+                                            className="w-full h-full object-cover transition-transform group-hover:scale-110"
+                                        />
+                                    </div>
+                                    <div className="flex-1 flex flex-col justify-center">
+                                        <div className="flex items-center gap-2 mb-1">
+                                            <span className="text-xs font-bold text-accent px-2 py-0.5 rounded-full bg-accent/10">
+                                                #{index + 1}
+                                            </span>
+                                            <span className="text-xs text-muted-foreground uppercase tracking-wider">
+                                                {project.category}
+                                            </span>
+                                        </div>
+                                        <h4 className="font-medium truncate">{project.title}</h4>
+                                        <div className="flex items-center gap-4 mt-3 text-sm text-muted-foreground">
+                                            <div className="flex items-center gap-1">
+                                                <Heart className="w-4 h-4 text-red-500 fill-current" />
+                                                <span>{project.likes_count || 0}</span>
+                                            </div>
+                                            <div className="flex items-center gap-1">
+                                                <MessageCircle className="w-4 h-4" />
+                                                <span>{project.comments_count || 0}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <InteractionBar
+                                        itemId={project.id}
+                                        type="design"
+                                        initialLikes={project.likes_count}
+                                        initialComments={project.comments_count}
+                                        initialShares={project.shares_count}
+                                        variant="light"
+                                        className="mt-4 pt-4 border-t border-border/50"
+                                    />
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {selectedPhoto && (
+                <Lightbox
+                    photo={selectedPhoto}
+                    photos={lightboxPhotos}
+                    onClose={() => setSelectedPhoto(null)}
+                    onNavigate={setSelectedPhoto}
+                />
+            )}
+
+            {selectedProject && (
+                <ProjectModal
+                    project={selectedProject}
+                    onClose={() => setSelectedProject(null)}
+                />
+            )}
+        </section>
+    );
+};
+
+export default RankingSection;
+
+```
+
+
+---
+
+## ARQUIVO: `src\components\SearchBar.tsx`
+**Linhas:** 112
+
+```typescript
+import { useState, useRef, useEffect } from 'react';
+import { Search, X, Loader2, Image, Palette, Calendar } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { useSearch, SearchResult } from '@/hooks/useSearch';
+import { useLanguage } from '@/contexts/LanguageContext';
+
+const SearchBar = () => {
+    const [query, setQuery] = useState('');
+    const [isOpen, setIsOpen] = useState(false);
+    const { results, loading } = useSearch(query);
+    const navigate = useNavigate();
+    const wrapperRef = useRef<HTMLDivElement>(null);
+    const { t } = useLanguage();
+
+    // Close dropdown when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (wrapperRef.current && !wrapperRef.current.contains(event.target as Node)) {
+                setIsOpen(false);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
+
+    const handleSelect = (result: SearchResult) => {
+        setIsOpen(false);
+        setQuery('');
+        // Navigate to the page
+        // In the future, we could pass state to open the specific item
+        navigate(result.link, { state: { highlightId: result.id } });
+    };
+
+    return (
+        <div ref={wrapperRef} className="relative w-full max-w-xs">
+            <div className="relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
+                <input
+                    type="text"
+                    value={query}
+                    onChange={(e) => {
+                        setQuery(e.target.value);
+                        setIsOpen(true);
+                    }}
+                    onFocus={() => setIsOpen(true)}
+                    placeholder={t('nav.search') || "Search..."}
+                    className="w-full pl-9 pr-4 py-2 text-sm bg-secondary/50 border-transparent focus:bg-background focus:border-accent rounded-full transition-all outline-none"
+                />
+                {query && (
+                    <button
+                        onClick={() => {
+                            setQuery('');
+                            setIsOpen(false);
+                        }}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                    >
+                        <X className="h-3 w-3" />
+                    </button>
+                )}
+            </div>
+
+            {/* Results Dropdown */}
+            {isOpen && query.length >= 2 && (
+                <div className="absolute top-full mt-2 left-0 w-full md:w-80 bg-background/95 backdrop-blur-md border border-border rounded-xl shadow-xl overflow-hidden z-50 animate-in fade-in zoom-in-95 duration-200">
+                    {loading ? (
+                        <div className="p-4 flex items-center justify-center text-muted-foreground">
+                            <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                            <span>Searching...</span>
+                        </div>
+                    ) : results.length > 0 ? (
+                        <div className="py-2">
+                            <div className="px-3 py-1.5 text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                                Results
+                            </div>
+                            {results.map((result) => (
+                                <button
+                                    key={`${result.type}-${result.id}`}
+                                    onClick={() => handleSelect(result)}
+                                    className="w-full px-4 py-3 flex items-start gap-3 hover:bg-accent/10 transition-colors text-left group"
+                                >
+                                    <div className="mt-0.5 p-1.5 rounded-md bg-secondary text-secondary-foreground group-hover:bg-accent group-hover:text-accent-foreground transition-colors">
+                                        {result.type === 'photography' ? (
+                                            <Image className="h-4 w-4" />
+                                        ) : (
+                                            <Palette className="h-4 w-4" />
+                                        )}
+                                    </div>
+                                    <div className="flex-1 min-w-0">
+                                        <h4 className="text-sm font-medium truncate group-hover:text-accent transition-colors">
+                                            {result.title}
+                                        </h4>
+                                        <p className="text-xs text-muted-foreground truncate">
+                                            {result.category}
+                                            {result.date && ` • ${new Date(result.date).getFullYear()}`}
+                                        </p>
+                                    </div>
+                                </button>
+                            ))}
+                        </div>
+                    ) : (
+                        <div className="p-4 text-center text-sm text-muted-foreground">
+                            No results found for "{query}"
+                        </div>
+                    )}
+                </div>
+            )}
+        </div>
+    );
+};
+
+export default SearchBar;
+
+```
+
+
+---
+
+## ARQUIVO: `src\components\SEO.tsx`
+**Linhas:** 26
+
+```typescript
+import { Helmet } from 'react-helmet-async';
+
+interface SEOProps {
+    title?: string;
+    description?: string;
+}
+
+export const SEO = ({ title, description }: SEOProps) => {
+    const defaultTitle = 'tdfoco | Portfólio de Fotografia e Design';
+    const defaultDescription = 'Portfolio profissional de fotografia e design gráfico. Explore trabalhos de retratos, arte urbana, natureza, eventos e identidades visuais modernas.';
+
+    const pageTitle = title ? `${title} | tdfoco` : defaultTitle;
+    const pageDescription = description || defaultDescription;
+
+    return (
+        <Helmet>
+            <title>{pageTitle}</title>
+            <meta name="description" content={pageDescription} />
+            <meta property="og:title" content={pageTitle} />
+            <meta property="og:description" content={pageDescription} />
+            <meta name="twitter:title" content={pageTitle} />
+            <meta name="twitter:description" content={pageDescription} />
+        </Helmet>
+    );
+};
+
+```
+
+
+---
+
+## ARQUIVO: `src\components\TagInput.tsx`
+**Linhas:** 97
+
+```typescript
+import { useState, KeyboardEvent } from 'react';
+import { X } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
+
+interface TagInputProps {
+    tags: string[];
+    onChange: (tags: string[]) => void;
+    placeholder?: string;
+    className?: string;
+}
+
+const TagInput = ({ tags, onChange, placeholder = "Add tags (press Enter)", className = "" }: TagInputProps) => {
+    const [inputValue, setInputValue] = useState('');
+
+    const normalizeTag = (tag: string): string => {
+        return tag.trim().toLowerCase().replace(/\s+/g, '_');
+    };
+
+    const addTag = (tag: string) => {
+        const normalized = normalizeTag(tag);
+        if (normalized && !tags.includes(normalized)) {
+            onChange([...tags, normalized]);
+        }
+        setInputValue('');
+    };
+
+    const removeTag = (tagToRemove: string) => {
+        onChange(tags.filter(tag => tag !== tagToRemove));
+    };
+
+    const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            addTag(inputValue);
+        } else if (e.key === 'Backspace' && !inputValue && tags.length > 0) {
+            // Remove last tag when backspace is pressed on empty input
+            removeTag(tags[tags.length - 1]);
+        }
+    };
+
+    const handlePaste = (e: React.ClipboardEvent) => {
+        e.preventDefault();
+        const pastedText = e.clipboardData.getData('text');
+
+        // Support comma-separated tags
+        const newTags = pastedText
+            .split(/[,;\n]/)
+            .map(normalizeTag)
+            .filter(tag => tag && !tags.includes(tag));
+
+        onChange([...tags, ...newTags]);
+    };
+
+    return (
+        <div className={`space-y-2 ${className}`}>
+            <Input
+                type="text"
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+                onKeyDown={handleKeyDown}
+                onPaste={handlePaste}
+                placeholder={placeholder}
+                className="w-full"
+            />
+
+            {tags.length > 0 && (
+                <div className="flex flex-wrap gap-2">
+                    {tags.map((tag) => (
+                        <Badge
+                            key={tag}
+                            variant="secondary"
+                            className="px-3 py-1 flex items-center gap-1 text-sm"
+                        >
+                            <span>#{tag}</span>
+                            <button
+                                type="button"
+                                onClick={() => removeTag(tag)}
+                                className="ml-1 hover:text-destructive transition-colors"
+                                aria-label={`Remove ${tag} tag`}
+                            >
+                                <X size={14} />
+                            </button>
+                        </Badge>
+                    ))}
+                </div>
+            )}
+
+            <p className="text-xs text-muted-foreground">
+                Press Enter to add tags. Paste comma-separated tags for batch input.
+            </p>
+        </div>
+    );
+};
+
+export default TagInput;
+
+```
+
+
+---
+
+## ARQUIVO: `src\components\UnifiedPortfolioGrid.tsx`
+**Linhas:** 244
+
+```typescript
+import { useState } from "react";
+import { usePhotography, useDesignProjects } from "@/hooks/useSupabaseData";
+import { useImageProtection } from "@/hooks/useImageProtection";
+import ProtectedImage from "./ProtectedImage";
+import InteractionBar from "./InteractionBar";
+import Lightbox, { Photo } from "./Lightbox";
+import ProjectModal from "./ProjectModal";
+import type { DesignProject } from "@/lib/supabase";
+
+type UnifiedItem = {
+    id: string;
+    src: string;
+    alt: string;
+    type: 'photography' | 'design';
+    category: string;
+    likes_count?: number;
+    comments_count?: number;
+    shares_count?: number;
+    originalId: string;
+};
+
+const UnifiedPortfolioGrid = () => {
+    useImageProtection();
+
+    const [photoFilter, setPhotoFilter] = useState<string>("all");
+    const [designFilter, setDesignFilter] = useState<string>("all");
+    const [selectedPhoto, setSelectedPhoto] = useState<Photo | null>(null);
+    const [selectedProject, setSelectedProject] = useState<DesignProject | null>(null);
+
+    const { photos, loading: photosLoading } = usePhotography(photoFilter === "all" ? undefined : photoFilter);
+    const { projects, loading: projectsLoading } = useDesignProjects(designFilter === "all" ? undefined : designFilter);
+
+    const loading = photosLoading || projectsLoading;
+
+    const photoCategories = [
+        { key: "all", label: "Todos" },
+        { key: "portraits", label: "Retratos" },
+        { key: "urban", label: "Urbano" },
+        { key: "nature", label: "Natureza" },
+        { key: "art", label: "Arte" },
+        { key: "events", label: "Eventos" }
+    ];
+
+    const designCategories = [
+        { key: "all", label: "Todos" },
+        { key: "logos", label: "Logos" },
+        { key: "visual_identity", label: "Identidade Visual" },
+        { key: "social_media", label: "Redes Sociais" },
+        { key: "posters", label: "Pôsteres" },
+        { key: "special", label: "Projetos Especiais" }
+    ];
+
+    // Combine both portfolios into unified items
+    const unifiedItems: UnifiedItem[] = [
+        ...photos.map(photo => ({
+            id: `photo-${photo.id}`,
+            src: photo.url,
+            alt: photo.title,
+            type: 'photography' as const,
+            category: photo.category,
+            likes_count: photo.likes_count,
+            comments_count: photo.comments_count,
+            shares_count: photo.shares_count,
+            originalId: photo.id
+        })),
+        ...projects.map(project => ({
+            id: `design-${project.id}`,
+            src: project.images[0],
+            alt: project.title,
+            type: 'design' as const,
+            category: project.category,
+            likes_count: project.likes_count,
+            comments_count: project.comments_count,
+            shares_count: project.shares_count,
+            originalId: project.id
+        }))
+    ];
+
+    return (
+        <section id="portfolio" className="min-h-screen bg-background py-20 px-4 md:px-8">
+            <div className="max-w-7xl mx-auto">
+                {/* Main Title */}
+                <h1 className="text-5xl md:text-6xl font-light tracking-tight text-center mb-12">
+                    Portfólio
+                </h1>
+
+                {/* Two sections side by side with divider */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto mb-8">
+                    {/* Photography Section */}
+                    <div className="text-center md:text-right md:border-r border-border md:pr-8">
+                        <h2 className="text-2xl md:text-3xl font-display font-semibold mb-4 text-[#00A3FF]">
+                            Fotografia
+                        </h2>
+                        <p className="text-muted-foreground text-sm md:text-base font-light leading-relaxed">
+                            Uma coleção de momentos capturados através de diferentes perspectivas
+                        </p>
+                    </div>
+
+                    {/* Design Section */}
+                    <div className="text-center md:text-left md:pl-8">
+                        <h2 className="text-2xl md:text-3xl font-display font-semibold mb-4 text-[#00A3FF]">
+                            Design Gráfico
+                        </h2>
+                        <p className="text-muted-foreground text-sm md:text-base font-light leading-relaxed">
+                            Identidades visuais modernas, branding e peças de design que criam forte impacto visual e experiências memoráveis de marca
+                        </p>
+                    </div>
+                </div>
+
+                {/* Category Filters - Two rows */}
+                <div className="space-y-4 mb-12">
+                    {/* Photography Filters */}
+                    <div className="flex flex-wrap gap-3 justify-center">
+                        {photoCategories.map((category) => (
+                            <button
+                                key={category.key}
+                                onClick={() => setPhotoFilter(category.key)}
+                                className={`px-5 py-2 rounded-full text-sm font-medium tracking-wide transition-all duration-300 ${photoFilter === category.key
+                                    ? "bg-[#00A3FF] text-white shadow-lg shadow-[#00A3FF]/30"
+                                    : "bg-secondary text-secondary-foreground hover:bg-[#00A3FF]/20"
+                                    }`}
+                            >
+                                {category.label}
+                            </button>
+                        ))}
+                    </div>
+
+                    {/* Design Filters */}
+                    <div className="flex flex-wrap gap-3 justify-center">
+                        {designCategories.map((category) => (
+                            <button
+                                key={category.key}
+                                onClick={() => setDesignFilter(category.key)}
+                                className={`px-5 py-2 rounded-full text-sm font-medium tracking-wide transition-all duration-300 ${designFilter === category.key
+                                    ? "bg-[#00A3FF] text-white shadow-lg shadow-[#00A3FF]/30"
+                                    : "bg-secondary text-secondary-foreground hover:bg-[#00A3FF]/20"
+                                    }`}
+                            >
+                                {category.label}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+
+                {/* Unified Grid */}
+                {loading ? (
+                    <div className="text-center py-20">
+                        <p className="text-muted-foreground">Carregando...</p>
+                    </div>
+                ) : unifiedItems.length === 0 ? (
+                    <div className="text-center py-20">
+                        <p className="text-muted-foreground">Nenhum item encontrado</p>
+                    </div>
+                ) : (
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+                        {unifiedItems.map((item, index) => (
+                            <div
+                                key={item.id}
+                                className="group animate-fade-in"
+                                style={{ animationDelay: `${index * 30}ms` }}
+                            >
+                                <div className="relative aspect-square overflow-hidden rounded-lg">
+                                    <ProtectedImage
+                                        src={item.src}
+                                        alt={item.alt}
+                                        loading="lazy"
+                                        className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+                                        onImageClick={() => {
+                                            if (item.type === 'photography') {
+                                                const photo = photos.find(p => p.id === item.originalId);
+                                                if (photo) {
+                                                    setSelectedPhoto({
+                                                        id: photo.id,
+                                                        src: photo.url,
+                                                        alt: photo.title,
+                                                        category: photo.category,
+                                                        description: photo.description,
+                                                        likes_count: photo.likes_count,
+                                                        comments_count: photo.comments_count,
+                                                        shares_count: photo.shares_count,
+                                                        // Map other fields if necessary
+                                                    });
+                                                }
+                                            } else {
+                                                const project = projects.find(p => p.id === item.originalId);
+                                                if (project) setSelectedProject(project);
+                                            }
+                                        }}
+                                    />
+                                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/50 transition-all duration-500 flex items-center justify-center pointer-events-none">
+                                        <span className="text-white opacity-0 group-hover:opacity-100 transition-opacity duration-500 text-sm tracking-wider font-light">
+                                            {item.type === 'photography' ? 'Fotografia' : 'Design'}
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <InteractionBar
+                                    itemId={item.originalId}
+                                    type={item.type}
+                                    initialLikes={item.likes_count}
+                                    initialComments={item.comments_count}
+                                    initialShares={item.shares_count}
+                                    variant="light"
+                                    className="mt-2 justify-between px-1"
+                                />
+                            </div>
+                        ))}
+                    </div>
+                )}
+            </div>
+
+            {/* Lightbox for Photography */}
+            {selectedPhoto && (
+                <Lightbox
+                    photo={selectedPhoto}
+                    photos={photos.map(p => ({
+                        id: p.id,
+                        src: p.url,
+                        alt: p.title,
+                        category: p.category,
+                        description: p.description,
+                        likes_count: p.likes_count,
+                        comments_count: p.comments_count,
+                        shares_count: p.shares_count
+                    }))}
+                    onClose={() => setSelectedPhoto(null)}
+                    onNavigate={(photo) => setSelectedPhoto(photo)}
+                />
+            )}
+
+            {/* Modal for Design Projects */}
+            {selectedProject && (
+                <ProjectModal
+                    project={selectedProject}
+                    isOpen={!!selectedProject}
+                    onClose={() => setSelectedProject(null)}
+                />
+            )}
+        </section >
+    );
+};
+
+export default UnifiedPortfolioGrid;
+
+```
+
+
+---
+
+## ARQUIVO: `src\contexts\LanguageContext.tsx`
+**Linhas:** 117
+
+```typescript
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import { supabase } from '@/lib/supabase';
+import ptTranslations from './translations/pt.json';
+import enTranslations from './translations/en.json';
+import esTranslations from './translations/es.json';
+import frTranslations from './translations/fr.json';
+
+type Language = 'pt' | 'en' | 'es' | 'fr';
+
+interface LanguageContextType {
+    language: Language;
+    setLanguage: (lang: Language) => void;
+    t: (key: string) => any;
+}
+
+const localTranslations = {
+    pt: ptTranslations,
+    en: enTranslations,
+    es: esTranslations,
+    fr: frTranslations,
+};
+
+const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
+
+export const useLanguage = () => {
+    const context = useContext(LanguageContext);
+    if (!context) {
+        throw new Error('useLanguage must be used within LanguageProvider');
+    }
+    return context;
+};
+
+interface LanguageProviderProps {
+    children: React.ReactNode;
+}
+
+export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) => {
+    const [language, setLanguageState] = useState<Language>(() => {
+        const saved = localStorage.getItem('language');
+        return (saved as Language) || 'pt';
+    });
+    const [dbTranslations, setDbTranslations] = useState<Record<string, string>>({});
+
+    useEffect(() => {
+        const fetchTranslations = async () => {
+            try {
+                const { data } = await supabase
+                    .from('site_content')
+                    .select('key, value')
+                    .eq('lang', language);
+
+                if (data) {
+                    const translationsMap = data.reduce((acc, item) => {
+                        acc[item.key] = item.value;
+                        return acc;
+                    }, {} as Record<string, string>);
+                    setDbTranslations(translationsMap);
+                }
+            } catch (error) {
+                console.error('Error fetching translations:', error);
+            }
+        };
+
+        fetchTranslations();
+
+        // Subscribe to changes
+        const channel = supabase
+            .channel('schema-db-changes')
+            .on(
+                'postgres_changes',
+                {
+                    event: '*',
+                    schema: 'public',
+                    table: 'site_content',
+                    filter: `lang=eq.${language}`,
+                },
+                (payload) => {
+                    fetchTranslations();
+                }
+            )
+            .subscribe();
+
+        return () => {
+            supabase.removeChannel(channel);
+        };
+    }, [language]);
+
+    const setLanguage = (lang: Language) => {
+        setLanguageState(lang);
+        localStorage.setItem('language', lang);
+    };
+
+    const t = (key: string): any => {
+        // First check database translations
+        if (dbTranslations[key]) {
+            return dbTranslations[key];
+        }
+
+        // Fallback to local JSON
+        const currentTranslations = localTranslations[language];
+        const keys = key.split('.');
+        let value: any = currentTranslations;
+
+        for (const k of keys) {
+            value = value?.[k];
+        }
+
+        return value || key;
+    };
+
+    return (
+        <LanguageContext.Provider value={{ language, setLanguage, t }}>
+            {children}
+        </LanguageContext.Provider>
+    );
+};
+
+```
+
+
+---
+
+## ARQUIVO: `src\hooks\use-mobile.tsx`
+**Linhas:** 20
+
+```typescript
+import * as React from "react";
+
+const MOBILE_BREAKPOINT = 768;
+
+export function useIsMobile() {
+  const [isMobile, setIsMobile] = React.useState<boolean | undefined>(undefined);
+
+  React.useEffect(() => {
+    const mql = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT - 1}px)`);
+    const onChange = () => {
+      setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);
+    };
+    mql.addEventListener("change", onChange);
+    setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);
+    return () => mql.removeEventListener("change", onChange);
+  }, []);
+
+  return !!isMobile;
+}
+
+```
+
+
+---
+
+## ARQUIVO: `src\hooks\use-toast.ts`
+**Linhas:** 187
+
+```typescript
+import * as React from "react";
+
+import type { ToastActionElement, ToastProps } from "@/components/ui/toast";
+
+const TOAST_LIMIT = 1;
+const TOAST_REMOVE_DELAY = 1000000;
+
+type ToasterToast = ToastProps & {
+  id: string;
+  title?: React.ReactNode;
+  description?: React.ReactNode;
+  action?: ToastActionElement;
+};
+
+const actionTypes = {
+  ADD_TOAST: "ADD_TOAST",
+  UPDATE_TOAST: "UPDATE_TOAST",
+  DISMISS_TOAST: "DISMISS_TOAST",
+  REMOVE_TOAST: "REMOVE_TOAST",
+} as const;
+
+let count = 0;
+
+function genId() {
+  count = (count + 1) % Number.MAX_SAFE_INTEGER;
+  return count.toString();
+}
+
+type ActionType = typeof actionTypes;
+
+type Action =
+  | {
+      type: ActionType["ADD_TOAST"];
+      toast: ToasterToast;
+    }
+  | {
+      type: ActionType["UPDATE_TOAST"];
+      toast: Partial<ToasterToast>;
+    }
+  | {
+      type: ActionType["DISMISS_TOAST"];
+      toastId?: ToasterToast["id"];
+    }
+  | {
+      type: ActionType["REMOVE_TOAST"];
+      toastId?: ToasterToast["id"];
+    };
+
+interface State {
+  toasts: ToasterToast[];
+}
+
+const toastTimeouts = new Map<string, ReturnType<typeof setTimeout>>();
+
+const addToRemoveQueue = (toastId: string) => {
+  if (toastTimeouts.has(toastId)) {
+    return;
+  }
+
+  const timeout = setTimeout(() => {
+    toastTimeouts.delete(toastId);
+    dispatch({
+      type: "REMOVE_TOAST",
+      toastId: toastId,
+    });
+  }, TOAST_REMOVE_DELAY);
+
+  toastTimeouts.set(toastId, timeout);
+};
+
+export const reducer = (state: State, action: Action): State => {
+  switch (action.type) {
+    case "ADD_TOAST":
+      return {
+        ...state,
+        toasts: [action.toast, ...state.toasts].slice(0, TOAST_LIMIT),
+      };
+
+    case "UPDATE_TOAST":
+      return {
+        ...state,
+        toasts: state.toasts.map((t) => (t.id === action.toast.id ? { ...t, ...action.toast } : t)),
+      };
+
+    case "DISMISS_TOAST": {
+      const { toastId } = action;
+
+      // ! Side effects ! - This could be extracted into a dismissToast() action,
+      // but I'll keep it here for simplicity
+      if (toastId) {
+        addToRemoveQueue(toastId);
+      } else {
+        state.toasts.forEach((toast) => {
+          addToRemoveQueue(toast.id);
+        });
+      }
+
+      return {
+        ...state,
+        toasts: state.toasts.map((t) =>
+          t.id === toastId || toastId === undefined
+            ? {
+                ...t,
+                open: false,
+              }
+            : t,
+        ),
+      };
+    }
+    case "REMOVE_TOAST":
+      if (action.toastId === undefined) {
+        return {
+          ...state,
+          toasts: [],
+        };
+      }
+      return {
+        ...state,
+        toasts: state.toasts.filter((t) => t.id !== action.toastId),
+      };
+  }
+};
+
+const listeners: Array<(state: State) => void> = [];
+
+let memoryState: State = { toasts: [] };
+
+function dispatch(action: Action) {
+  memoryState = reducer(memoryState, action);
+  listeners.forEach((listener) => {
+    listener(memoryState);
+  });
+}
+
+type Toast = Omit<ToasterToast, "id">;
+
+function toast({ ...props }: Toast) {
+  const id = genId();
+
+  const update = (props: ToasterToast) =>
+    dispatch({
+      type: "UPDATE_TOAST",
+      toast: { ...props, id },
+    });
+  const dismiss = () => dispatch({ type: "DISMISS_TOAST", toastId: id });
+
+  dispatch({
+    type: "ADD_TOAST",
+    toast: {
+      ...props,
+      id,
+      open: true,
+      onOpenChange: (open) => {
+        if (!open) dismiss();
+      },
+    },
+  });
+
+  return {
+    id: id,
+    dismiss,
+    update,
+  };
+}
+
+function useToast() {
+  const [state, setState] = React.useState<State>(memoryState);
+
+  React.useEffect(() => {
+    listeners.push(setState);
+    return () => {
+      const index = listeners.indexOf(setState);
+      if (index > -1) {
+        listeners.splice(index, 1);
+      }
+    };
+  }, [state]);
+
+  return {
+    ...state,
+    toast,
+    dismiss: (toastId?: string) => dispatch({ type: "DISMISS_TOAST", toastId }),
+  };
+}
+
+export { useToast, toast };
+
+```
+
+
+---
+
+## ARQUIVO: `src\hooks\useImageProtection.ts`
+**Linhas:** 56
+
+```typescript
+import { useEffect } from 'react';
+
+export const useImageProtection = () => {
+    useEffect(() => {
+        // Prevent right-click context menu
+        const handleContextMenu = (e: MouseEvent) => {
+            const target = e.target as HTMLElement;
+            if (target.tagName === 'IMG' || target.closest('img')) {
+                e.preventDefault();
+                return false;
+            }
+        };
+
+        // Prevent drag and drop
+        const handleDragStart = (e: DragEvent) => {
+            const target = e.target as HTMLElement;
+            if (target.tagName === 'IMG') {
+                e.preventDefault();
+                return false;
+            }
+        };
+
+        // Prevent keyboard shortcuts for saving images
+        const handleKeyDown = (e: KeyboardEvent) => {
+            // Prevent Ctrl+S, Ctrl+Shift+S (Save)
+            if ((e.ctrlKey || e.metaKey) && (e.key === 's' || e.key === 'S')) {
+                const target = e.target as HTMLElement;
+                if (target.tagName === 'IMG' || document.activeElement?.tagName === 'IMG') {
+                    e.preventDefault();
+                    return false;
+                }
+            }
+
+            // Prevent Print Screen in some browsers
+            if (e.key === 'PrintScreen') {
+                e.preventDefault();
+                // Show a message (optional)
+                console.log('Screenshots are disabled for image protection');
+                return false;
+            }
+        };
+
+        // Add event listeners
+        document.addEventListener('contextmenu', handleContextMenu);
+        document.addEventListener('dragstart', handleDragStart);
+        document.addEventListener('keydown', handleKeyDown);
+
+        // Cleanup
+        return () => {
+            document.removeEventListener('contextmenu', handleContextMenu);
+            document.removeEventListener('dragstart', handleDragStart);
+            document.removeEventListener('keydown', handleKeyDown);
+        };
+    }, []);
+};
+
+```
+
+
+---
+
+## ARQUIVO: `src\hooks\useSearch.ts`
+**Linhas:** 96
+
+```typescript
+import { useState, useEffect } from 'react';
+import { supabase, PhotographyItem, DesignProject } from '@/lib/supabase';
+
+export interface SearchResult {
+    id: string;
+    type: 'photography' | 'design';
+    title: string;
+    description: string;
+    url: string; // Thumbnail URL
+    category: string;
+    date: string;
+    link: string; // Internal route
+}
+
+export const useSearch = (query: string) => {
+    const [results, setResults] = useState<SearchResult[]>([]);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        const searchData = async () => {
+            if (!query || query.trim().length < 2) {
+                setResults([]);
+                return;
+            }
+
+            setLoading(true);
+            setError(null);
+
+            try {
+                const searchTerm = `%${query}%`;
+
+                // Search Photography
+                const { data: photoData, error: photoError } = await supabase
+                    .from('photography')
+                    .select('*')
+                    .or(`title.ilike.${searchTerm},description.ilike.${searchTerm},event_name.ilike.${searchTerm},tags.cs.{${query}}`)
+                    .limit(5);
+
+                if (photoError) throw photoError;
+
+                // Search Design
+                const { data: designData, error: designError } = await supabase
+                    .from('design_projects')
+                    .select('*')
+                    .or(`title.ilike.${searchTerm},description.ilike.${searchTerm},event_name.ilike.${searchTerm},tags.cs.{${query}}`)
+                    .limit(5);
+
+                if (designError) throw designError;
+
+                // Transform and combine results
+                const photos: SearchResult[] = (photoData || []).map((item: PhotographyItem) => ({
+                    id: item.id,
+                    type: 'photography',
+                    title: item.title,
+                    description: item.description || '',
+                    url: item.url,
+                    category: item.category,
+                    date: item.event_date || item.created_at,
+                    link: '/photography' // We might need a way to open specific photos, for now link to gallery
+                }));
+
+                const designs: SearchResult[] = (designData || []).map((item: DesignProject) => ({
+                    id: item.id,
+                    type: 'design',
+                    title: item.title,
+                    description: item.description,
+                    url: item.images[0],
+                    category: item.category,
+                    date: item.event_date || item.created_at,
+                    link: '/design'
+                }));
+
+                // Sort by date (newest first)
+                const combined = [...photos, ...designs].sort((a, b) =>
+                    new Date(b.date).getTime() - new Date(a.date).getTime()
+                );
+
+                setResults(combined);
+
+            } catch (err: any) {
+                console.error('Search error:', err);
+                setError(err.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        const timeoutId = setTimeout(searchData, 300); // Debounce
+        return () => clearTimeout(timeoutId);
+
+    }, [query]);
+
+    return { results, loading, error };
+};
+
+```
+
+
+---
+
+## ARQUIVO: `src\hooks\useSupabaseData.ts`
+**Linhas:** 368
+
+```typescript
+import { useState, useEffect } from 'react';
+import { supabase } from '@/lib/supabase';
+import type { PhotographyItem, DesignProject } from '@/lib/supabase';
+
+export interface Comment {
+    id: string;
+    content: string;
+    user_name: string;
+    created_at: string;
+    photo_id?: string;
+    project_id?: string;
+    approved?: boolean;
+    parent_id?: string;
+    is_admin?: boolean;
+    replies?: Comment[];
+}
+
+// Fisher-Yates shuffle algorithm for randomizing arrays
+function shuffleArray<T>(array: T[]): T[] {
+    const shuffled = [...array];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+}
+
+// Hook for fetching photography items
+export function usePhotography(category?: string) {
+    const [photos, setPhotos] = useState<PhotographyItem[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        async function fetchPhotos() {
+            try {
+                setLoading(true);
+                let query = supabase
+                    .from('photography')
+                    .select('*');
+
+                if (category) {
+                    query = query.eq('category', category);
+                }
+
+                const { data, error } = await query;
+
+                if (error) throw error;
+                // Randomize the order of photos
+                setPhotos(shuffleArray(data || []));
+                setError(null);
+            } catch (err: any) {
+                setError(err.message);
+                setPhotos([]);
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        fetchPhotos();
+    }, [category]);
+
+    return { photos, loading, error };
+}
+
+// Hook for fetching design projects
+export function useDesignProjects(category?: string) {
+    const [projects, setProjects] = useState<DesignProject[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        async function fetchProjects() {
+            try {
+                setLoading(true);
+                let query = supabase
+                    .from('design_projects')
+                    .select('*');
+
+                if (category) {
+                    query = query.eq('category', category);
+                }
+
+                const { data, error } = await query;
+
+                if (error) throw error;
+                // Randomize the order of projects
+                setProjects(shuffleArray(data || []));
+                setError(null);
+            } catch (err: any) {
+                setError(err.message);
+                setProjects([]);
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        fetchProjects();
+    }, [category]);
+
+    return { projects, loading, error };
+}
+
+export const useComments = (itemId: string, type: 'photography' | 'design') => {
+    const [comments, setComments] = useState<Comment[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    const fetchComments = async () => {
+        try {
+            const column = type === 'photography' ? 'photo_id' : 'project_id';
+            const { data, error } = await supabase
+                .from('comments')
+                .select('*')
+                .eq(column, itemId)
+                .eq('approved', true)
+                .order('created_at', { ascending: false });
+
+            if (error) throw error;
+            setComments(data || []);
+        } catch (error) {
+            console.error('Error fetching comments:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        if (itemId) fetchComments();
+    }, [itemId, type]);
+
+    const addComment = async (content: string, userName: string = 'Anonymous') => {
+        const column = type === 'photography' ? 'photo_id' : 'project_id';
+        const { error } = await supabase
+            .from('comments')
+            .insert({
+                content,
+                user_name: userName,
+                [column]: itemId
+            });
+
+        if (error) throw error;
+        await fetchComments();
+    };
+
+    return { comments, loading, addComment, refreshComments: fetchComments };
+};
+
+export const incrementLikes = async (id: string, type: 'photography' | 'design') => {
+    const table = type === 'photography' ? 'photography' : 'design_projects';
+    const { error } = await supabase.rpc('increment_likes', { row_id: id, table_name: table });
+    if (error) console.error('Error incrementing likes:', error);
+};
+
+export const incrementShares = async (id: string, type: 'photography' | 'design') => {
+    const table = type === 'photography' ? 'photography' : 'design_projects';
+    const { error } = await supabase.rpc('increment_shares', { row_id: id, table_name: table });
+    if (error) console.error('Error incrementing shares:', error);
+};
+
+export const useAdminComments = () => {
+    const [pendingComments, setPendingComments] = useState<Comment[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    const fetchPendingComments = async () => {
+        try {
+            setLoading(true);
+            const { data, error } = await supabase
+                .from('comments')
+                .select(`
+                    *,
+                    photography (title),
+                    design_projects (title)
+                `)
+                .eq('approved', false)
+                .order('created_at', { ascending: false });
+
+            if (error) throw error;
+            setPendingComments(data || []);
+        } catch (error) {
+            console.error('Error fetching pending comments:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchPendingComments();
+    }, []);
+
+    const approveComment = async (id: string) => {
+        const { error } = await supabase
+            .from('comments')
+            .update({ approved: true })
+            .eq('id', id);
+
+        if (error) throw error;
+        await fetchPendingComments();
+    };
+
+    const rejectComment = async (id: string) => {
+        const { error } = await supabase
+            .from('comments')
+            .delete()
+            .eq('id', id);
+
+        if (error) throw error;
+        await fetchPendingComments();
+    };
+
+    return { pendingComments, loading, approveComment, rejectComment, refreshComments: fetchPendingComments };
+};
+
+// Hook for authentication
+export function useAuth() {
+    const [user, setUser] = useState<any>(null);
+    const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        // Get initial session
+        supabase.auth.getSession().then(({ data: { session } }) => {
+            setUser(session?.user ?? null);
+        });
+
+        // Listen for auth changes
+        const {
+            data: { subscription },
+        } = supabase.auth.onAuthStateChange((_event, session) => {
+            setUser(session?.user ?? null);
+        });
+
+        return () => subscription.unsubscribe();
+    }, []);
+
+    const signIn = async (email: string, password: string) => {
+        setLoading(true);
+        const { data, error } = await supabase.auth.signInWithPassword({
+            email,
+            password,
+        });
+        setLoading(false);
+        return { data, error };
+    };
+
+    const signOut = async () => {
+        const { error } = await supabase.auth.signOut();
+        return { error };
+    };
+
+    return {
+        user,
+        loading,
+        signIn,
+        signOut,
+    };
+}
+
+// Hook para listar TODOS os comentários (admin)
+export const useAllComments = () => {
+    const [allComments, setAllComments] = useState<Comment[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    const fetchAllComments = async () => {
+        try {
+            setLoading(true);
+            const { data, error } = await supabase
+                .from('comments')
+                .select(`
+                    *,
+                    photography (title),
+                    design_projects (title)
+                `)
+                .is('parent_id', null) // Apenas comentários raiz (não respostas)
+                .order('created_at', { ascending: false });
+
+            if (error) throw error;
+            setAllComments(data || []);
+        } catch (error) {
+            console.error('Error fetching all comments:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchAllComments();
+    }, []);
+
+    return { allComments, loading, refreshComments: fetchAllComments };
+};
+
+// Função para deletar comentário (admin)
+export const deleteComment = async (id: string) => {
+    try {
+        const { error } = await supabase
+            .from('comments')
+            .delete()
+            .eq('id', id);
+
+        if (error) throw error;
+    } catch (error: any) {
+        throw new Error(error.message || 'Failed to delete comment');
+    }
+};
+
+// Função para adicionar resposta (admin)
+export const addReply = async (parentId: string, content: string, itemId: string, type: 'photography' | 'design') => {
+    try {
+        const column = type === 'photography' ? 'photo_id' : 'project_id';
+        const { error } = await supabase
+            .from('comments')
+            .insert({
+                content,
+                user_name: 'Tiago',
+                [column]: itemId,
+                parent_id: parentId,
+                is_admin: true,
+                approved: true
+            });
+
+        if (error) throw error;
+    } catch (error: any) {
+        throw new Error(error.message || 'Failed to add reply');
+    }
+}
+
+export const useTopRated = (limit = 5) => {
+    const [topPhotos, setTopPhotos] = useState<PhotographyItem[]>([]);
+    const [topProjects, setTopProjects] = useState<DesignProject[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchTopRated = async () => {
+            try {
+                setLoading(true);
+
+                // Fetch top photos by likes
+                const { data: photos, error: photosError } = await supabase
+                    .from('photography')
+                    .select('*')
+                    .order('likes_count', { ascending: false })
+                    .limit(limit);
+
+                if (photosError) throw photosError;
+                setTopPhotos(photos || []);
+
+                // Fetch top projects by likes
+                const { data: projects, error: projectsError } = await supabase
+                    .from('design_projects')
+                    .select('*')
+                    .order('likes_count', { ascending: false })
+                    .limit(limit);
+
+                if (projectsError) throw projectsError;
+                setTopProjects(projects || []);
+
+            } catch (error) {
+                console.error('Error fetching top rated:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchTopRated();
+    }, [limit]);
+
+    return { topPhotos, topProjects, loading };
+};
+
+```
+
+
+---
+
+## ARQUIVO: `src\lib\exifExtractor.ts`
+**Linhas:** 128
+
+```typescript
+import exifr from 'exifr';
+
+export interface ExifData {
+    camera_make?: string;
+    camera_model?: string;
+    lens_model?: string;
+    iso?: number;
+    aperture?: string;
+    shutter_speed?: string;
+    focal_length?: string;
+    capture_date?: Date;
+}
+
+/**
+ * Extract EXIF metadata from an image file
+ * @param file Image file to extract EXIF from
+ * @returns ExifData object with camera settings and metadata
+ */
+export async function extractExifData(file: File): Promise<ExifData> {
+    try {
+        const exif = await exifr.parse(file, {
+            tiff: true,
+            exif: true,
+            gps: false, // Disable GPS for privacy
+        });
+
+        if (!exif) {
+            console.log('No EXIF data found in image');
+            return {};
+        }
+
+        return {
+            camera_make: exif.Make?.trim(),
+            camera_model: exif.Model?.trim(),
+            lens_model: exif.LensModel?.trim() || exif.Lens?.trim(),
+            iso: exif.ISO || exif.ISOSpeedRatings,
+            aperture: formatAperture(exif.FNumber || exif.ApertureValue),
+            shutter_speed: formatShutterSpeed(exif.ExposureTime || exif.ShutterSpeedValue),
+            focal_length: formatFocalLength(exif.FocalLength),
+            capture_date: exif.DateTimeOriginal || exif.DateTime || exif.CreateDate,
+        };
+    } catch (error) {
+        console.warn('Failed to extract EXIF data:', error);
+        return {};
+    }
+}
+
+/**
+ * Format aperture value as f-number string
+ */
+function formatAperture(value?: number): string | undefined {
+    if (!value) return undefined;
+    return `f/${value.toFixed(1)}`;
+}
+
+/**
+ * Format shutter speed for display
+ */
+function formatShutterSpeed(exposureTime?: number): string | undefined {
+    if (!exposureTime) return undefined;
+
+    if (exposureTime >= 1) {
+        return `${exposureTime}s`;
+    } else {
+        const denominator = Math.round(1 / exposureTime);
+        return `1/${denominator}s`;
+    }
+}
+
+/**
+ * Format focal length as millimeters
+ */
+function formatFocalLength(focalLength?: number): string | undefined {
+    if (!focalLength) return undefined;
+    return `${Math.round(focalLength)}mm`;
+}
+
+/**
+ * Format date for input field (YYYY-MM-DD)
+ */
+export function formatDateForInput(date: Date | string | undefined): string {
+    if (!date) return '';
+
+    const d = typeof date === 'string' ? new Date(date) : date;
+
+    if (isNaN(d.getTime())) return '';
+
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
+}
+
+/**
+ * Format EXIF data as a readable text description
+ * This creates a nicely formatted text with camera settings
+ */
+export function formatExifAsDescription(exifData: ExifData): string {
+    const parts: string[] = [];
+
+    // Camera info
+    if (exifData.camera_make || exifData.camera_model) {
+        const camera = [exifData.camera_make, exifData.camera_model]
+            .filter(Boolean)
+            .join(' ');
+        parts.push(`📷 ${camera}`);
+    }
+
+    // Lens
+    if (exifData.lens_model) {
+        parts.push(`🔍 ${exifData.lens_model}`);
+    }
+
+    // Technical settings in one line
+    const technical: string[] = [];
+    if (exifData.focal_length) technical.push(exifData.focal_length);
+    if (exifData.aperture) technical.push(exifData.aperture);
+    if (exifData.shutter_speed) technical.push(exifData.shutter_speed);
+    if (exifData.iso) technical.push(`ISO ${exifData.iso}`);
+
+    if (technical.length > 0) {
+        parts.push(`⚙️ ${technical.join(' • ')}`);
+    }
+
+    return parts.join('\n');
+}
+
+```
+
+
+---
+
+## ARQUIVO: `src\lib\supabase.ts`
+**Linhas:** 99
+
+```typescript
+import { createClient } from '@supabase/supabase-js'
+
+// Initialize Supabase client
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || ''
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || ''
+
+export const supabase = createClient(supabaseUrl, supabaseAnonKey)
+
+// Storage bucket names
+export const PHOTOGRAPHY_BUCKET = 'photography';
+export const DESIGN_BUCKET = 'design';
+export const HERO_BUCKET = 'hero';
+
+// TypeScript types
+export interface PhotographyItem {
+    id: string;
+    title: string;
+    category: 'portraits' | 'urban' | 'nature' | 'art' | 'events';
+    url: string;
+    description?: string;
+    year?: number;
+    event_name?: string;
+    event_date?: string;
+    tags?: string[];
+    // EXIF metadata
+    camera_make?: string;
+    camera_model?: string;
+    lens_model?: string;
+    iso?: number;
+    aperture?: string;
+    shutter_speed?: string;
+    focal_length?: string;
+    capture_date?: string;
+    created_at: string;
+    updated_at?: string;
+    likes_count?: number;
+    comments_count?: number;
+    shares_count?: number;
+}
+
+export interface DesignProject {
+    id: string;
+    title: string;
+    category: 'branding' | 'editorial' | 'web' | 'illustration' | 'packaging';
+    description: string;
+    images: string[];
+    client?: string;
+    year?: number;
+    link?: string;
+    event_name?: string;
+    event_date?: string;
+    tags?: string[];
+    created_at: string;
+    updated_at?: string;
+    likes_count?: number;
+    comments_count?: number;
+    shares_count?: number;
+}
+
+export interface HeroImage {
+    id: string;
+    created_at: string;
+    url: string;
+    title: string;
+    active: boolean;
+    page?: string;
+}
+
+// Helper function to upload image
+export async function uploadImage(bucket: string, file: File): Promise<string> {
+    const fileExt = file.name.split('.').pop();
+    const fileName = `${Math.random().toString(36).substring(2)}.${fileExt}`;
+    const filePath = `${fileName}`;
+
+    const { data, error } = await supabase.storage
+        .from(bucket)
+        .upload(filePath, file);
+
+    if (error) throw error;
+
+    const { data: { publicUrl } } = supabase.storage
+        .from(bucket)
+        .getPublicUrl(filePath);
+
+    return publicUrl;
+}
+
+// Helper function to delete image
+export async function deleteImage(bucket: string, url: string): Promise<{ error: string | null }> {
+    const fileName = url.split('/').pop()?.split('?')[0];
+    if (!fileName) return { error: 'Invalid file URL' };
+
+    const { error } = await supabase.storage
+        .from(bucket)
+        .remove([fileName]);
+
+    return { error: error?.message || null };
+}
+
+```
+
+
+---
+
+## ARQUIVO: `src\lib\utils.ts`
+**Linhas:** 7
+
+```typescript
+import { clsx, type ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
+
+```
+
+
+---
+
+## ARQUIVO: `src\pages\AboutPage.tsx`
+**Linhas:** 151
+
+```typescript
+import { useState, useEffect } from "react";
+import Navigation from "@/components/Navigation";
+import Footer from "@/components/Footer";
+import { Camera, Palette, Heart, Award, Users, Lightbulb } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { supabase } from "@/lib/supabase";
+import { SEO } from "@/components/SEO";
+
+const AboutPage = () => {
+    const { t } = useLanguage();
+    const [heroImage, setHeroImage] = useState<string | null>(null);
+
+    useEffect(() => {
+        const fetchHeroImage = async () => {
+            const { data } = await supabase
+                .from('hero_images')
+                .select('url')
+                .eq('page', 'about')
+                .eq('active', true)
+                .order('created_at', { ascending: false })
+                .limit(1)
+                .single();
+
+            if (data) {
+                setHeroImage(data.url);
+            }
+        };
+
+        fetchHeroImage();
+    }, []);
+
+    return (
+        <>
+            <SEO title="Sobre Mim" />
+            <Navigation />
+            <main className="min-h-screen pt-20 bg-background">
+                {/* Hero Section */}
+                <section className="relative py-32 px-4 overflow-hidden">
+                    {/* Background Image */}
+                    {heroImage && (
+                        <div
+                            className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-20 z-0"
+                            style={{ backgroundImage: `url(${heroImage})` }}
+                        />
+                    )}
+                    {/* Background Gradient */}
+                    <div className={`absolute inset-0 bg-gradient-to-br from-background via-secondary/20 to-background z-0 ${heroImage ? 'opacity-80' : ''}`} />
+                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-accent/10 blur-[120px] rounded-full pointer-events-none" />
+
+                    <div className="relative z-10 max-w-4xl mx-auto text-center">
+                        <h1 className="text-5xl md:text-7xl font-display font-bold tracking-tight mb-8 animate-fade-in bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/70">
+                            {t('about.title')}
+                        </h1>
+                        <div className="w-32 h-1.5 bg-gradient-to-r from-accent to-purple-500 mx-auto mb-10 rounded-full shadow-[0_0_20px_rgba(0,163,255,0.5)]" />
+                    </div>
+                </section>
+
+                {/* Bio Section */}
+                <section className="py-20 px-4 md:px-8">
+                    <div className="max-w-4xl mx-auto">
+                        <div className="prose prose-lg max-w-none">
+                            <p className="text-xl text-foreground/90 font-light leading-relaxed mb-6">
+                                {t('about.intro')}
+                            </p>
+                            <p className="text-lg text-muted-foreground font-light leading-relaxed mb-6">
+                                {t('about.description1')}
+                            </p>
+                            <p className="text-lg text-muted-foreground font-light leading-relaxed">
+                                {t('about.description2')}
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
+                {/* Skills & Expertise */}
+                <section className="bg-secondary py-20 px-4 md:px-8">
+                    <div className="max-w-6xl mx-auto">
+                        <h2 className="text-3xl md:text-4xl font-display font-bold text-center mb-16">
+                            {t('about.expertise')}
+                        </h2>
+                        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                            <div className="text-center p-6 bg-background rounded-lg hover:shadow-lg hover:shadow-accent/10 transition-all duration-300">
+                                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-accent/10 text-accent mb-6">
+                                    <Camera size={28} strokeWidth={1.5} />
+                                </div>
+                                <h3 className="text-xl font-display font-semibold mb-3">{t('about.photography')}</h3>
+                                <p className="text-muted-foreground font-light leading-relaxed">
+                                    {t('about.photographyDesc')}
+                                </p>
+                            </div>
+
+                            <div className="text-center p-6 bg-background rounded-lg hover:shadow-lg hover:shadow-accent/10 transition-all duration-300">
+                                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-accent/10 text-accent mb-6">
+                                    <Palette size={28} strokeWidth={1.5} />
+                                </div>
+                                <h3 className="text-xl font-display font-semibold mb-3">{t('about.graphicDesign')}</h3>
+                                <p className="text-muted-foreground font-light leading-relaxed">
+                                    {t('about.graphicDesignDesc')}
+                                </p>
+                            </div>
+
+                            <div className="text-center p-6 bg-background rounded-lg hover:shadow-lg hover:shadow-accent/10 transition-all duration-300">
+                                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-accent/10 text-accent mb-6">
+                                    <Heart size={28} strokeWidth={1.5} />
+                                </div>
+                                <h3 className="text-xl font-display font-semibold mb-3">{t('about.passion.title')}</h3>
+                                <p className="text-muted-foreground font-light leading-relaxed">
+                                    {t('about.passion.description')}
+                                </p>
+                            </div>
+
+                            <div className="text-center p-6 bg-background rounded-lg hover:shadow-lg hover:shadow-accent/10 transition-all duration-300">
+                                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-accent/10 text-accent mb-6">
+                                    <Award size={28} strokeWidth={1.5} />
+                                </div>
+                                <h3 className="text-xl font-display font-semibold mb-3">{t('about.quality')}</h3>
+                                <p className="text-muted-foreground font-light leading-relaxed">
+                                    {t('about.qualityDesc')}
+                                </p>
+                            </div>
+
+                            <div className="text-center p-6 bg-background rounded-lg hover:shadow-lg hover:shadow-accent/10 transition-all duration-300">
+                                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-accent/10 text-accent mb-6">
+                                    <Users size={28} strokeWidth={1.5} />
+                                </div>
+                                <h3 className="text-xl font-display font-semibold mb-3">{t('about.collaboration')}</h3>
+                                <p className="text-muted-foreground font-light leading-relaxed">
+                                    {t('about.collaborationDesc')}
+                                </p>
+                            </div>
+
+                            <div className="text-center p-6 bg-background rounded-lg hover:shadow-lg hover:shadow-accent/10 transition-all duration-300">
+                                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-accent/10 text-accent mb-6">
+                                    <Lightbulb size={28} strokeWidth={1.5} />
+                                </div>
+                                <h3 className="text-xl font-display font-semibold mb-3">{t('about.creativity')}</h3>
+                                <p className="text-muted-foreground font-light leading-relaxed">
+                                    {t('about.creativityDesc')}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </main>
+            <Footer />
+        </>
+    );
+};
+
+export default AboutPage;
+
+```
+
+
+---
+
+## ARQUIVO: `src\pages\Admin.tsx`
+**Linhas:** 1493
+
+```typescript
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth, useAdminComments } from '@/hooks/useSupabaseData';
+import type { Comment } from '@/hooks/useSupabaseData';
+import { supabase, uploadImage, deleteImage, PHOTOGRAPHY_BUCKET, DESIGN_BUCKET, HERO_BUCKET } from '@/lib/supabase';
+import type { PhotographyItem, DesignProject, HeroImage } from '@/lib/supabase';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { useToast } from '@/hooks/use-toast';
+import { extractExifData, formatDateForInput, formatExifAsDescription } from '@/lib/exifExtractor';
+import { Calendar, Edit, Loader2, LogOut, Plus, Tag, Trash2, Upload, MessageCircle, Check, X as XIcon } from 'lucide-react';
+import TagInput from '@/components/TagInput';
+import BatchUpload from '@/components/BatchUpload';
+import {
+    Accordion,
+    AccordionContent,
+    AccordionItem,
+    AccordionTrigger,
+} from "@/components/ui/accordion";
+
+const Admin = () => {
+    const { user, loading: authLoading, signIn, signOut } = useAuth();
+    const navigate = useNavigate();
+    const { toast } = useToast();
+
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [isLoggingIn, setIsLoggingIn] = useState(false);
+
+    const [photos, setPhotos] = useState<PhotographyItem[]>([]);
+    const [projects, setProjects] = useState<DesignProject[]>([]);
+    const [heroImages, setHeroImages] = useState<HeroImage[]>([]);
+    const [loadingData, setLoadingData] = useState(false);
+
+    useEffect(() => {
+        if (user) {
+            loadData();
+        }
+    }, [user]);
+
+    const loadData = async () => {
+        setLoadingData(true);
+        try {
+            const [photosRes, projectsRes] = await Promise.all([
+                supabase.from('photography').select('*').order('created_at', { ascending: false }),
+                supabase.from('design_projects').select('*').order('created_at', { ascending: false }),
+            ]);
+
+            if (photosRes.data) setPhotos(photosRes.data);
+            if (projectsRes.data) setProjects(projectsRes.data);
+
+            const { data: heroData } = await supabase
+                .from('hero_images')
+                .select('*')
+                .order('created_at', { ascending: false });
+
+            if (heroData) setHeroImages(heroData);
+        } catch (error) {
+            console.error('Error loading data:', error);
+        } finally {
+            setLoadingData(false);
+        }
+    };
+
+    const handleLogin = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setIsLoggingIn(true);
+
+        const { error } = await signIn(email, password);
+
+        if (error) {
+            toast({
+                title: 'Falha no Login',
+                description: error.message,
+                variant: 'destructive',
+            });
+        } else {
+            toast({
+                title: 'Sucesso',
+                description: 'Bem-vindo ao painel administrativo!',
+            });
+        }
+
+        setIsLoggingIn(false);
+    };
+
+    const handleLogout = async () => {
+        await signOut();
+        toast({
+            title: 'Desconectado',
+            description: 'Você foi desconectado com sucesso.',
+        });
+        navigate('/');
+    };
+
+    const handleDeletePhoto = async (photo: PhotographyItem) => {
+        if (!confirm('Are you sure you want to delete this photo?')) return;
+
+        try {
+            // First, verify the photo exists and we can read it
+            const { data: existingPhoto, error: checkError } = await supabase
+                .from('photography')
+                .select('id')
+                .eq('id', photo.id)
+                .single();
+
+            if (checkError || !existingPhoto) {
+                throw new Error('Photo not found or cannot be accessed.');
+            }
+
+            // Try to delete from storage
+            const { error: storageError } = await deleteImage(PHOTOGRAPHY_BUCKET, photo.url);
+            if (storageError) {
+                console.error('Storage delete error:', storageError);
+                // Don't fail the whole operation for storage errors
+            }
+
+            // Attempt database delete
+            const { error: deleteError, count } = await supabase
+                .from('photography')
+                .delete({ count: 'exact' })
+                .eq('id', photo.id);
+
+            if (deleteError) throw deleteError;
+
+            // Verify it was actually deleted
+            const { data: stillExists } = await supabase
+                .from('photography')
+                .select('id')
+                .eq('id', photo.id)
+                .single();
+
+            if (stillExists) {
+                throw new Error('Delete failed: Item still exists in database. This is likely due to missing permissions in Supabase. Please check RLS policies.');
+            }
+
+            toast({
+                title: 'Photo Deleted',
+                description: 'The photo has been removed successfully.',
+            });
+
+            loadData();
+        } catch (error: any) {
+            console.error('Delete error:', error);
+            let description = error.message || 'An unexpected error occurred.';
+            if (error.message && error.message.includes('Item still exists')) {
+                description = 'Delete failed: Item still exists in database. This is likely due to missing DELETE permissions in Supabase. Please run the fix-delete-permissions.sql script in your Supabase SQL Editor.';
+            }
+            toast({
+                title: 'Delete Failed',
+                description: description,
+                variant: 'destructive',
+            });
+        }
+    };
+
+    const handleDeleteProject = async (project: DesignProject) => {
+        if (!confirm('Are you sure you want to delete this project?')) return;
+
+        try {
+            // First, verify the project exists and we can read it
+            const { data: existingProject, error: checkError } = await supabase
+                .from('design_projects')
+                .select('id')
+                .eq('id', project.id)
+                .single();
+
+            if (checkError || !existingProject) {
+                throw new Error('Project not found or cannot be accessed.');
+            }
+
+            // Try to delete all images from storage
+            for (const imageUrl of project.images) {
+                const { error: storageError } = await deleteImage(DESIGN_BUCKET, imageUrl);
+                if (storageError) {
+                    console.error('Storage delete error:', storageError);
+                }
+            }
+
+            // Attempt database delete
+            const { error: deleteError, count } = await supabase
+                .from('design_projects')
+                .delete({ count: 'exact' })
+                .eq('id', project.id);
+
+            if (deleteError) throw deleteError;
+
+            // Verify it was actually deleted
+            const { data: stillExists } = await supabase
+                .from('design_projects')
+                .select('id')
+                .eq('id', project.id)
+                .single();
+
+            if (stillExists) {
+                throw new Error('Delete failed: Item still exists in database. This is likely due to missing permissions in Supabase. Please check RLS policies.');
+            }
+
+            toast({
+                title: 'Project Deleted',
+                description: 'The project has been removed successfully.',
+            });
+
+            loadData();
+        } catch (error: any) {
+            console.error('Delete error:', error);
+            let description = error.message || 'An unexpected error occurred.';
+            if (error.message && error.message.includes('Item still exists')) {
+                description = 'Delete failed: Item still exists in database. This is likely due to missing DELETE permissions in Supabase. Please run the fix-delete-permissions.sql script in your Supabase SQL Editor.';
+            }
+            toast({
+                title: 'Delete Failed',
+                description: description,
+                variant: 'destructive',
+            });
+        }
+    };
+
+    const handleDeleteHeroImage = async (image: HeroImage) => {
+        if (!confirm('Are you sure you want to delete this image?')) return;
+
+        try {
+            // First, verify the hero image exists and we can read it
+            const { data: existingImage, error: checkError } = await supabase
+                .from('hero_images')
+                .select('id')
+                .eq('id', image.id)
+                .single();
+
+            if (checkError || !existingImage) {
+                throw new Error('Hero image not found or cannot be accessed.');
+            }
+
+            // Try to delete from storage
+            const { error: storageError } = await deleteImage(HERO_BUCKET, image.url);
+            if (storageError) {
+                console.error('Storage delete error:', storageError);
+            }
+
+            // Attempt database delete
+            const { error: deleteError, count } = await supabase
+                .from('hero_images')
+                .delete({ count: 'exact' })
+                .eq('id', image.id);
+
+            if (deleteError) throw deleteError;
+
+            // Verify it was actually deleted
+            const { data: stillExists } = await supabase
+                .from('hero_images')
+                .select('id')
+                .eq('id', image.id)
+                .single();
+
+            if (stillExists) {
+                throw new Error('Delete failed: Item still exists in database. This is likely due to missing permissions in Supabase. Please check RLS policies.');
+            }
+
+            toast({
+                title: 'Image Deleted',
+                description: 'The hero image has been removed successfully.',
+            });
+
+            loadData();
+        } catch (error: any) {
+            console.error('Delete error:', error);
+            let description = error.message || 'An unexpected error occurred.';
+            if (error.message && error.message.includes('Item still exists')) {
+                description = 'Delete failed: Item still exists in database. This is likely due to missing DELETE permissions in Supabase. Please run the fix-delete-permissions.sql script in your Supabase SQL Editor.';
+            }
+            toast({
+                title: 'Delete Failed',
+                description: description,
+                variant: 'destructive',
+            });
+        }
+    };
+
+    const handleToggleActiveHero = async (image: HeroImage) => {
+        try {
+            // Toggle the clicked image
+            await supabase
+                .from('hero_images')
+                .update({ active: !image.active })
+                .eq('id', image.id);
+
+            loadData();
+        } catch (error: any) {
+            toast({
+                title: 'Error',
+                description: error.message,
+                variant: 'destructive',
+            });
+        }
+    };
+
+    // Login Form
+    if (!user) {
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-secondary to-background p-4">
+                <Card className="w-full max-w-md">
+                    <CardHeader className="text-center">
+                        <CardTitle className="text-3xl font-display">Painel Administrativo</CardTitle>
+                        <CardDescription>Gerencie seu portfólio de fotografia e design</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <form onSubmit={handleLogin} className="space-y-4">
+                            <div>
+                                <label htmlFor="email" className="block text-sm font-medium mb-2">
+                                    E-mail
+                                </label>
+                                <Input
+                                    id="email"
+                                    type="email"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    required
+                                    placeholder="admin@example.com"
+                                />
+                            </div>
+                            <div>
+                                <label htmlFor="password" className="block text-sm font-medium mb-2">
+                                    Senha
+                                </label>
+                                <Input
+                                    id="password"
+                                    type="password"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    required
+                                    placeholder="••••••••"
+                                />
+                            </div>
+                            <Button
+                                type="submit"
+                                className="w-full"
+                                disabled={isLoggingIn}
+                            >
+                                {isLoggingIn ? (
+                                    <>
+                                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                        Entrando...
+                                    </>
+                                ) : (
+                                    'Entrar'
+                                )}
+                            </Button>
+                        </form>
+                    </CardContent>
+                </Card>
+            </div>
+        );
+    }
+
+    // Admin Dashboard
+    return (
+        <div className="min-h-screen bg-background">
+            <header className="border-b border-border bg-secondary/50 backdrop-blur-sm sticky top-0 z-50">
+                <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+                    <h1 className="text-2xl font-display font-bold">Painel Administrativo</h1>
+                    <div className="flex items-center gap-4">
+                        <span className="text-sm text-muted-foreground">{user.email}</span>
+                        <Button onClick={handleLogout} variant="outline" size="sm">
+                            <LogOut className="mr-2 h-4 w-4" />
+                            Sair
+                        </Button>
+                    </div>
+                </div>
+            </header>
+
+            <main className="max-w-7xl mx-auto px-4 py-8">
+                <Tabs defaultValue="photography" className="w-full">
+                    <TabsList className="flex w-full max-w-2xl mx-auto gap-2">
+                        <TabsTrigger value="photography" className="flex-1">Fotografia</TabsTrigger>
+                        <TabsTrigger value="design" className="flex-1">Design</TabsTrigger>
+                        <TabsTrigger value="hero" className="flex-1">Hero</TabsTrigger>
+                        <TabsTrigger value="comments" className="flex-1">Comentários</TabsTrigger>
+                        <TabsTrigger value="content" className="flex-1">Conteúdo</TabsTrigger>
+                    </TabsList>
+
+                    <TabsContent value="photography" className="mt-8">
+                        <PhotoManagement
+                            photos={photos}
+                            onDelete={handleDeletePhoto}
+                            onRefresh={loadData}
+                            loading={loadingData}
+                        />
+                    </TabsContent>
+
+                    <TabsContent value="design" className="mt-8">
+                        <DesignManagement
+                            projects={projects}
+                            onDelete={handleDeleteProject}
+                            onRefresh={loadData}
+                            loading={loadingData}
+                        />
+                    </TabsContent>
+
+                    <TabsContent value="hero" className="mt-8">
+                        <HeroManagement
+                            images={heroImages}
+                            onDelete={handleDeleteHeroImage}
+                            onToggleActive={handleToggleActiveHero}
+                            onRefresh={loadData}
+                            loading={loadingData}
+                        />
+                    </TabsContent>
+
+                    <TabsContent value="comments" className="mt-8">
+                        <CommentManagement />
+                    </TabsContent>
+
+                    <TabsContent value="content" className="mt-8">
+                        <ContentManagement />
+                    </TabsContent>
+                </Tabs>
+            </main>
+        </div>
+    );
+};
+
+// Photography Management Component
+interface PhotoManagementProps {
+    photos: PhotographyItem[];
+    onDelete: (photo: PhotographyItem) => void;
+    onRefresh: () => void;
+    loading: boolean;
+}
+
+const PhotoManagement = ({ photos, onDelete, onRefresh, loading }: PhotoManagementProps) => {
+    const [showForm, setShowForm] = useState(false);
+    const [showBatchUpload, setShowBatchUpload] = useState(false);
+    const [uploading, setUploading] = useState(false);
+    const { toast } = useToast();
+
+    const [formData, setFormData] = useState({
+        file: null as File | null,
+        category: 'portraits' as PhotographyItem['category'],
+        title: '',
+        description: '',
+        year: new Date().getFullYear(),
+        event_name: '',
+        event_date: '',
+        tags: [] as string[],
+    });
+
+    const [editingPhoto, setEditingPhoto] = useState<PhotographyItem | null>(null);
+
+    const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        const exifData = await extractExifData(file);
+        const exifDescription = formatExifAsDescription(exifData);
+
+        setFormData(prev => ({
+            ...prev,
+            file,
+            description: exifDescription || prev.description,
+        }));
+    };
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!formData.file) return;
+
+        setUploading(true);
+        try {
+            const url = await uploadImage(PHOTOGRAPHY_BUCKET, formData.file);
+
+            await supabase.from('photography').insert({
+                url,
+                category: formData.category,
+                title: formData.title,
+                description: formData.description,
+                event_name: formData.event_name || null,
+                event_date: formData.event_date || null,
+                tags: formData.tags.length > 0 ? formData.tags : null,
+            });
+
+            toast({
+                title: 'Success',
+                description: 'Photo uploaded successfully!',
+            });
+
+            setFormData({
+                file: null,
+                category: 'portraits',
+                title: '',
+                description: '',
+                year: new Date().getFullYear(),
+                event_name: '',
+                event_date: '',
+                tags: [],
+            });
+            setShowForm(false);
+            onRefresh();
+        } catch (error: any) {
+            toast({
+                title: 'Error',
+                description: error.message,
+                variant: 'destructive',
+            });
+        } finally {
+            setUploading(false);
+        }
+    };
+
+    const handleUpdate = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!editingPhoto) return;
+
+        setUploading(true);
+        try {
+            await supabase.from('photography').update({
+                category: formData.category,
+                title: formData.title,
+                description: formData.description,
+                event_name: formData.event_name || null,
+                event_date: formData.event_date || null,
+                tags: formData.tags.length > 0 ? formData.tags : null,
+            }).eq('id', editingPhoto.id);
+
+            toast({ title: 'Success', description: 'Photo updated successfully!' });
+            setEditingPhoto(null);
+            onRefresh();
+        } catch (error: any) {
+            toast({ title: 'Error', description: error.message, variant: 'destructive' });
+        } finally {
+            setUploading(false);
+        }
+    };
+
+    const handleEdit = (photo: PhotographyItem) => {
+        setEditingPhoto(photo);
+        setFormData({
+            file: null,
+            category: photo.category,
+            title: photo.title,
+            description: photo.description || '',
+            year: photo.year || new Date().getFullYear(),
+            event_name: photo.event_name || '',
+            event_date: photo.event_date || '',
+            tags: photo.tags || [],
+        });
+        setShowForm(false);
+    };
+
+    return (
+        <div className="space-y-6">
+            <div className="flex justify-between items-center">
+                <h2 className="text-2xl font-display font-bold">Gerenciamento de Fotografias</h2>
+                <div className="flex gap-2">
+                    <Button onClick={() => setShowBatchUpload(!showBatchUpload)} variant="outline">
+                        <Upload className="mr-2 h-4 w-4" />
+                        Upload em Lote
+                    </Button>
+                    <Button onClick={() => setShowForm(!showForm)}>
+                        <Plus className="mr-2 h-4 w-4" />
+                        Adicionar Foto
+                    </Button>
+                </div>
+            </div>
+
+            {showBatchUpload && (
+                <BatchUpload
+                    type="photography"
+                    onComplete={() => {
+                        setShowBatchUpload(false);
+                        onRefresh();
+                    }}
+                    onCancel={() => setShowBatchUpload(false)}
+                />
+            )}
+
+            {editingPhoto && (
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Editar Foto</CardTitle>
+                        <CardDescription>Atualizar metadados e informações da foto</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <form onSubmit={handleUpdate} className="space-y-4">
+                            {/* Same form fields as upload, but without file input */}
+                            <div>
+                                <label className="block text-sm font-medium mb-2">Category</label>
+                                <select
+                                    value={formData.category}
+                                    onChange={(e) => setFormData({ ...formData, category: e.target.value as any })}
+                                    className="w-full px-4 py-2 rounded-md border border-input bg-background"
+                                >
+                                    <option value="portraits">Portraits</option>
+                                    <option value="urban">Urban</option>
+                                    <option value="nature">Nature</option>
+                                    <option value="art">Art</option>
+                                    <option value="events">Events</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium mb-2">Title</label>
+                                <Input
+                                    value={formData.title}
+                                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                                    required
+                                />
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label className="block text-sm font-medium mb-2 flex items-center gap-2">
+                                        <Calendar size={16} />
+                                        Event Name (optional)
+                                    </label>
+                                    <Input
+                                        value={formData.event_name}
+                                        onChange={(e) => setFormData({ ...formData, event_name: e.target.value })}
+                                        placeholder="e.g., Aniversário Alice"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium mb-2">Event Date (optional)</label>
+                                    <Input
+                                        type="date"
+                                        value={formData.event_date}
+                                        onChange={(e) => setFormData({ ...formData, event_date: e.target.value })}
+                                    />
+                                </div>
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium mb-2 flex items-center gap-2">
+                                    <Tag size={16} />
+                                    Tags (optional)
+                                </label>
+                                <TagInput
+                                    tags={formData.tags}
+                                    onChange={(tags) => setFormData({ ...formData, tags })}
+                                    placeholder="Add tags like: portrait, studio, commercial"
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium mb-2">Description</label>
+                                <Textarea
+                                    value={formData.description}
+                                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                                    required
+                                />
+                            </div>
+
+                            <div className="flex gap-4">
+                                <Button type="submit" disabled={uploading}>
+                                    {uploading ? (
+                                        <>
+                                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                            Updating...
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Upload className="mr-2 h-4 w-4" />
+                                            Update Photo
+                                        </>
+                                    )}
+                                </Button>
+                                <Button type="button" variant="outline" onClick={() => setEditingPhoto(null)}>
+                                    Cancel
+                                </Button>
+                            </div>
+                        </form>
+                    </CardContent>
+                </Card>
+            )}
+
+            {showForm && (
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Upload New Photo</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <form onSubmit={handleSubmit} className="space-y-4">
+                            <div>
+                                <label className="block text-sm font-medium mb-2">Image File</label>
+                                <Input
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={handleFileChange}
+                                    required
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium mb-2">Category</label>
+                                <select
+                                    value={formData.category}
+                                    onChange={(e) => setFormData({ ...formData, category: e.target.value as any })}
+                                    className="w-full px-4 py-2 rounded-md border border-input bg-background"
+                                >
+                                    <option value="portraits">Portraits</option>
+                                    <option value="urban">Urban</option>
+                                    <option value="nature">Nature</option>
+                                    <option value="art">Art</option>
+                                    <option value="events">Events</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium mb-2">Title</label>
+                                <Input
+                                    value={formData.title}
+                                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                                    required
+                                />
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label className="block text-sm font-medium mb-2 flex items-center gap-2">
+                                        <Calendar size={16} />
+                                        Event Name (optional)
+                                    </label>
+                                    <Input
+                                        value={formData.event_name}
+                                        onChange={(e) => setFormData({ ...formData, event_name: e.target.value })}
+                                        placeholder="e.g., Aniversário Alice"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium mb-2">Event Date (optional)</label>
+                                    <Input
+                                        type="date"
+                                        value={formData.event_date}
+                                        onChange={(e) => setFormData({ ...formData, event_date: e.target.value })}
+                                    />
+                                </div>
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium mb-2 flex items-center gap-2">
+                                    <Tag size={16} />
+                                    Tags (optional)
+                                </label>
+                                <TagInput
+                                    tags={formData.tags}
+                                    onChange={(tags) => setFormData({ ...formData, tags })}
+                                    placeholder="Add tags like: portrait, studio, commercial"
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium mb-2">Description</label>
+                                <Textarea
+                                    value={formData.description}
+                                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                                    required
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium mb-2">Year</label>
+                                <Input
+                                    type="number"
+                                    value={formData.year}
+                                    onChange={(e) => setFormData({ ...formData, year: parseInt(e.target.value) })}
+                                    required
+                                />
+                            </div>
+
+                            <div className="flex gap-4">
+                                <Button type="submit" disabled={uploading}>
+                                    {uploading ? (
+                                        <>
+                                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                            Uploading...
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Upload className="mr-2 h-4 w-4" />
+                                            Upload Photo
+                                        </>
+                                    )}
+                                </Button>
+                                <Button type="button" variant="outline" onClick={() => setShowForm(false)}>
+                                    Cancel
+                                </Button>
+                            </div>
+                        </form>
+                    </CardContent>
+                </Card>
+            )}
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {loading ? (
+                    <p className="col-span-full text-center text-muted-foreground">Loading...</p>
+                ) : photos.length === 0 ? (
+                    <p className="col-span-full text-center text-muted-foreground">No photos yet. Add your first one above!</p>
+                ) : (
+                    photos.map((photo) => (
+                        <Card key={photo.id}>
+                            <img src={photo.url} alt={photo.title} className="w-full h-48 object-cover rounded-t-lg" />
+                            <CardContent className="p-4">
+                                <p className="text-sm text-accent font-medium mb-1">{photo.category}</p>
+                                <h3 className="font-semibold mb-1">{photo.title}</h3>
+
+                                {photo.event_name && (
+                                    <div className="flex items-center gap-1 text-sm mb-1">
+                                        <Calendar size={14} className="text-muted-foreground" />
+                                        <span className="font-medium">{photo.event_name}</span>
+                                        {photo.event_date && (
+                                            <span className="text-muted-foreground">
+                                                • {new Date(photo.event_date).toLocaleDateString('pt-BR')}
+                                            </span>
+                                        )}
+                                    </div>
+                                )}
+
+                                {photo.tags && photo.tags.length > 0 && (
+                                    <div className="flex flex-wrap gap-1 mb-2">
+                                        {photo.tags.map((tag) => (
+                                            <span key={tag} className="text-xs bg-secondary px-2 py-0.5 rounded-full">
+                                                #{tag}
+                                            </span>
+                                        ))}
+                                    </div>
+                                )}
+
+                                <p className="text-sm text-muted-foreground mb-3 line-clamp-2">{photo.description}</p>
+
+                                <div className="flex gap-2">
+                                    <Button
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={() => handleEdit(photo)}
+                                        className="flex-1"
+                                    >
+                                        <Edit className="mr-2 h-4 w-4" />
+                                        Edit
+                                    </Button>
+                                    <Button
+                                        variant="destructive"
+                                        size="sm"
+                                        onClick={() => onDelete(photo)}
+                                        className="flex-1"
+                                    >
+                                        <Trash2 className="mr-2 h-4 w-4" />
+                                        Delete
+                                    </Button>
+                                </div>
+                            </CardContent>
+                        </Card>
+                    ))
+                )}
+            </div>
+        </div>
+    );
+};
+
+// Design Management Component (similar structure)
+interface DesignManagementProps {
+    projects: DesignProject[];
+    onDelete: (project: DesignProject) => void;
+    onRefresh: () => void;
+    loading: boolean;
+}
+
+const DesignManagement = ({ projects, onDelete, onRefresh, loading }: DesignManagementProps) => {
+    const [showForm, setShowForm] = useState(false);
+    const [showBatchUpload, setShowBatchUpload] = useState(false);
+    const [uploading, setUploading] = useState(false);
+    const { toast } = useToast();
+
+    const [formData, setFormData] = useState({
+        files: [] as File[],
+        category: 'branding' as DesignProject['category'],
+        title: '',
+        description: '',
+        year: new Date().getFullYear(),
+        client: '',
+    });
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (formData.files.length === 0) return;
+
+        setUploading(true);
+        try {
+            const imageUrls = await Promise.all(
+                formData.files.map((file) => uploadImage(DESIGN_BUCKET, file))
+            );
+
+            await supabase.from('design_projects').insert({
+                images: imageUrls,
+                category: formData.category,
+                title: formData.title,
+                description: formData.description,
+                year: formData.year,
+                client: formData.client || null,
+            });
+
+            toast({
+                title: 'Success',
+                description: 'Design project uploaded successfully!',
+            });
+
+            setFormData({
+                files: [],
+                category: 'branding',
+                title: '',
+                description: '',
+                year: new Date().getFullYear(),
+                client: '',
+            });
+            setShowForm(false);
+            onRefresh();
+        } catch (error: any) {
+            toast({
+                title: 'Error',
+                description: error.message,
+                variant: 'destructive',
+            });
+        } finally {
+            setUploading(false);
+        }
+    };
+
+    return (
+        <div className="space-y-6">
+            <div className="flex justify-between items-center">
+                <h2 className="text-2xl font-display font-bold">Design Projects Management</h2>
+                <div className="flex gap-2">
+                    <Button onClick={() => setShowBatchUpload(!showBatchUpload)} variant="outline">
+                        <Upload className="mr-2 h-4 w-4" />
+                        Batch Upload
+                    </Button>
+                    <Button onClick={() => setShowForm(!showForm)}>
+                        <Plus className="mr-2 h-4 w-4" />
+                        Add New Project
+                    </Button>
+                </div>
+            </div>
+
+            {showBatchUpload && (
+                <BatchUpload
+                    type="design"
+                    onComplete={() => {
+                        setShowBatchUpload(false);
+                        onRefresh();
+                    }}
+                    onCancel={() => setShowBatchUpload(false)}
+                />
+            )}
+
+            {showForm && (
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Upload New Design Project</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <form onSubmit={handleSubmit} className="space-y-4">
+                            <div>
+                                <label className="block text-sm font-medium mb-2">Images (multiple allowed)</label>
+                                <Input
+                                    type="file"
+                                    accept="image/*"
+                                    multiple
+                                    onChange={(e) => setFormData({ ...formData, files: Array.from(e.target.files || []) })}
+                                    required
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium mb-2">Category</label>
+                                <select
+                                    value={formData.category}
+                                    onChange={(e) => setFormData({ ...formData, category: e.target.value as any })}
+                                    className="w-full px-4 py-2 rounded-md border border-input bg-background"
+                                >
+                                    <option value="branding">Branding</option>
+                                    <option value="editorial">Editorial</option>
+                                    <option value="web">Web</option>
+                                    <option value="illustration">Illustration</option>
+                                    <option value="packaging">Packaging</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium mb-2">Title</label>
+                                <Input
+                                    value={formData.title}
+                                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                                    required
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium mb-2">Description</label>
+                                <Textarea
+                                    value={formData.description}
+                                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                                    required
+                                />
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label className="block text-sm font-medium mb-2">Year</label>
+                                    <Input
+                                        type="number"
+                                        value={formData.year}
+                                        onChange={(e) => setFormData({ ...formData, year: parseInt(e.target.value) })}
+                                        required
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium mb-2">Client (optional)</label>
+                                    <Input
+                                        value={formData.client}
+                                        onChange={(e) => setFormData({ ...formData, client: e.target.value })}
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="flex gap-4">
+                                <Button type="submit" disabled={uploading}>
+                                    {uploading ? (
+                                        <>
+                                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                            Uploading...
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Upload className="mr-2 h-4 w-4" />
+                                            Upload Project
+                                        </>
+                                    )}
+                                </Button>
+                                <Button type="button" variant="outline" onClick={() => setShowForm(false)}>
+                                    Cancel
+                                </Button>
+                            </div>
+                        </form>
+                    </CardContent>
+                </Card>
+            )}
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {loading ? (
+                    <p className="col-span-full text-center text-muted-foreground">Loading...</p>
+                ) : projects.length === 0 ? (
+                    <p className="col-span-full text-center text-muted-foreground">No projects yet. Add your first one above!</p>
+                ) : (
+                    projects.map((project) => (
+                        <Card key={project.id}>
+                            <img src={project.images[0]} alt={project.title} className="w-full h-48 object-cover rounded-t-lg" />
+                            <CardContent className="p-4">
+                                <p className="text-sm text-accent font-medium mb-1">{project.category}</p>
+                                <h3 className="font-semibold mb-1">{project.title}</h3>
+                                <p className="text-sm text-muted-foreground mb-1">{project.year}</p>
+                                {project.client && <p className="text-sm text-muted-foreground mb-3">Client: {project.client}</p>}
+                                <Button
+                                    variant="destructive"
+                                    size="sm"
+                                    onClick={() => onDelete(project)}
+                                    className="w-full"
+                                >
+                                    <Trash2 className="mr-2 h-4 w-4" />
+                                    Delete
+                                </Button>
+                            </CardContent>
+                        </Card>
+                    ))
+                )}
+            </div>
+        </div>
+    );
+};
+
+const CommentManagement = () => {
+    const { pendingComments, loading, approveComment, rejectComment, refreshComments } = useAdminComments();
+    const { toast } = useToast();
+
+    const handleApprove = async (id: string) => {
+        try {
+            await approveComment(id);
+            toast({ title: 'Comentário Aprovado', description: 'O comentário agora está visível publicamente.' });
+        } catch (error) {
+            toast({ title: 'Erro', description: 'Falha ao aprovar comentário.', variant: 'destructive' });
+        }
+    };
+
+    const handleReject = async (id: string) => {
+        if (!confirm('Tem certeza que deseja rejeitar este comentário?')) return;
+        try {
+            await rejectComment(id);
+            toast({ title: 'Comentário Rejeitado', description: 'O comentário foi removido.' });
+        } catch (error) {
+            toast({ title: 'Erro', description: 'Falha ao rejeitar comentário.', variant: 'destructive' });
+        }
+    };
+
+    return (
+        <div className="space-y-6">
+            <div className="flex justify-between items-center">
+                <h2 className="text-2xl font-display font-bold">Moderação de Comentários</h2>
+                <Button onClick={() => refreshComments()} variant="outline" size="sm">
+                    Atualizar
+                </Button>
+            </div>
+
+            {loading ? (
+                <div className="text-center py-10">
+                    <Loader2 className="h-8 w-8 animate-spin mx-auto text-muted-foreground" />
+                    <p className="mt-2 text-muted-foreground">Carregando comentários...</p>
+                </div>
+            ) : pendingComments.length === 0 ? (
+                <div className="text-center py-20 bg-secondary/20 rounded-lg">
+                    <MessageCircle className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+                    <p className="text-lg font-medium">Nenhum comentário pendente</p>
+                    <p className="text-muted-foreground">Todos os comentários foram moderados.</p>
+                </div>
+            ) : (
+                <div className="grid gap-4">
+                    {pendingComments.map((comment: any) => (
+                        <Card key={comment.id}>
+                            <CardContent className="p-6">
+                                <div className="flex flex-col md:flex-row gap-6 justify-between items-start">
+                                    <div className="space-y-2 flex-1">
+                                        <div className="flex items-center gap-2">
+                                            <span className="font-semibold text-lg">{comment.user_name || 'Anônimo'}</span>
+                                            <span className="text-sm text-muted-foreground">
+                                                em {comment.photography?.title || comment.design_projects?.title || 'Item desconhecido'}
+                                            </span>
+                                            <span className="text-xs bg-yellow-500/10 text-yellow-500 px-2 py-0.5 rounded-full">
+                                                Pendente
+                                            </span>
+                                        </div>
+                                        <p className="text-foreground/90 bg-secondary/30 p-3 rounded-md">
+                                            "{comment.content}"
+                                        </p>
+                                        <p className="text-xs text-muted-foreground">
+                                            {new Date(comment.created_at).toLocaleString()}
+                                        </p>
+                                    </div>
+                                    <div className="flex gap-2">
+                                        <Button
+                                            onClick={() => handleApprove(comment.id)}
+                                            className="bg-green-600 hover:bg-green-700 text-white"
+                                        >
+                                            <Check className="mr-2 h-4 w-4" />
+                                            Aprovar
+                                        </Button>
+                                        <Button
+                                            onClick={() => handleReject(comment.id)}
+                                            variant="destructive"
+                                        >
+                                            <XIcon className="mr-2 h-4 w-4" />
+                                            Rejeitar
+                                        </Button>
+                                    </div>
+                                </div>
+                            </CardContent>
+                        </Card>
+                    ))}
+                </div>
+            )}
+        </div>
+    );
+};
+
+export default Admin;
+
+interface HeroManagementProps {
+    images: HeroImage[];
+    onDelete: (image: HeroImage) => void;
+    onToggleActive: (image: HeroImage) => void;
+    onRefresh: () => void;
+    loading: boolean;
+}
+
+const HeroManagement = ({ images, onDelete, onToggleActive, onRefresh, loading }: HeroManagementProps) => {
+    const [showForm, setShowForm] = useState(false);
+    const [showBatchUpload, setShowBatchUpload] = useState(false);
+    const [uploading, setUploading] = useState(false);
+    const { toast } = useToast();
+
+    const [formData, setFormData] = useState({
+        file: null as File | null,
+        title: '',
+    });
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!formData.file) return;
+
+        setUploading(true);
+        try {
+            const url = await uploadImage(HERO_BUCKET, formData.file);
+
+            await supabase.from('hero_images').insert({
+                url,
+                title: formData.title,
+                active: false, // Default to inactive
+            });
+
+            toast({
+                title: 'Success',
+                description: 'Hero image uploaded successfully!',
+            });
+
+            setFormData({
+                file: null,
+                title: '',
+            });
+            setShowForm(false);
+            onRefresh();
+        } catch (error: any) {
+            toast({
+                title: 'Error',
+                description: error.message,
+                variant: 'destructive',
+            });
+        } finally {
+            setUploading(false);
+        }
+    };
+
+    return (
+        <div className="space-y-6">
+            <div className="flex justify-between items-center">
+                <h2 className="text-2xl font-display font-bold">Hero Images Management</h2>
+                <div className="flex gap-2">
+                    <Button onClick={() => setShowBatchUpload(!showBatchUpload)} variant="outline">
+                        <Upload className="mr-2 h-4 w-4" />
+                        Batch Upload
+                    </Button>
+                    <Button onClick={() => setShowForm(!showForm)}>
+                        <Plus className="mr-2 h-4 w-4" />
+                        Add New Hero Image
+                    </Button>
+                </div>
+            </div>
+
+            {showBatchUpload && (
+                <BatchUpload
+                    type="hero"
+                    onComplete={() => {
+                        setShowBatchUpload(false);
+                        onRefresh();
+                    }}
+                    onCancel={() => setShowBatchUpload(false)}
+                />
+            )}
+
+            {showForm && (
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Upload New Hero Image</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <form onSubmit={handleSubmit} className="space-y-4">
+                            <div>
+                                <label className="block text-sm font-medium mb-2">Image File</label>
+                                <Input
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={(e) => setFormData({ ...formData, file: e.target.files?.[0] || null })}
+                                    required
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium mb-2">Title (for reference)</label>
+                                <Input
+                                    value={formData.title}
+                                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                                    required
+                                />
+                            </div>
+
+                            <div className="flex gap-4">
+                                <Button type="submit" disabled={uploading}>
+                                    {uploading ? (
+                                        <>
+                                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                            Uploading...
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Upload className="mr-2 h-4 w-4" />
+                                            Upload Image
+                                        </>
+                                    )}
+                                </Button>
+                                <Button type="button" variant="outline" onClick={() => setShowForm(false)}>
+                                    Cancel
+                                </Button>
+                            </div>
+                        </form>
+                    </CardContent>
+                </Card>
+            )}
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {loading ? (
+                    <p className="col-span-full text-center text-muted-foreground">Loading...</p>
+                ) : images.length === 0 ? (
+                    <p className="col-span-full text-center text-muted-foreground">No hero images yet. Add your first one above!</p>
+                ) : (
+                    images.map((image) => (
+                        <Card key={image.id} className={image.active ? "border-2 border-accent" : ""}>
+                            <div className="relative h-48">
+                                <img src={image.url} alt={image.title} className="w-full h-full object-cover rounded-t-lg" />
+                                {image.active && (
+                                    <div className="absolute top-2 right-2 bg-accent text-accent-foreground px-2 py-1 rounded text-xs font-bold">
+                                        ACTIVE
+                                    </div>
+                                )}
+                            </div>
+                            <CardContent className="p-4">
+                                <h3 className="font-semibold mb-3">{image.title}</h3>
+                                <div className="flex gap-2">
+                                    <Button
+                                        variant={image.active ? "secondary" : "default"}
+                                        size="sm"
+                                        onClick={() => onToggleActive(image)}
+                                        className="flex-1"
+                                    >
+                                        {image.active ? "Deactivate" : "Set Active"}
+                                    </Button>
+                                    <Button
+                                        variant="destructive"
+                                        size="sm"
+                                        onClick={() => onDelete(image)}
+                                    >
+                                        <Trash2 className="h-4 w-4" />
+                                    </Button>
+                                </div>
+                            </CardContent>
+                        </Card>
+                    ))
+                )}
+            </div>
+        </div>
+    );
+};
+
+// Content Management Component
+const ContentManagement = () => {
+    const [content, setContent] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [editingKey, setEditingKey] = useState<string | null>(null);
+    const [editValue, setEditValue] = useState('');
+    const { toast } = useToast();
+
+    useEffect(() => {
+        loadContent();
+    }, []);
+
+    const loadContent = async () => {
+        setLoading(true);
+        try {
+            const { data } = await supabase
+                .from('site_content')
+                .select('*')
+                .eq('lang', 'pt') // Default to editing Portuguese for now
+                .order('key');
+
+            if (data) setContent(data);
+        } catch (error) {
+            console.error('Error loading content:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleSave = async (key: string) => {
+        try {
+            const { error } = await supabase
+                .from('site_content')
+                .upsert({
+                    key,
+                    lang: 'pt',
+                    value: editValue
+                });
+
+            if (error) throw error;
+
+            toast({
+                title: 'Success',
+                description: 'Content updated successfully!',
+            });
+
+            setEditingKey(null);
+            loadContent();
+        } catch (error: any) {
+            toast({
+                title: 'Error',
+                description: error.message,
+                variant: 'destructive',
+            });
+        }
+    };
+
+    const filteredContent = content.filter(item =>
+        item.key.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.value.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    // Group content by section (prefix)
+    const groupedContent: Record<string, any[]> = filteredContent.reduce((acc: Record<string, any[]>, item) => {
+        const prefix = item.key.split('.')[0];
+        if (!acc[prefix]) {
+            acc[prefix] = [];
+        }
+        acc[prefix].push(item);
+        return acc;
+    }, {});
+
+    return (
+        <div className="space-y-6">
+            <div className="flex justify-between items-center">
+                <h2 className="text-2xl font-display font-bold">Site Content Management</h2>
+                <Input
+                    placeholder="Search content..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="max-w-xs"
+                />
+            </div>
+
+            {loading ? (
+                <p className="text-center text-muted-foreground">Loading content...</p>
+            ) : (
+                <Accordion type="single" collapsible className="w-full space-y-4">
+                    {Object.entries(groupedContent).map(([section, items]) => (
+                        <AccordionItem key={section} value={section} className="border rounded-lg px-4 bg-card">
+                            <AccordionTrigger className="hover:no-underline py-4">
+                                <span className="capitalize font-bold text-lg">{section}</span>
+                                <span className="text-sm text-muted-foreground ml-2 font-normal">
+                                    ({items.length} items)
+                                </span>
+                            </AccordionTrigger>
+                            <AccordionContent className="pt-4 pb-4 space-y-4">
+                                {items.map((item) => (
+                                    <Card key={item.key}>
+                                        <CardContent className="p-4 flex items-center justify-between gap-4">
+                                            <div className="flex-1">
+                                                <p className="text-sm font-mono text-muted-foreground mb-1">{item.key}</p>
+                                                {editingKey === item.key ? (
+                                                    <Textarea
+                                                        value={editValue}
+                                                        onChange={(e) => setEditValue(e.target.value)}
+                                                        className="min-h-[100px]"
+                                                    />
+                                                ) : (
+                                                    <p className="text-base">{item.value}</p>
+                                                )}
+                                            </div>
+                                            <div>
+                                                {editingKey === item.key ? (
+                                                    <div className="flex gap-2">
+                                                        <Button size="sm" onClick={() => handleSave(item.key)}>Save</Button>
+                                                        <Button size="sm" variant="outline" onClick={() => setEditingKey(null)}>Cancel</Button>
+                                                    </div>
+                                                ) : (
+                                                    <Button
+                                                        size="sm"
+                                                        variant="outline"
+                                                        onClick={() => {
+                                                            setEditingKey(item.key);
+                                                            setEditValue(item.value);
+                                                        }}
+                                                    >
+                                                        Edit
+                                                    </Button>
+                                                )}
+                                            </div>
+                                        </CardContent>
+                                    </Card>
+                                ))}
+                            </AccordionContent>
+                        </AccordionItem>
+                    ))}
+                </Accordion>
+            )}
+        </div>
+    );
+};
+
+```
+
+
+---
+
+## ARQUIVO: `src\pages\Contact.tsx`
+**Linhas:** 276
+
+```typescript
+import { useState, useEffect } from "react";
+import Navigation from "@/components/Navigation";
+import Footer from "@/components/Footer";
+import { Mail, Phone, MapPin, Send } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { useToast } from "@/hooks/use-toast";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { supabase } from "@/lib/supabase";
+import { SEO } from "@/components/SEO";
+
+const Contact = () => {
+    const { t } = useLanguage();
+    const [heroImage, setHeroImage] = useState<string | null>(null);
+
+    useEffect(() => {
+        const fetchHeroImage = async () => {
+            const { data } = await supabase
+                .from('hero_images')
+                .select('url')
+                .eq('page', 'contact')
+                .eq('active', true)
+                .order('created_at', { ascending: false })
+                .limit(1)
+                .single();
+
+            if (data) {
+                setHeroImage(data.url);
+            }
+        };
+
+        fetchHeroImage();
+    }, []);
+
+    // ... (state declarations)
+    const [formData, setFormData] = useState({
+        name: "",
+        email: "",
+        service: "",
+        message: "",
+    });
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const { toast } = useToast();
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setIsSubmitting(true);
+
+        // Simulate form submission - in production, this would connect to your email service
+        setTimeout(() => {
+            toast({
+                title: t('contact.messageSent'),
+                description: t('contact.thankYou'),
+            });
+            setFormData({ name: "", email: "", service: "", message: "" });
+            setIsSubmitting(false);
+        }, 1000);
+    };
+
+    const handleChange = (
+        e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    ) => {
+        setFormData({
+            ...formData,
+            [e.target.name]: e.target.value,
+        });
+    };
+
+    return (
+        <>
+            <SEO title="Contato" />
+            <Navigation />
+            <main className="min-h-screen pt-20 bg-background">
+                {/* Hero Section */}
+                <section className="relative py-32 px-4 overflow-hidden">
+                    {/* Background Image */}
+                    {heroImage && (
+                        <div
+                            className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-20 z-0"
+                            style={{ backgroundImage: `url(${heroImage})` }}
+                        />
+                    )}
+                    {/* Background Gradient */}
+                    <div className={`absolute inset-0 bg-gradient-to-br from-background via-secondary/20 to-background z-0 ${heroImage ? 'opacity-80' : ''}`} />
+                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-accent/10 blur-[120px] rounded-full pointer-events-none" />
+
+                    <div className="max-w-4xl mx-auto text-center relative z-10">
+                        <h1 className="text-5xl md:text-7xl font-display font-bold tracking-tight mb-8 animate-fade-in bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/70">
+                            {t('contact.title')}
+                        </h1>
+                        <div className="w-32 h-1.5 bg-gradient-to-r from-accent to-purple-500 mx-auto mb-10 rounded-full shadow-[0_0_20px_rgba(0,163,255,0.5)]" />
+                        <p className="text-xl md:text-2xl text-muted-foreground font-light leading-relaxed max-w-2xl mx-auto">
+                            {t('contact.description')}
+                        </p>
+                    </div>
+                </section>
+
+                {/* Contact Section */}
+                <section className="py-20 px-4 md:px-8">
+                    <div className="max-w-6xl mx-auto">
+                        <div className="grid lg:grid-cols-2 gap-12">
+                            {/* Contact Form */}
+                            <div className="bg-secondary p-8 rounded-lg">
+                                <h2 className="text-2xl font-display font-bold mb-6">{t('contact.sendMessage')}</h2>
+                                <form onSubmit={handleSubmit} className="space-y-6">
+                                    <div>
+                                        <label htmlFor="name" className="block text-sm font-medium mb-2">
+                                            {t('contact.name')} *
+                                        </label>
+                                        <Input
+                                            id="name"
+                                            name="name"
+                                            type="text"
+                                            required
+                                            value={formData.name}
+                                            onChange={handleChange}
+                                            placeholder={t('contact.yourName')}
+                                            className="w-full"
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <label htmlFor="email" className="block text-sm font-medium mb-2">
+                                            {t('contact.email')} *
+                                        </label>
+                                        <Input
+                                            id="email"
+                                            name="email"
+                                            type="email"
+                                            required
+                                            value={formData.email}
+                                            onChange={handleChange}
+                                            placeholder={t('contact.yourEmail')}
+                                            className="w-full"
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <label htmlFor="service" className="block text-sm font-medium mb-2">
+                                            {t('contact.serviceInterest')}
+                                        </label>
+                                        <select
+                                            id="service"
+                                            name="service"
+                                            value={formData.service}
+                                            onChange={handleChange}
+                                            className="w-full px-4 py-2 rounded-md bg-background border border-input focus:outline-none focus:ring-2 focus:ring-accent"
+                                        >
+                                            <option value="">{t('contact.selectService')}</option>
+                                            <option value="portrait">{t('services.serviceOptions.portrait')}</option>
+                                            <option value="event">{t('services.serviceOptions.event')}</option>
+                                            <option value="urban">{t('services.serviceOptions.urban')}</option>
+                                            <option value="nature">{t('services.serviceOptions.nature')}</option>
+                                            <option value="logo">{t('services.serviceOptions.logo')}</option>
+                                            <option value="branding">{t('services.serviceOptions.branding')}</option>
+                                            <option value="social">{t('services.serviceOptions.social')}</option>
+                                            <option value="other">{t('services.serviceOptions.other')}</option>
+                                        </select>
+                                    </div>
+
+                                    <div>
+                                        <label htmlFor="message" className="block text-sm font-medium mb-2">
+                                            {t('contact.message')} *
+                                        </label>
+                                        <Textarea
+                                            id="message"
+                                            name="message"
+                                            required
+                                            value={formData.message}
+                                            onChange={handleChange}
+                                            placeholder={t('contact.tellAboutProject')}
+                                            rows={6}
+                                            className="w-full"
+                                        />
+                                    </div>
+
+                                    <Button
+                                        type="submit"
+                                        disabled={isSubmitting}
+                                        className="w-full bg-accent text-accent-foreground hover:bg-accent/90 py-6 text-lg font-semibold"
+                                    >
+                                        {isSubmitting ? (
+                                            t('contact.sending')
+                                        ) : (
+                                            <>
+                                                <Send className="mr-2" size={20} />
+                                                {t('contact.send')}
+                                            </>
+                                        )}
+                                    </Button>
+                                </form>
+                            </div>
+
+                            {/* Contact Info */}
+                            <div className="space-y-8">
+                                <div>
+                                    <h2 className="text-2xl font-display font-bold mb-6">{t('contact.contactInfo')}</h2>
+                                    <p className="text-muted-foreground mb-8">
+                                        {t('contact.contactDesc')}
+                                    </p>
+                                </div>
+
+                                <div className="space-y-6">
+                                    <div className="flex items-start space-x-4">
+                                        <div className="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center flex-shrink-0">
+                                            <Mail className="text-accent" size={20} />
+                                        </div>
+                                        <div>
+                                            <h3 className="font-semibold mb-1">{t('contact.email')}</h3>
+                                            <a
+                                                href="mailto:tiago@example.com"
+                                                className="text-muted-foreground hover:text-accent transition-colors"
+                                            >
+                                                tiago@example.com
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                    <div className="flex items-start space-x-4">
+                                        <div className="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center flex-shrink-0">
+                                            <Phone className="text-accent" size={20} />
+                                        </div>
+                                        <div>
+                                            <h3 className="font-semibold mb-1">{t('contact.phone')}</h3>
+                                            <a
+                                                href="tel:+5511999999999"
+                                                className="text-muted-foreground hover:text-accent transition-colors"
+                                            >
+                                                +55 (11) 99999-9999
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                    <div className="flex items-start space-x-4">
+                                        <div className="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center flex-shrink-0">
+                                            <MapPin className="text-accent" size={20} />
+                                        </div>
+                                        <div>
+                                            <h3 className="font-semibold mb-1">{t('contact.location')}</h3>
+                                            <p className="text-muted-foreground">
+                                                {t('contact.locationValue')}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Social Media - Optional */}
+                                <div className="pt-8 border-t border-border">
+                                    <h3 className="font-semibold mb-4">{t('contact.followMe')}</h3>
+                                    <div className="flex space-x-4">
+                                        <a
+                                            href="https://instagram.com/tdfoco"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center hover:bg-accent hover:text-accent-foreground transition-all duration-300"
+                                        >
+                                            <span className="sr-only">Instagram</span>
+                                            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+                                            </svg>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </main>
+            <Footer />
+        </>
+    );
+};
+
+export default Contact;
+
+```
+
+
+---
+
+## ARQUIVO: `src\pages\GraphicDesign.tsx`
+**Linhas:** 75
+
+```typescript
+import { useState, useEffect } from "react";
+import Navigation from "@/components/Navigation";
+import Footer from "@/components/Footer";
+import DesignGrid from "@/components/DesignGrid";
+import RankingSection from "@/components/RankingSection";
+import { supabase } from "@/lib/supabase";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { SEO } from "@/components/SEO";
+
+const GraphicDesign = () => {
+    const { t } = useLanguage();
+    const [heroImage, setHeroImage] = useState<string | null>(null);
+
+    useEffect(() => {
+        const fetchHeroImage = async () => {
+            const { data } = await supabase
+                .from('hero_images')
+                .select('url')
+                .eq('page', 'design')
+                .eq('active', true)
+                .order('created_at', { ascending: false })
+                .limit(1)
+                .single();
+
+            if (data) {
+                setHeroImage(data.url);
+            }
+        };
+
+        fetchHeroImage();
+    }, []);
+
+    return (
+        <>
+            <SEO title="Design Gráfico" description={t('design.description')} />
+            <Navigation />
+            <main className="min-h-screen pt-20 bg-background">
+                {/* Hero Section */}
+                <section className="relative py-32 px-4 overflow-hidden">
+                    {/* Background Image */}
+                    {heroImage && (
+                        <div
+                            className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-20 z-0"
+                            style={{ backgroundImage: `url(${heroImage})` }}
+                        />
+                    )}
+                    {/* Background Gradient */}
+                    <div className={`absolute inset-0 bg-gradient-to-br from-background via-secondary/20 to-background z-0 ${heroImage ? 'opacity-80' : ''}`} />
+                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-accent/10 blur-[120px] rounded-full pointer-events-none" />
+
+                    <div className="relative z-10 max-w-4xl mx-auto text-center">
+                        <h1 className="text-5xl md:text-7xl font-display font-bold tracking-tight mb-8 animate-fade-in bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/70">
+                            {t('design.title')}
+                        </h1>
+                        <div className="w-32 h-1.5 bg-gradient-to-r from-accent to-purple-500 mx-auto mb-10 rounded-full shadow-[0_0_20px_rgba(0,163,255,0.5)]" />
+                        <p className="text-xl md:text-2xl text-muted-foreground font-light leading-relaxed max-w-2xl mx-auto">
+                            {t('design.description')}
+                        </p>
+                    </div>
+                </section>
+
+                {/* Design Portfolio - Using DesignGrid component */}
+                <DesignGrid
+                    showHeader={false}
+                    showFilters={true}
+                />
+                <RankingSection />
+            </main>
+            <Footer />
+        </>
+    );
+};
+
+export default GraphicDesign;
+
+```
+
+
+---
+
+## ARQUIVO: `src\pages\Index.tsx`
+**Linhas:** 27
+
+```typescript
+import Navigation from "@/components/Navigation";
+import Hero from "@/components/Hero";
+import UnifiedPortfolioGrid from "@/components/UnifiedPortfolioGrid";
+import RankingSection from "@/components/RankingSection";
+import About from "@/components/About";
+import Footer from "@/components/Footer";
+
+import { SEO } from "@/components/SEO";
+
+const Index = () => {
+  return (
+    <>
+      <SEO />
+      <Navigation />
+      <main className="min-h-screen">
+        <Hero page="home" />
+        <UnifiedPortfolioGrid />
+        <RankingSection />
+        <About />
+        <Footer />
+      </main>
+    </>
+  );
+};
+
+export default Index;
+
+```
+
+
+---
+
+## ARQUIVO: `src\pages\NotFound.tsx`
+**Linhas:** 25
+
+```typescript
+import { useLocation } from "react-router-dom";
+import { useEffect } from "react";
+
+const NotFound = () => {
+  const location = useLocation();
+
+  useEffect(() => {
+    console.error("404 Error: User attempted to access non-existent route:", location.pathname);
+  }, [location.pathname]);
+
+  return (
+    <div className="flex min-h-screen items-center justify-center bg-muted">
+      <div className="text-center">
+        <h1 className="mb-4 text-4xl font-bold">404</h1>
+        <p className="mb-4 text-xl text-muted-foreground">Oops! Page not found</p>
+        <a href="/" className="text-primary underline hover:text-primary/90">
+          Return to Home
+        </a>
+      </div>
+    </div>
+  );
+};
+
+export default NotFound;
+
+```
+
+
+---
+
+## ARQUIVO: `src\pages\Photography.tsx`
+**Linhas:** 72
+
+```typescript
+import { useState, useEffect } from "react";
+import Navigation from "@/components/Navigation";
+import PhotoGrid from "@/components/PhotoGrid";
+import RankingSection from "@/components/RankingSection";
+import Footer from "@/components/Footer";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { supabase } from "@/lib/supabase";
+import { SEO } from "@/components/SEO";
+
+const Photography = () => {
+    const { t } = useLanguage();
+    const [heroImage, setHeroImage] = useState<string | null>(null);
+
+    useEffect(() => {
+        const fetchHeroImage = async () => {
+            const { data } = await supabase
+                .from('hero_images')
+                .select('url')
+                .eq('page', 'photography')
+                .eq('active', true)
+                .order('created_at', { ascending: false })
+                .limit(1)
+                .single();
+
+            if (data) {
+                setHeroImage(data.url);
+            }
+        };
+
+        fetchHeroImage();
+    }, []);
+
+    return (
+        <>
+            <SEO title="Fotografia" description={t('portfolio.description')} />
+            <Navigation />
+            <main className="min-h-screen pt-20 bg-background">
+                {/* Hero Section */}
+                <section className="relative py-32 px-4 overflow-hidden">
+                    {/* Background Image */}
+                    {heroImage && (
+                        <div
+                            className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-20 z-0"
+                            style={{ backgroundImage: `url(${heroImage})` }}
+                        />
+                    )}
+                    {/* Background Gradient */}
+                    <div className={`absolute inset-0 bg-gradient-to-br from-background via-secondary/20 to-background z-0 ${heroImage ? 'opacity-80' : ''}`} />
+                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-accent/10 blur-[120px] rounded-full pointer-events-none" />
+
+                    <div className="relative z-10 max-w-4xl mx-auto text-center">
+                        <h1 className="text-5xl md:text-7xl font-display font-bold tracking-tight mb-8 animate-fade-in bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/70">
+                            {t('portfolio.title')}
+                        </h1>
+                        <div className="w-32 h-1.5 bg-gradient-to-r from-accent to-purple-500 mx-auto mb-10 rounded-full shadow-[0_0_20px_rgba(0,163,255,0.5)]" />
+                        <p className="text-xl md:text-2xl text-muted-foreground font-light leading-relaxed max-w-2xl mx-auto">
+                            {t('portfolio.description')}
+                        </p>
+                    </div>
+                </section>
+
+                {/* Photo Grid */}
+                <PhotoGrid showHeader={false} />
+                <RankingSection />
+            </main>
+            <Footer />
+        </>
+    );
+};
+
+export default Photography;
+
+```
+
+
+---
+
+## ARQUIVO: `src\pages\Ranking.tsx`
+**Linhas:** 211
+
+```typescript
+import Navigation from "@/components/Navigation";
+import Footer from "@/components/Footer";
+import { useTopRated } from '@/hooks/useSupabaseData';
+import { useLanguage } from '@/contexts/LanguageContext';
+import ProtectedImage from '@/components/ProtectedImage';
+import { Heart, MessageCircle } from 'lucide-react';
+import { useState } from 'react';
+import Lightbox, { Photo } from '@/components/Lightbox';
+import ProjectModal from '@/components/ProjectModal';
+import InteractionBar from '@/components/InteractionBar';
+import type { DesignProject } from '@/lib/supabase';
+import { SEO } from "@/components/SEO";
+
+const Ranking = () => {
+    const { t } = useLanguage();
+    // Fetch top 10 items for the dedicated ranking page
+    const { topPhotos, topProjects, loading } = useTopRated(10);
+    const [selectedPhoto, setSelectedPhoto] = useState<Photo | null>(null);
+    const [selectedProject, setSelectedProject] = useState<DesignProject | null>(null);
+
+    // Transform photos for lightbox
+    const lightboxPhotos: Photo[] = topPhotos.map(photo => ({
+        id: photo.id,
+        src: photo.url,
+        alt: photo.title,
+        category: photo.category,
+        description: photo.description,
+        likes_count: photo.likes_count,
+        comments_count: photo.comments_count,
+        shares_count: photo.shares_count
+    }));
+
+    return (
+        <>
+            <SEO title="Ranking" description="Os trabalhos mais populares do portfólio" />
+            <Navigation />
+            <main className="min-h-screen pt-20 bg-background">
+                <section className="py-20 px-4 md:px-8">
+                    <div className="max-w-7xl mx-auto">
+                        <div className="text-center mb-16">
+                            <h1 className="text-4xl md:text-5xl font-light tracking-tight mb-6">
+                                Ranking
+                            </h1>
+                            <p className="text-muted-foreground text-lg font-light max-w-2xl mx-auto">
+                                Os trabalhos mais curtidos e comentados pela comunidade
+                            </p>
+                        </div>
+
+                        {loading ? (
+                            <div className="text-center py-20">
+                                <p className="text-muted-foreground">{t('portfolio.loading')}</p>
+                            </div>
+                        ) : (
+                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                                {/* Top Photos */}
+                                <div>
+                                    <h2 className="text-2xl font-display font-semibold mb-8 flex items-center gap-3 text-[#00A3FF]">
+                                        <span className="w-8 h-[2px] bg-[#00A3FF]"></span>
+                                        Top Fotografia
+                                    </h2>
+                                    <div className="space-y-6">
+                                        {topPhotos.map((photo, index) => (
+                                            <div
+                                                key={photo.id}
+                                                className="flex gap-4 bg-secondary/30 p-4 rounded-lg hover:bg-secondary/50 transition-all cursor-pointer group border border-transparent hover:border-border/50"
+                                            >
+                                                <div
+                                                    className="w-32 h-32 flex-shrink-0 overflow-hidden rounded-md relative"
+                                                    onClick={() => {
+                                                        const p = lightboxPhotos.find(lp => lp.id === photo.id);
+                                                        if (p) setSelectedPhoto(p);
+                                                    }}
+                                                >
+                                                    <div className="absolute top-2 left-2 z-10 w-8 h-8 flex items-center justify-center bg-black/60 backdrop-blur-sm rounded-full text-white font-bold text-sm border border-white/10">
+                                                        #{index + 1}
+                                                    </div>
+                                                    <ProtectedImage
+                                                        src={photo.url}
+                                                        alt={photo.title}
+                                                        className="w-full h-full object-cover transition-transform group-hover:scale-110"
+                                                    />
+                                                </div>
+                                                <div className="flex-1 flex flex-col">
+                                                    <div className="flex-1" onClick={() => {
+                                                        const p = lightboxPhotos.find(lp => lp.id === photo.id);
+                                                        if (p) setSelectedPhoto(p);
+                                                    }}>
+                                                        <div className="flex items-center gap-2 mb-2">
+                                                            <span className="text-xs text-muted-foreground uppercase tracking-wider bg-background px-2 py-1 rounded-full">
+                                                                {photo.category}
+                                                            </span>
+                                                        </div>
+                                                        <h3 className="font-medium text-lg leading-tight mb-2 group-hover:text-[#00A3FF] transition-colors">
+                                                            {photo.title}
+                                                        </h3>
+                                                        <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                                                            <div className="flex items-center gap-1.5">
+                                                                <Heart className="w-4 h-4 text-red-500 fill-current" />
+                                                                <span className="font-medium">{photo.likes_count || 0}</span>
+                                                            </div>
+                                                            <div className="flex items-center gap-1.5">
+                                                                <MessageCircle className="w-4 h-4" />
+                                                                <span className="font-medium">{photo.comments_count || 0}</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <InteractionBar
+                                                        itemId={photo.id}
+                                                        type="photography"
+                                                        initialLikes={photo.likes_count}
+                                                        initialComments={photo.comments_count}
+                                                        initialShares={photo.shares_count}
+                                                        variant="light"
+                                                        className="mt-3 pt-3 border-t border-border/50 justify-start gap-6"
+                                                    />
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                {/* Top Projects */}
+                                <div>
+                                    <h2 className="text-2xl font-display font-semibold mb-8 flex items-center gap-3 text-[#00A3FF]">
+                                        <span className="w-8 h-[2px] bg-[#00A3FF]"></span>
+                                        Top Design
+                                    </h2>
+                                    <div className="space-y-6">
+                                        {topProjects.map((project, index) => (
+                                            <div
+                                                key={project.id}
+                                                className="flex gap-4 bg-secondary/30 p-4 rounded-lg hover:bg-secondary/50 transition-all cursor-pointer group border border-transparent hover:border-border/50"
+                                            >
+                                                <div
+                                                    className="w-32 h-32 flex-shrink-0 overflow-hidden rounded-md relative"
+                                                    onClick={() => setSelectedProject(project)}
+                                                >
+                                                    <div className="absolute top-2 left-2 z-10 w-8 h-8 flex items-center justify-center bg-black/60 backdrop-blur-sm rounded-full text-white font-bold text-sm border border-white/10">
+                                                        #{index + 1}
+                                                    </div>
+                                                    <ProtectedImage
+                                                        src={project.images[0]}
+                                                        alt={project.title}
+                                                        className="w-full h-full object-cover transition-transform group-hover:scale-110"
+                                                    />
+                                                </div>
+                                                <div className="flex-1 flex flex-col">
+                                                    <div className="flex-1" onClick={() => setSelectedProject(project)}>
+                                                        <div className="flex items-center gap-2 mb-2">
+                                                            <span className="text-xs text-muted-foreground uppercase tracking-wider bg-background px-2 py-1 rounded-full">
+                                                                {project.category}
+                                                            </span>
+                                                        </div>
+                                                        <h3 className="font-medium text-lg leading-tight mb-2 group-hover:text-[#00A3FF] transition-colors">
+                                                            {project.title}
+                                                        </h3>
+                                                        <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                                                            <div className="flex items-center gap-1.5">
+                                                                <Heart className="w-4 h-4 text-red-500 fill-current" />
+                                                                <span className="font-medium">{project.likes_count || 0}</span>
+                                                            </div>
+                                                            <div className="flex items-center gap-1.5">
+                                                                <MessageCircle className="w-4 h-4" />
+                                                                <span className="font-medium">{project.comments_count || 0}</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <InteractionBar
+                                                        itemId={project.id}
+                                                        type="design"
+                                                        initialLikes={project.likes_count}
+                                                        initialComments={project.comments_count}
+                                                        initialShares={project.shares_count}
+                                                        variant="light"
+                                                        className="mt-3 pt-3 border-t border-border/50 justify-start gap-6"
+                                                    />
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                </section>
+            </main>
+            <Footer />
+
+            {selectedPhoto && (
+                <Lightbox
+                    photo={selectedPhoto}
+                    photos={lightboxPhotos}
+                    onClose={() => setSelectedPhoto(null)}
+                    onNavigate={setSelectedPhoto}
+                />
+            )}
+
+            {selectedProject && (
+                <ProjectModal
+                    project={selectedProject}
+                    onClose={() => setSelectedProject(null)}
+                />
+            )}
+        </>
+    );
+};
+
+export default Ranking;
+
+```
+
+
+---
+
+## ARQUIVO: `src\pages\Services.tsx`
+**Linhas:** 248
+
+```typescript
+import { useState, useEffect } from "react";
+import Navigation from "@/components/Navigation";
+import Footer from "@/components/Footer";
+import { Camera, Palette, Users, Building, Sparkles, Package } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { supabase } from "@/lib/supabase";
+import { SEO } from "@/components/SEO";
+
+const Services = () => {
+    const { t } = useLanguage();
+    const [heroImage, setHeroImage] = useState<string | null>(null);
+
+    useEffect(() => {
+        const fetchHeroImage = async () => {
+            const { data } = await supabase
+                .from('hero_images')
+                .select('url')
+                .eq('page', 'services')
+                .eq('active', true)
+                .order('created_at', { ascending: false })
+                .limit(1)
+                .single();
+
+            if (data) {
+                setHeroImage(data.url);
+            }
+        };
+
+        fetchHeroImage();
+    }, []);
+
+    const photographyServices = [
+        {
+            icon: Users,
+            titleKey: "services.photography.portraits.title",
+            descriptionKey: "services.photography.portraits.description",
+            featuresKey: "services.photography.portraits.features"
+        },
+        {
+            icon: Camera,
+            titleKey: "services.photography.events.title",
+            descriptionKey: "services.photography.events.description",
+            featuresKey: "services.photography.events.features"
+        },
+        {
+            icon: Building,
+            titleKey: "services.photography.urban.title",
+            descriptionKey: "services.photography.urban.description",
+            featuresKey: "services.photography.urban.features"
+        },
+        {
+            icon: Sparkles,
+            titleKey: "services.photography.nature.title",
+            descriptionKey: "services.photography.nature.description",
+            featuresKey: "services.photography.nature.features"
+        },
+    ];
+
+    const designServices = [
+        {
+            icon: Palette,
+            titleKey: "services.design.identity.title",
+            descriptionKey: "services.design.identity.description",
+            featuresKey: "services.design.identity.features"
+        },
+        {
+            icon: Package,
+            titleKey: "services.design.branding.title",
+            descriptionKey: "services.design.branding.description",
+            featuresKey: "services.design.branding.features"
+        },
+        {
+            icon: Users,
+            titleKey: "services.design.social.title",
+            descriptionKey: "services.design.social.description",
+            featuresKey: "services.design.social.features"
+        },
+        {
+            icon: Sparkles,
+            titleKey: "services.design.special.title",
+            descriptionKey: "services.design.special.description",
+            featuresKey: "services.design.special.features"
+        },
+    ];
+
+    return (
+        <>
+            <SEO title="Serviços" />
+            <Navigation />
+            <main className="min-h-screen pt-20 bg-background">
+                {/* Hero Section */}
+                <section className="relative py-32 px-4 overflow-hidden">
+                    {/* Background Image */}
+                    {heroImage && (
+                        <div
+                            className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-20 z-0"
+                            style={{ backgroundImage: `url(${heroImage})` }}
+                        />
+                    )}
+                    {/* Background Gradient */}
+                    <div className={`absolute inset-0 bg-gradient-to-br from-background via-secondary/20 to-background z-0 ${heroImage ? 'opacity-80' : ''}`} />
+                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-accent/10 blur-[120px] rounded-full pointer-events-none" />
+
+                    <div className="relative z-10 max-w-4xl mx-auto text-center">
+                        <h1 className="text-5xl md:text-7xl font-display font-bold tracking-tight mb-8 animate-fade-in bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/70">
+                            {t('services.title')}
+                        </h1>
+                        <div className="w-32 h-1.5 bg-gradient-to-r from-accent to-purple-500 mx-auto mb-10 rounded-full shadow-[0_0_20px_rgba(0,163,255,0.5)]" />
+                        <p className="text-xl md:text-2xl text-muted-foreground font-light leading-relaxed max-w-2xl mx-auto">
+                            {t('services.description')}
+                        </p>
+                    </div>
+                </section>
+
+                {/* Photography Services */}
+                <section className="py-24 px-4 md:px-8 relative">
+                    <div className="max-w-7xl mx-auto">
+                        <div className="text-center mb-16">
+                            <h2 className="text-3xl md:text-5xl font-display font-bold mb-6">
+                                {t('services.photographyServices')}
+                            </h2>
+                            <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+                                {t('services.photographyDesc')}
+                            </p>
+                        </div>
+
+                        <div className="grid md:grid-cols-2 gap-8">
+                            {photographyServices.map((service, index) => (
+                                <div
+                                    key={index}
+                                    className="group relative p-8 rounded-2xl border border-white/5 bg-secondary/30 backdrop-blur-sm hover:bg-secondary/50 transition-all duration-500 hover:border-accent/50 hover:shadow-[0_0_40px_-10px_rgba(0,163,255,0.15)] animate-fade-in overflow-hidden"
+                                    style={{ animationDelay: `${index * 100}ms` }}
+                                >
+                                    <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity duration-500 transform group-hover:scale-110">
+                                        <service.icon size={120} />
+                                    </div>
+
+                                    <div className="relative z-10">
+                                        <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-accent/20 to-purple-500/20 text-accent mb-8 group-hover:scale-110 transition-transform duration-500 border border-white/5 shadow-inner">
+                                            <service.icon size={32} strokeWidth={1.5} />
+                                        </div>
+
+                                        <h3 className="text-2xl font-display font-bold mb-4 group-hover:text-accent transition-colors duration-300">
+                                            {t(service.titleKey)}
+                                        </h3>
+                                        <p className="text-muted-foreground mb-8 leading-relaxed">
+                                            {t(service.descriptionKey)}
+                                        </p>
+
+                                        <ul className="space-y-3">
+                                            {(() => {
+                                                const features = t(service.featuresKey);
+                                                const featuresList = Array.isArray(features) ? features : [];
+                                                return (featuresList as string[]).map((feature: string, idx: number) => (
+                                                    <li key={idx} className="flex items-center text-sm text-foreground/80 group-hover:text-foreground transition-colors">
+                                                        <span className="w-1.5 h-1.5 rounded-full bg-accent mr-3 shadow-[0_0_10px_hsl(var(--accent))]" />
+                                                        {feature}
+                                                    </li>
+                                                ));
+                                            })()}
+                                        </ul>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+
+                {/* Design Services */}
+                <section className="py-24 px-4 md:px-8 bg-secondary/20 relative overflow-hidden">
+                    {/* Decorative Elements */}
+                    <div className="absolute top-1/2 right-0 -translate-y-1/2 w-[600px] h-[600px] bg-purple-500/5 blur-[100px] rounded-full pointer-events-none" />
+
+                    <div className="max-w-7xl mx-auto relative z-10">
+                        <div className="text-center mb-16">
+                            <h2 className="text-3xl md:text-5xl font-display font-bold mb-6">
+                                {t('services.designServices')}
+                            </h2>
+                            <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+                                {t('services.designDesc')}
+                            </p>
+                        </div>
+
+                        <div className="grid md:grid-cols-2 gap-8">
+                            {designServices.map((service, index) => (
+                                <div
+                                    key={index}
+                                    className="group relative p-8 rounded-2xl border border-white/5 bg-background/40 backdrop-blur-md hover:bg-background/60 transition-all duration-500 hover:border-purple-500/50 hover:shadow-[0_0_40px_-10px_rgba(122,63,255,0.15)] animate-fade-in"
+                                    style={{ animationDelay: `${index * 100}ms` }}
+                                >
+                                    <div className="relative z-10">
+                                        <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-500/20 to-accent/20 text-purple-400 mb-8 group-hover:scale-110 transition-transform duration-500 border border-white/5 shadow-inner">
+                                            <service.icon size={32} strokeWidth={1.5} />
+                                        </div>
+
+                                        <h3 className="text-2xl font-display font-bold mb-4 group-hover:text-purple-400 transition-colors duration-300">
+                                            {t(service.titleKey)}
+                                        </h3>
+                                        <p className="text-muted-foreground mb-8 leading-relaxed">
+                                            {t(service.descriptionKey)}
+                                        </p>
+
+                                        <ul className="space-y-3">
+                                            {(() => {
+                                                const features = t(service.featuresKey);
+                                                const featuresList = Array.isArray(features) ? features : [];
+                                                return (featuresList as string[]).map((feature: string, idx: number) => (
+                                                    <li key={idx} className="flex items-center text-sm text-foreground/80 group-hover:text-foreground transition-colors">
+                                                        <span className="w-1.5 h-1.5 rounded-full bg-purple-500 mr-3 shadow-[0_0_10px_rgba(122,63,255,0.5)]" />
+                                                        {feature}
+                                                    </li>
+                                                ));
+                                            })()}
+                                        </ul>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+
+                {/* CTA Section */}
+                <section className="py-32 px-4 md:px-8 relative overflow-hidden">
+                    <div className="absolute inset-0 bg-gradient-to-t from-accent/5 to-transparent pointer-events-none" />
+
+                    <div className="max-w-4xl mx-auto text-center relative z-10">
+                        <h2 className="text-4xl md:text-6xl font-display font-bold mb-8">
+                            {t('services.readyToWork')}
+                        </h2>
+                        <p className="text-xl text-muted-foreground mb-12 max-w-2xl mx-auto font-light">
+                            {t('services.readyDesc')}
+                        </p>
+                        <a
+                            href="/contact"
+                            className="inline-flex items-center justify-center px-12 py-5 bg-gradient-to-r from-accent to-purple-600 text-white rounded-full font-bold text-lg hover:shadow-[0_0_30px_-5px_hsl(var(--accent))] hover:scale-105 transition-all duration-300"
+                        >
+                            {t('services.getInTouch')}
+                        </a>
+                    </div>
+                </section>
+            </main>
+            <Footer />
+        </>
+    );
+};
+
+export default Services;
+
+```
+
+
+---
+
+## ARQUIVO: `src\App.tsx`
+**Linhas:** 51
+
+```typescript
+import { Toaster } from "@/components/ui/toaster";
+import { Toaster as Sonner } from "@/components/ui/sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { LanguageProvider } from "@/contexts/LanguageContext";
+import { useImageProtection } from "@/hooks/useImageProtection";
+import Index from "./pages/Index";
+import Photography from "./pages/Photography";
+import GraphicDesign from "./pages/GraphicDesign";
+import AboutPage from "./pages/AboutPage";
+import Services from "./pages/Services";
+import Contact from "./pages/Contact";
+import Admin from "./pages/Admin";
+import Ranking from "./pages/Ranking";
+import NotFound from "./pages/NotFound";
+
+const queryClient = new QueryClient();
+
+const App = () => {
+  // Enable global image protection
+  useImageProtection();
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      <LanguageProvider>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/photography" element={<Photography />} />
+              <Route path="/design" element={<GraphicDesign />} />
+              <Route path="/about" element={<AboutPage />} />
+              <Route path="/services" element={<Services />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/ranking" element={<Ranking />} />
+              <Route path="/admin" element={<Admin />} />
+              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
+        </TooltipProvider>
+      </LanguageProvider>
+    </QueryClientProvider>
+  );
+};
+
+export default App;
+
+```
+
+
+---
+
+## ARQUIVO: `src\main.tsx`
+**Linhas:** 12
+
+```typescript
+import { createRoot } from "react-dom/client";
+import App from "./App.tsx";
+import "./index.css";
+
+import { HelmetProvider } from 'react-helmet-async';
+
+createRoot(document.getElementById("root")!).render(
+    <HelmetProvider>
+        <App />
+    </HelmetProvider>
+);
+
+```
+

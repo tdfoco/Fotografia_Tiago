@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&family=Fira+Code:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <title>Livro de Código Completo - Portfolio | Tiago Damasceno</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box
+        }
+
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1e40af;
+            --code-bg: #282c34;
+            --code-text: #abb2bf;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --gray-900: #111827
+        }
+
+        body {
+            font-family: 'Lato', sans-serif;
+            font-size: 10.5pt;
+            line-height: 1.6;
+            color: var(--gray-800);
+            background: white
+        }
+
+        @page {
+            size: A4;
+            margin: 18mm 20mm
+        }
+
+        .cover {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            min-height: 297mm;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 40mm 30mm;
+            page-break-after: always
+        }
+
+        .cover h1 {
+            font-size: 46pt;
+            font-weight: 900;
+            margin-bottom: 10mm;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            line-height: 1.1
+        }
+
+        .cover-subtitle {
+            font-size: 24pt;
+            font-weight: 300;
+            margin-bottom: 5mm;
+            opacity: .95
+        }
+
+        .cover-desc {
+            font-size: 15pt;
+            margin-bottom: 25mm;
+            opacity: .88;
+            max-width: 550px
+        }
+
+        .cover-author {
+            font-size: 20pt;
+            font-weight: 700;
+            margin-bottom: 5mm
+        }
+
+        .cover-domain {
+            font-size: 17pt;
+            margin-bottom: 20mm;
+            opacity: .92
+        }
+
+        .cover-footer {
+            font-size: 12pt;
+            font-weight: 300;
+            opacity: .8;
+            margin-top: auto;
+            line-height: 1.6
+        }
+
+        .content {
+            padding: 0;
+            max-width: 100%
+        }
+
+        h1 {
+            font-size: 22pt;
+            font-weight: 900;
+            color: var(--primary);
+            margin: 25pt 0 12pt;
+            padding-bottom: 8pt;
+            border-bottom: 3px solid var(--primary);
+            page-break-after: avoid;
+            text-transform: uppercase
+        }
+
+        h2 {
+            font-size: 16pt;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin: 18pt 0 10pt;
+            padding-left: 12pt;
+            border-left: 4px solid var(--primary);
+            page-break-after: avoid
+        }
+
+        h3 {
+            font-size: 13pt;
+            font-weight: 700;
+            color: var(--gray-800);
+            margin: 15pt 0 8pt;
+            page-break-after: avoid
+        }
+
+        h4 {
+            font-size: 11pt;
+            font-weight: 600;
+            color: var(--gray-700);
+            margin: 12pt 0 6pt;
+            page-break-after: avoid
+        }
+
+        p {
+            margin-bottom: 8pt;
+            line-height: 1.5
+        }
+
+        code {
+            background: var(--gray-100);
+            padding: 2pt 5pt;
+            border-radius: 3pt;
+            font-size: 9pt;
+            color: #dc2626;
+            font-weight: 500;
+            font-family: 'Fira Code', 'Courier New', monospace
+        }
+
+        pre {
+            background: var(--code-bg);
+            color: var(--code-text);
+            border-left: 4px solid var(--primary);
+            padding: 12pt;
+            margin: 10pt 0;
+            border-radius: 4pt;
+            page-break-inside: avoid;
+            font-size: 8pt;
+            line-height: 1.4;
+            overflow-x: auto;
+            max-width: 100%
+        }
+
+        pre code {
+            background: transparent;
+            padding: 0;
+            color: inherit;
+            font-size: 8pt;
+            white-space: pre-wrap;
+            word-break: break-all
+        }
+
+        hr {
+            border: none;
+            border-top: 2px solid var(--gray-200);
+            margin: 20pt 0;
+            page-break-after: avoid
+        }
+
+        strong {
+            font-weight: 700;
+            color: var(--gray-900)
+        }
+
+        .footer-text {
+            position: fixed;
+            bottom: 10mm;
+            left: 20mm;
+            font-size: 8pt;
+            color: var(--gray-700)
+        }
+
+        .page-number {
+            position: fixed;
+            bottom: 10mm;
+            right: 20mm;
+            font-size: 9pt;
+            color: var(--gray-700);
+            font-weight: 600
+        }
+
+        @media print {
+            .page-number::after {
+                content: counter(page)
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="cover">
+        <h1>Livro de Código<br>Completo</h1>
+        <p class="cover-subtitle">Portfolio de Fotografia</p>
+        <p class="cover-desc">Código-Fonte Completo de 90 Arquivos TypeScript/React<br>Material de Estudo de Engenharia
+            de Software</p>
+        <div style="margin-top:20mm">
+            <p class="cover-author">Tiago Damasceno</p>
+            <p class="cover-domain">tdfoco.cloud</p>
+        </div>
+        <div class="cover-footer">
+            30 de Novembro de 2025 | Versão 1.0.0<br>
+            React 18 • TypeScript 5 • Vite • Supabase<br>
+            <em>90 Arquivos de Código Anotados</em>
+        </div>
+    </div>
+
+    <div class="content">
+        <!-- CONTEÚDO INSERIDO AQUI -->
+    </div>
+
+    <div class="footer-text">Livro de Código - Tiago Damasceno • tdfoco.cloud</div>
+    <div class="page-number"></div>
+
+</body>
+
+</html>

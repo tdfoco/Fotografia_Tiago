@@ -10,6 +10,9 @@ export interface Comment {
     photo_id?: string;
     project_id?: string;
     approved?: boolean;
+    parent_id?: string;
+    is_admin?: boolean;
+    replies?: Comment[];
 }
 
 // Fisher-Yates shuffle algorithm for randomizing arrays
@@ -249,6 +252,75 @@ export function useAuth() {
         signIn,
         signOut,
     };
+}
+
+// Hook para listar TODOS os comentários (admin)
+export const useAllComments = () => {
+    const [allComments, setAllComments] = useState<Comment[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    const fetchAllComments = async () => {
+        try {
+            setLoading(true);
+            const { data, error } = await supabase
+                .from('comments')
+                .select(`
+                    *,
+                    photography (title),
+                    design_projects (title)
+                `)
+                .is('parent_id', null) // Apenas comentários raiz (não respostas)
+                .order('created_at', { ascending: false });
+
+            if (error) throw error;
+            setAllComments(data || []);
+        } catch (error) {
+            console.error('Error fetching all comments:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchAllComments();
+    }, []);
+
+    return { allComments, loading, refreshComments: fetchAllComments };
+};
+
+// Função para deletar comentário (admin)
+export const deleteComment = async (id: string) => {
+    try {
+        const { error } = await supabase
+            .from('comments')
+            .delete()
+            .eq('id', id);
+
+        if (error) throw error;
+    } catch (error: any) {
+        throw new Error(error.message || 'Failed to delete comment');
+    }
+};
+
+// Função para adicionar resposta (admin)
+export const addReply = async (parentId: string, content: string, itemId: string, type: 'photography' | 'design') => {
+    try {
+        const column = type === 'photography' ? 'photo_id' : 'project_id';
+        const { error } = await supabase
+            .from('comments')
+            .insert({
+                content,
+                user_name: 'Tiago',
+                [column]: itemId,
+                parent_id: parentId,
+                is_admin: true,
+                approved: true
+            });
+
+        if (error) throw error;
+    } catch (error: any) {
+        throw new Error(error.message || 'Failed to add reply');
+    }
 }
 
 export const useTopRated = (limit = 5) => {

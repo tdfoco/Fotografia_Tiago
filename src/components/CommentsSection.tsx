@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { useComments } from '@/hooks/useSupabaseData';
+import { useComments, useAuth } from '@/hooks/useSupabaseData';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Loader2, Send, User } from 'lucide-react';
+import { Loader2, Send, User, Reply, BadgeCheck } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { formatDistanceToNow } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
@@ -15,11 +15,16 @@ interface CommentsSectionProps {
 
 const CommentsSection = ({ itemId, type, className }: CommentsSectionProps) => {
     const { comments, loading, addComment } = useComments(itemId, type);
+    const { user } = useAuth();
     const { toast } = useToast();
     const [newComment, setNewComment] = useState('');
     const [userName, setUserName] = useState('');
     const [submitting, setSubmitting] = useState(false);
     const [showSuccess, setShowSuccess] = useState(false);
+    const [replyingTo, setReplyingTo] = useState<string | null>(null);
+    const [replyContent, setReplyContent] = useState('');
+
+    const isAdmin = !!user;
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -37,6 +42,30 @@ const CommentsSection = ({ itemId, type, className }: CommentsSectionProps) => {
             });
         } catch (error) {
             console.error('Error submitting comment:', error);
+        } finally {
+            setSubmitting(false);
+        }
+    };
+
+    const handleReply = async (commentId: string) => {
+        if (!replyContent.trim()) return;
+
+        setSubmitting(true);
+        try {
+            await addComment(replyContent, 'Tiago', commentId, true);
+            setReplyContent('');
+            setReplyingTo(null);
+            toast({
+                title: "Resposta enviada",
+                description: "Sua resposta foi publicada com sucesso.",
+            });
+        } catch (error) {
+            console.error('Error submitting reply:', error);
+            toast({
+                title: "Erro",
+                description: "Falha ao enviar resposta.",
+                variant: "destructive"
+            });
         } finally {
             setSubmitting(false);
         }
@@ -80,7 +109,7 @@ const CommentsSection = ({ itemId, type, className }: CommentsSectionProps) => {
             </form>
 
             {/* Comments List */}
-            <div className="space-y-4 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
+            <div className="space-y-4 max-h-[500px] overflow-y-auto pr-2 custom-scrollbar">
                 {loading ? (
                     <div className="flex justify-center py-4">
                         <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
@@ -91,22 +120,110 @@ const CommentsSection = ({ itemId, type, className }: CommentsSectionProps) => {
                     </p>
                 ) : (
                     comments.map((comment) => (
-                        <div key={comment.id} className="flex gap-3 bg-secondary/20 p-3 rounded-lg">
-                            <div className="h-8 w-8 rounded-full bg-accent/20 flex items-center justify-center flex-shrink-0">
-                                <User className="h-4 w-4 text-accent" />
-                            </div>
-                            <div className="flex-1">
-                                <div className="flex justify-between items-start">
-                                    <span className="text-sm font-medium">{comment.user_name}</span>
-                                    <span className="text-xs text-muted-foreground">
-                                        {formatDistanceToNow(new Date(comment.created_at), {
-                                            addSuffix: true,
-                                            locale: ptBR
-                                        })}
-                                    </span>
+                        <div key={comment.id} className="space-y-3">
+                            {/* Main Comment */}
+                            <div className="flex gap-3 bg-secondary/20 p-3 rounded-lg">
+                                <div className="h-8 w-8 rounded-full bg-accent/20 flex items-center justify-center flex-shrink-0">
+                                    <User className="h-4 w-4 text-accent" />
                                 </div>
-                                <p className="text-sm mt-1 text-foreground/90">{comment.content}</p>
+                                <div className="flex-1">
+                                    <div className="flex justify-between items-start">
+                                        <div className="flex items-center gap-2">
+                                            <span className="text-sm font-medium">{comment.user_name}</span>
+                                            {comment.is_admin && (
+                                                <span className="flex items-center gap-1 text-xs bg-accent/20 text-accent px-2 py-0.5 rounded-full">
+                                                    <BadgeCheck className="h-3 w-3" />
+                                                    Tiago
+                                                </span>
+                                            )}
+                                        </div>
+                                        <span className="text-xs text-muted-foreground">
+                                            {formatDistanceToNow(new Date(comment.created_at), {
+                                                addSuffix: true,
+                                                locale: ptBR
+                                            })}
+                                        </span>
+                                    </div>
+                                    <p className="text-sm mt-1 text-foreground/90">{comment.content}</p>
+
+                                    {/* Reply Button (Admin Only) */}
+                                    {isAdmin && !comment.is_admin && (
+                                        <Button
+                                            variant="ghost"
+                                            size="sm"
+                                            className="mt-2 h-7 text-xs"
+                                            onClick={() => setReplyingTo(replyingTo === comment.id ? null : comment.id)}
+                                        >
+                                            <Reply className="h-3 w-3 mr-1" />
+                                            Responder
+                                        </Button>
+                                    )}
+
+                                    {/* Reply Input (Admin Only) */}
+                                    {isAdmin && replyingTo === comment.id && (
+                                        <div className="mt-3 flex gap-2">
+                                            <Input
+                                                placeholder="Escreva sua resposta..."
+                                                value={replyContent}
+                                                onChange={(e) => setReplyContent(e.target.value)}
+                                                className="flex-1 bg-background"
+                                                autoFocus
+                                            />
+                                            <Button
+                                                size="sm"
+                                                onClick={() => handleReply(comment.id)}
+                                                disabled={submitting || !replyContent.trim()}
+                                            >
+                                                {submitting ? (
+                                                    <Loader2 className="h-4 w-4 animate-spin" />
+                                                ) : (
+                                                    <Send className="h-4 w-4" />
+                                                )}
+                                            </Button>
+                                            <Button
+                                                size="sm"
+                                                variant="ghost"
+                                                onClick={() => {
+                                                    setReplyingTo(null);
+                                                    setReplyContent('');
+                                                }}
+                                            >
+                                                Cancelar
+                                            </Button>
+                                        </div>
+                                    )}
+                                </div>
                             </div>
+
+                            {/* Replies (Nested) */}
+                            {comment.replies && comment.replies.length > 0 && (
+                                <div className="ml-11 space-y-2">
+                                    {comment.replies.map((reply) => (
+                                        <div key={reply.id} className="flex gap-3 bg-secondary/10 p-3 rounded-lg border-l-2 border-accent/30">
+                                            <div className="h-7 w-7 rounded-full bg-accent/20 flex items-center justify-center flex-shrink-0">
+                                                <BadgeCheck className="h-4 w-4 text-accent" />
+                                            </div>
+                                            <div className="flex-1">
+                                                <div className="flex justify-between items-start">
+                                                    <div className="flex items-center gap-2">
+                                                        <span className="text-sm font-medium">Tiago</span>
+                                                        <span className="text-xs bg-accent/20 text-accent px-2 py-0.5 rounded-full">
+                                                            Admin
+                                                        </span>
+                                                    </div>
+                                                    <span className="text-xs text-muted-foreground">
+                                                        {formatDistanceToNow(new Date(reply.created_at), {
+                                                            addSuffix: true,
+                                                            locale: ptBR
+                                                        })}
+                                                    </span>
+                                                </div>
+                                                <p className="text-sm mt-1 text-foreground/90">{reply.content}</p>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
                         </div>
                     ))
                 )}

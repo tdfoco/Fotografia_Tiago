@@ -144,7 +144,9 @@ const InteractionBar = ({
                 )}
             >
                 <MessageCircle className="h-5 w-5" />
-                <span className="text-sm font-medium">{initialComments}</span>
+                {initialComments > 0 && (
+                    <span className="text-sm font-medium">{initialComments}</span>
+                )}
             </button>
 
             <button
@@ -156,7 +158,9 @@ const InteractionBar = ({
                 )}
             >
                 <Share2 className="h-5 w-5" />
-                <span className="text-sm font-medium">{shares}</span>
+                {shares > 0 && (
+                    <span className="text-sm font-medium">{shares}</span>
+                )}
             </button>
         </div>
     );

@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <title>Portfolio Fotográfico - Livro Técnico | Tiago Damasceno</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1e40af;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+        }
+
+        body {
+            font-family: 'Lato', serif;
+            font-size: 11.5pt;
+            line-height: 1.8;
+            color: var(--gray-800);
+            background: white;
+        }
+
+        @page {
+            size: A4;
+            margin: 25mm 22mm;
+        }
+
+        .cover {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            min-height: 297mm;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 40mm 30mm;
+            page-break-after: always;
+        }
+
+        .cover h1 {
+            font-size: 48pt;
+            font-weight: 900;
+            margin-bottom: 12mm;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            line-height: 1.15;
+        }
+
+        .cover-subtitle {
+            font-size: 26pt;
+            font-weight: 300;
+            margin-bottom: 6mm;
+            opacity: 0.95;
+        }
+
+        .cover-description {
+            font-size: 17pt;
+            font-weight: 400;
+            margin-bottom: 30mm;
+            opacity: 0.88;
+            font-style: italic;
+            max-width: 500px;
+        }
+
+        .cover-author {
+            font-size: 22pt;
+            font-weight: 700;
+            margin-bottom: 6mm;
+        }
+
+        .cover-domain {
+            font-size: 18pt;
+            margin-bottom: 25mm;
+            opacity: 0.92;
+            letter-spacing: 1px;
+        }
+
+        .cover-footer {
+            font-size: 13pt;
+            font-weight: 300;
+            opacity: 0.82;
+            margin-top: auto;
+            line-height: 1.7;
+        }
+
+        .content {
+            padding: 0;
+            max-width: 100%;
+        }
+
+        h1 {
+            font-size: 26pt;
+            font-weight: 900;
+            color: var(--primary);
+            margin: 35pt 0 18pt;
+            padding-bottom: 12pt;
+            border-bottom: 4px solid var(--primary);
+            page-break-after: avoid;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        h2 {
+            font-size: 20pt;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin: 28pt 0 14pt;
+            padding-left: 16pt;
+            border-left: 6px solid var(--primary);
+            page-break-after: avoid;
+        }
+
+        h3 {
+            font-size: 16pt;
+            font-weight: 700;
+            color: var(--gray-800);
+            margin: 22pt 0 12pt;
+            page-break-after: avoid;
+        }
+
+        h4 {
+            font-size: 14pt;
+            font-weight: 600;
+            color: var(--gray-700);
+            margin: 18pt 0 10pt;
+            page-break-after: avoid;
+            font-style: italic;
+        }
+
+        p {
+            margin-bottom: 13pt;
+            text-align: justify;
+            text-indent: 25pt;
+            hyphens: auto;
+            orphans: 3;
+            widows: 3;
+            line-height: 1.8;
+        }
+
+        h1+p,
+        h2+p,
+        h3+p,
+        h4+p {
+            text-indent: 0;
+        }
+
+        p.no-indent {
+            text-indent: 0;
+        }
+
+        .first-paragraph::first-letter {
+            font-size: 3.5em;
+            font-weight: 900;
+            float: left;
+            line-height: 0.85;
+            margin: 3pt 10pt 0 0;
+            color: var(--primary);
+        }
+
+        code {
+            background: var(--gray-100);
+            padding: 2pt 7pt;
+            border-radius: 4pt;
+            font-size: 10.5pt;
+            color: #dc2626;
+            font-weight: 500;
+            font-family: 'Courier New', monospace;
+        }
+
+        pre {
+            background: #282c34;
+            color: #abb2bf;
+            border-left: 6px solid var(--primary);
+            padding: 16pt;
+            margin: 16pt 0;
+            border-radius: 6pt;
+            page-break-inside: avoid;
+            font-size: 10pt;
+            line-height: 1.6;
+        }
+
+        pre code {
+            background: transparent;
+            padding: 0;
+            color: inherit;
+        }
+
+        hr {
+            border: none;
+            border-top: 3px solid var(--gray-300);
+            margin: 30pt 0;
+            height: 0;
+        }
+
+        strong {
+            font-weight: 700;
+            color: var(--gray-900);
+        }
+
+        em {
+            font-style: italic;
+        }
+
+        .footer-text {
+            position: fixed;
+            bottom: 12mm;
+            left: 22mm;
+            font-size: 9pt;
+            color: var(--gray-600);
+            font-weight: 400;
+        }
+
+        .page-number {
+            position: fixed;
+            bottom: 12mm;
+            right: 22mm;
+            font-size: 10pt;
+            color: var(--gray-600);
+            font-weight: 600;
+        }
+
+        @media print {
+            .page-number::after {
+                content: counter(page);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- CAPA -->
+    <div class="cover">
+        <h1>Portfolio de<br>Fotografia</h1>
+        <p class="cover-subtitle">Documentação Técnica Completa</p>
+        <p class="cover-description">Sistema Web Moderno para Portfólio Profissional</p>
+
+        <div style="margin-top: 25mm;">
+            <p class="cover-author">Tiago Damasceno</p>
+            <p class="cover-domain">tdfoco.cloud</p>
+        </div>
+
+        <div class="cover-footer">
+            30 de Novembro de 2025 | Versão 1.0.0<br>
+            React • TypeScript • Vite • Supabase • Tailwind CSS<br>
+            <em>Desenvolvido com Antigravity AI</em>
+        </div>
+    </div>
+
+    <!-- CONTEÚDO -->
+    <div class="content">
+        <!-- O conteúdo será inserido aqui -->
+    </div>
+
+    <div class="footer-text">Portfolio - Tiago Damasceno • tdfoco.cloud</div>
+    <div class="page-number"></div>
+
+</body>
+
+</html>

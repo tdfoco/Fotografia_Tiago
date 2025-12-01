@@ -73,14 +73,14 @@ const Admin = () => {
 
         if (error) {
             toast({
-                title: 'Falha no Login',
+                title: 'Login Failed',
                 description: error.message,
                 variant: 'destructive',
             });
         } else {
             toast({
-                title: 'Sucesso',
-                description: 'Bem-vindo ao painel administrativo!',
+                title: 'Success',
+                description: 'Welcome to the admin panel!',
             });
         }
 
@@ -90,8 +90,8 @@ const Admin = () => {
     const handleLogout = async () => {
         await signOut();
         toast({
-            title: 'Desconectado',
-            description: 'Você foi desconectado com sucesso.',
+            title: 'Logged Out',
+            description: 'You have been logged out successfully.',
         });
         navigate('/');
     };
@@ -303,14 +303,14 @@ const Admin = () => {
             <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-secondary to-background p-4">
                 <Card className="w-full max-w-md">
                     <CardHeader className="text-center">
-                        <CardTitle className="text-3xl font-display">Painel Administrativo</CardTitle>
-                        <CardDescription>Gerencie seu portfólio de fotografia e design</CardDescription>
+                        <CardTitle className="text-3xl font-display">Admin Login</CardTitle>
+                        <CardDescription>Enter your credentials to manage the portfolio</CardDescription>
                     </CardHeader>
                     <CardContent>
                         <form onSubmit={handleLogin} className="space-y-4">
                             <div>
                                 <label htmlFor="email" className="block text-sm font-medium mb-2">
-                                    E-mail
+                                    Email
                                 </label>
                                 <Input
                                     id="email"
@@ -323,7 +323,7 @@ const Admin = () => {
                             </div>
                             <div>
                                 <label htmlFor="password" className="block text-sm font-medium mb-2">
-                                    Senha
+                                    Password
                                 </label>
                                 <Input
                                     id="password"
@@ -342,10 +342,10 @@ const Admin = () => {
                                 {isLoggingIn ? (
                                     <>
                                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                        Entrando...
+                                        Logging in...
                                     </>
                                 ) : (
-                                    'Entrar'
+                                    'Login'
                                 )}
                             </Button>
                         </form>
@@ -360,12 +360,12 @@ const Admin = () => {
         <div className="min-h-screen bg-background">
             <header className="border-b border-border bg-secondary/50 backdrop-blur-sm sticky top-0 z-50">
                 <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
-                    <h1 className="text-2xl font-display font-bold">Painel Administrativo</h1>
+                    <h1 className="text-2xl font-display font-bold">Admin Panel</h1>
                     <div className="flex items-center gap-4">
                         <span className="text-sm text-muted-foreground">{user.email}</span>
                         <Button onClick={handleLogout} variant="outline" size="sm">
                             <LogOut className="mr-2 h-4 w-4" />
-                            Sair
+                            Logout
                         </Button>
                     </div>
                 </div>
@@ -374,11 +374,11 @@ const Admin = () => {
             <main className="max-w-7xl mx-auto px-4 py-8">
                 <Tabs defaultValue="photography" className="w-full">
                     <TabsList className="flex w-full max-w-2xl mx-auto gap-2">
-                        <TabsTrigger value="photography" className="flex-1">Fotografia</TabsTrigger>
-                        <TabsTrigger value="design" className="flex-1">Design</TabsTrigger>
-                        <TabsTrigger value="hero" className="flex-1">Hero</TabsTrigger>
+                        <TabsTrigger value="photography" className="flex-1">Photography</TabsTrigger>
+                        <TabsTrigger value="design" className="flex-1">Design Projects</TabsTrigger>
+                        <TabsTrigger value="hero" className="flex-1">Hero Images</TabsTrigger>
                         <TabsTrigger value="comments" className="flex-1">Comentários</TabsTrigger>
-                        <TabsTrigger value="content" className="flex-1">Conteúdo</TabsTrigger>
+                        <TabsTrigger value="content" className="flex-1">Content</TabsTrigger>
                     </TabsList>
 
                     <TabsContent value="photography" className="mt-8">
@@ -552,15 +552,15 @@ const PhotoManagement = ({ photos, onDelete, onRefresh, loading }: PhotoManageme
     return (
         <div className="space-y-6">
             <div className="flex justify-between items-center">
-                <h2 className="text-2xl font-display font-bold">Gerenciamento de Fotografias</h2>
+                <h2 className="text-2xl font-display font-bold">Photography Management</h2>
                 <div className="flex gap-2">
                     <Button onClick={() => setShowBatchUpload(!showBatchUpload)} variant="outline">
                         <Upload className="mr-2 h-4 w-4" />
-                        Upload em Lote
+                        Batch Upload
                     </Button>
                     <Button onClick={() => setShowForm(!showForm)}>
                         <Plus className="mr-2 h-4 w-4" />
-                        Adicionar Foto
+                        Add New Photo
                     </Button>
                 </div>
             </div>
@@ -579,8 +579,8 @@ const PhotoManagement = ({ photos, onDelete, onRefresh, loading }: PhotoManageme
             {editingPhoto && (
                 <Card>
                     <CardHeader>
-                        <CardTitle>Editar Foto</CardTitle>
-                        <CardDescription>Atualizar metadados e informações da foto</CardDescription>
+                        <CardTitle>Edit Photo</CardTitle>
+                        <CardDescription>Update photo metadata and information</CardDescription>
                     </CardHeader>
                     <CardContent>
                         <form onSubmit={handleUpdate} className="space-y-4">
