@@ -5,6 +5,7 @@ import { useImageProtection } from "@/hooks/useImageProtection";
 import ProtectedImage from "./ProtectedImage";
 import Lightbox, { Photo } from "./Lightbox";
 import InteractionBar from "./InteractionBar";
+import FavoriteButton from "./FavoriteButton";
 
 interface PhotoGridProps {
   showHeader?: boolean;
@@ -122,6 +123,16 @@ const PhotoGrid = ({ showHeader = true, showFilters = true, limit }: PhotoGridPr
                     <span className="text-white opacity-0 group-hover:opacity-100 transition-opacity duration-500 text-sm tracking-wider font-light">
                       {photo.category}
                     </span>
+                  </div>
+
+                  {/* Favorite Button - Top Right */}
+                  <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-auto">
+                    <FavoriteButton
+                      itemId={photo.id}
+                      itemType="photography"
+                      size="sm"
+                      variant="ghost"
+                    />
                   </div>
                 </div>
 

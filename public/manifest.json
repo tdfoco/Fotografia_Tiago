@@ -1,0 +1,94 @@
+{
+    "name": "tdfoco | Portfólio de Fotografia e Design",
+    "short_name": "tdfoco",
+    "description": "Portfolio profissional de fotografia e design gráfico de Tiago Damasceno. Explore trabalhos de retratos, arte urbana, natureza, eventos e identidades visuais modernas.",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#000000",
+    "theme_color": "#000000",
+    "orientation": "portrait-primary",
+    "categories": [
+        "photography",
+        "design",
+        "portfolio"
+    ],
+    "lang": "pt-BR",
+    "dir": "ltr",
+    "scope": "/",
+    "icons": [
+        {
+            "src": "/favicon.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "/favicon.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "/favicon.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "maskable"
+        },
+        {
+            "src": "/favicon.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "maskable"
+        }
+    ],
+    "screenshots": [
+        {
+            "src": "/favicon.png",
+            "sizes": "1280x720",
+            "type": "image/png",
+            "form_factor": "wide"
+        },
+        {
+            "src": "/favicon.png",
+            "sizes": "750x1334",
+            "type": "image/png",
+            "form_factor": "narrow"
+        }
+    ],
+    "shortcuts": [
+        {
+            "name": "Fotografia",
+            "short_name": "Fotos",
+            "description": "Ver galeria de fotografias",
+            "url": "/photography",
+            "icons": [
+                {
+                    "src": "/favicon.png",
+                    "sizes": "96x96"
+                }
+            ]
+        },
+        {
+            "name": "Design Gráfico",
+            "short_name": "Design",
+            "description": "Ver projetos de design",
+            "url": "/design",
+            "icons": [
+                {
+                    "src": "/favicon.png",
+                    "sizes": "96x96"
+                }
+            ]
+        }
+    ],
+    "share_target": {
+        "action": "/share",
+        "method": "POST",
+        "enctype": "multipart/form-data",
+        "params": {
+            "title": "title",
+            "text": "text",
+            "url": "url"
+        }
+    }
+}

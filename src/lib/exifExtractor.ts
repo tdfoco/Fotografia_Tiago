@@ -1,4 +1,5 @@
 import exifr from 'exifr';
+import { generateAltTextFromEXIF, generateDescription, suggestTags } from './aiHelpers';
 
 export interface ExifData {
     camera_make?: string;
@@ -9,6 +10,12 @@ export interface ExifData {
     shutter_speed?: string;
     focal_length?: string;
     capture_date?: Date;
+}
+
+export interface ExifDataWithAI extends ExifData {
+    suggested_alt_text?: string;
+    suggested_description?: string;
+    suggested_tags?: string[];
 }
 
 /**
@@ -124,4 +131,31 @@ export function formatExifAsDescription(exifData: ExifData): string {
     }
 
     return parts.join('\n');
+}
+
+/**
+ * Extract EXIF data with AI-powered suggestions
+ * @param file Image file to extract EXIF from
+ * @param title Optional title for context
+ * @param category Optional category for context
+ * @returns ExifDataWithAI object with camera settings and AI suggestions
+ */
+export async function extractExifDataWithAI(
+    file: File,
+    title?: string,
+    category?: string
+): Promise<ExifDataWithAI> {
+    const exifData = await extractExifData(file);
+
+    // Gerar sugestões de IA baseadas nos dados EXIF
+    const suggested_alt_text = generateAltTextFromEXIF(exifData, title, category);
+    const suggested_description = generateDescription(title || file.name, exifData, category);
+    const suggested_tags = suggestTags(title || file.name, suggested_description, category, exifData);
+
+    return {
+        ...exifData,
+        suggested_alt_text,
+        suggested_description,
+        suggested_tags,
+    };
 }

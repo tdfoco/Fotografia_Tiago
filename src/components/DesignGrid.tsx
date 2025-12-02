@@ -6,6 +6,7 @@ import { useImageProtection } from "@/hooks/useImageProtection";
 import ProtectedImage from "./ProtectedImage";
 import ProjectModal from "./ProjectModal";
 import InteractionBar from "./InteractionBar";
+import FavoriteButton from "./FavoriteButton";
 
 interface DesignGridProps {
     showHeader?: boolean;
@@ -123,6 +124,16 @@ const DesignGrid = ({ showHeader = true, showFilters = true, limit }: DesignGrid
                                                 {project.title}
                                             </h3>
                                         </div>
+                                    </div>
+
+                                    {/* Favorite Button - Top Right */}
+                                    <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-auto">
+                                        <FavoriteButton
+                                            itemId={project.id}
+                                            itemType="design"
+                                            size="sm"
+                                            variant="ghost"
+                                        />
                                     </div>
                                 </div>
                                 <div className="mt-4">

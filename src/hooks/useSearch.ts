@@ -10,6 +10,8 @@ export interface SearchResult {
     category: string;
     date: string;
     link: string; // Internal route
+    rank?: number; // Relevance score
+    headline?: string; // Highlighted snippet
 }
 
 export const useSearch = (query: string) => {
@@ -28,55 +30,68 @@ export const useSearch = (query: string) => {
             setError(null);
 
             try {
-                const searchTerm = `%${query}%`;
+                // Usar full-text search com tsvector e ranking
+                // plainto_tsquery automaticamente processa a string para busca
+                const searchQuery = query.trim();
 
-                // Search Photography
+                // Search Photography com ranking
                 const { data: photoData, error: photoError } = await supabase
                     .from('photography')
-                    .select('*')
-                    .or(`title.ilike.${searchTerm},description.ilike.${searchTerm},event_name.ilike.${searchTerm},tags.cs.{${query}}`)
-                    .limit(5);
+                    .select('*, ts_rank(search_vector, plainto_tsquery(\'portuguese\', $1)) as rank')
+                    .textSearch('search_vector', searchQuery, {
+                        type: 'plain',
+                        config: 'portuguese'
+                    })
+                    .order('rank', { ascending: false })
+                    .limit(8);
 
                 if (photoError) throw photoError;
 
-                // Search Design
+                // Search Design Projects com ranking
                 const { data: designData, error: designError } = await supabase
                     .from('design_projects')
-                    .select('*')
-                    .or(`title.ilike.${searchTerm},description.ilike.${searchTerm},event_name.ilike.${searchTerm},tags.cs.{${query}}`)
-                    .limit(5);
+                    .select('*, ts_rank(search_vector, plainto_tsquery(\'portuguese\', $1)) as rank')
+                    .textSearch('search_vector', searchQuery, {
+                        type: 'plain',
+                        config: 'portuguese'
+                    })
+                    .order('rank', { ascending: false })
+                    .limit(8);
 
                 if (designError) throw designError;
 
                 // Transform and combine results
-                const photos: SearchResult[] = (photoData || []).map((item: PhotographyItem) => ({
+                const photos: SearchResult[] = (photoData || []).map((item: any) => ({
                     id: item.id,
-                    type: 'photography',
+                    type: 'photography' as const,
                     title: item.title,
                     description: item.description || '',
                     url: item.url,
                     category: item.category,
                     date: item.event_date || item.created_at,
-                    link: '/photography' // We might need a way to open specific photos, for now link to gallery
+                    link: '/photography',
+                    rank: item.rank || 0
                 }));
 
-                const designs: SearchResult[] = (designData || []).map((item: DesignProject) => ({
+                const designs: SearchResult[] = (designData || []).map((item: any) => ({
                     id: item.id,
-                    type: 'design',
+                    type: 'design' as const,
                     title: item.title,
                     description: item.description,
                     url: item.images[0],
                     category: item.category,
                     date: item.event_date || item.created_at,
-                    link: '/design'
+                    link: '/design',
+                    rank: item.rank || 0
                 }));
 
-                // Sort by date (newest first)
+                // Combinar e ordenar por relevância (rank)
                 const combined = [...photos, ...designs].sort((a, b) =>
-                    new Date(b.date).getTime() - new Date(a.date).getTime()
+                    (b.rank || 0) - (a.rank || 0)
                 );
 
-                setResults(combined);
+                // Limitar a 10 melhores resultados
+                setResults(combined.slice(0, 10));
 
             } catch (err: any) {
                 console.error('Search error:', err);
