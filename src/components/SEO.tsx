@@ -59,6 +59,29 @@ export const SEO = ({
             <meta name="robots" content="index, follow" />
             <meta name="language" content="Portuguese" />
             <meta name="revisit-after" content="7 days" />
+
+            {/* JSON-LD Structured Data */}
+            <script type="application/ld+json">
+                {JSON.stringify({
+                    "@context": "https://schema.org",
+                    "@type": type === 'article' ? 'Article' : 'WebSite',
+                    "name": pageTitle,
+                    "description": pageDescription,
+                    "url": siteUrl,
+                    "author": {
+                        "@type": "Person",
+                        "name": author
+                    },
+                    "image": pageImage,
+                    ...((type === 'website') ? {
+                        "potentialAction": {
+                            "@type": "SearchAction",
+                            "target": `${siteUrl}/search?q={search_term_string}`,
+                            "query-input": "required name=search_term_string"
+                        }
+                    } : {})
+                })}
+            </script>
         </Helmet>
     );
 };

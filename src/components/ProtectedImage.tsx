@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useAuth } from '@/hooks/useSupabaseData';
+import { useAuth } from '@/hooks/usePocketBaseData';
 import { useImageLoader } from '@/hooks/useImageLoader';
 
 interface ProtectedImageProps {

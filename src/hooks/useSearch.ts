@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { supabase, PhotographyItem, DesignProject } from '@/lib/supabase';
+import { pb } from '@/lib/pocketbase';
+import { getImageUrl } from '@/hooks/usePocketBaseData';
 
 export interface SearchResult {
     id: string;
@@ -30,65 +31,48 @@ export const useSearch = (query: string) => {
             setError(null);
 
             try {
-                // Usar full-text search com tsvector e ranking
-                // plainto_tsquery automaticamente processa a string para busca
                 const searchQuery = query.trim();
+                const filter = `title ~ "${searchQuery}" || description ~ "${searchQuery}" || category ~ "${searchQuery}"`;
 
-                // Search Photography com ranking
-                const { data: photoData, error: photoError } = await supabase
-                    .from('photography')
-                    .select('*, ts_rank(search_vector, plainto_tsquery(\'portuguese\', $1)) as rank')
-                    .textSearch('search_vector', searchQuery, {
-                        type: 'plain',
-                        config: 'portuguese'
-                    })
-                    .order('rank', { ascending: false })
-                    .limit(8);
+                // Search Photography
+                const photoRecords = await pb.collection('photography').getList(1, 8, {
+                    filter: filter,
+                    sort: '-created',
+                });
 
-                if (photoError) throw photoError;
-
-                // Search Design Projects com ranking
-                const { data: designData, error: designError } = await supabase
-                    .from('design_projects')
-                    .select('*, ts_rank(search_vector, plainto_tsquery(\'portuguese\', $1)) as rank')
-                    .textSearch('search_vector', searchQuery, {
-                        type: 'plain',
-                        config: 'portuguese'
-                    })
-                    .order('rank', { ascending: false })
-                    .limit(8);
-
-                if (designError) throw designError;
+                // Search Design Projects
+                const designRecords = await pb.collection('design_projects').getList(1, 8, {
+                    filter: filter,
+                    sort: '-created',
+                });
 
                 // Transform and combine results
-                const photos: SearchResult[] = (photoData || []).map((item: any) => ({
+                const photos: SearchResult[] = photoRecords.items.map((item: any) => ({
                     id: item.id,
                     type: 'photography' as const,
                     title: item.title,
                     description: item.description || '',
-                    url: item.url,
+                    url: getImageUrl(item.collectionId, item.id, item.image),
                     category: item.category,
-                    date: item.event_date || item.created_at,
+                    date: item.event_date || item.created,
                     link: '/photography',
-                    rank: item.rank || 0
+                    rank: 1 // Simple ranking
                 }));
 
-                const designs: SearchResult[] = (designData || []).map((item: any) => ({
+                const designs: SearchResult[] = designRecords.items.map((item: any) => ({
                     id: item.id,
                     type: 'design' as const,
                     title: item.title,
                     description: item.description,
-                    url: item.images[0],
+                    url: getImageUrl(item.collectionId, item.id, item.images?.[0] || ''),
                     category: item.category,
-                    date: item.event_date || item.created_at,
+                    date: item.event_date || item.created,
                     link: '/design',
-                    rank: item.rank || 0
+                    rank: 1
                 }));
 
-                // Combinar e ordenar por relevância (rank)
-                const combined = [...photos, ...designs].sort((a, b) =>
-                    (b.rank || 0) - (a.rank || 0)
-                );
+                // Combinar
+                const combined = [...photos, ...designs];
 
                 // Limitar a 10 melhores resultados
                 setResults(combined.slice(0, 10));

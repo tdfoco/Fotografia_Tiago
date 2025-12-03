@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Heart, MessageCircle, Share2 } from 'lucide-react';
-import { incrementLikes, incrementShares } from '@/hooks/useSupabaseData';
+import { incrementLikes, incrementShares } from '@/hooks/usePocketBaseData';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 

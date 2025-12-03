@@ -291,7 +291,9 @@ Este é um projeto pessoal, mas sugestões são bem-vindas via issues.
 
 ## 📄 Licença
 
-© 2024-2025 Tiago Damasceno. Todos os direitos reservados.
+© 2025 Tiago Damasceno Francisco. Todos os direitos reservados.
+
+**Projeto iniciado em:** 29/11/2025
 
 ---
 
@@ -314,4 +316,4 @@ Este é um projeto pessoal, mas sugestões são bem-vindas via issues.
 
 ---
 
-**Desenvolvido com ❤️ por Tiago Damasceno | Powered by Antigravity AI**
+**Desenvolvido com ❤️ por Tiago Damasceno Francisco**

@@ -1,11 +1,11 @@
-import { useTopRated } from '@/hooks/useSupabaseData';
+import { useTopRated } from '@/hooks/usePocketBaseData';
 import { useLanguage } from '@/contexts/LanguageContext';
 import ProtectedImage from './ProtectedImage';
 import { Heart, MessageCircle } from 'lucide-react';
 import { useState } from 'react';
 import Lightbox, { Photo } from './Lightbox';
 import ProjectModal from './ProjectModal';
-import type { DesignProject } from '@/lib/supabase';
+import type { DesignProject } from '@/hooks/usePocketBaseData';
 import InteractionBar from './InteractionBar';
 
 const RankingSection = () => {

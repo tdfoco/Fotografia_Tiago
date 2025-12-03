@@ -1,6 +1,6 @@
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
-import { useTopRated } from '@/hooks/useSupabaseData';
+import { useTopRated } from '@/hooks/usePocketBaseData';
 import { useLanguage } from '@/contexts/LanguageContext';
 import ProtectedImage from '@/components/ProtectedImage';
 import { Heart, MessageCircle } from 'lucide-react';
@@ -8,7 +8,7 @@ import { useState } from 'react';
 import Lightbox, { Photo } from '@/components/Lightbox';
 import ProjectModal from '@/components/ProjectModal';
 import InteractionBar from '@/components/InteractionBar';
-import type { DesignProject } from '@/lib/supabase';
+import type { DesignProject } from '@/hooks/usePocketBaseData';
 import { SEO } from "@/components/SEO";
 
 const Ranking = () => {

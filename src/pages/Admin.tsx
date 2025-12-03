@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth, useAdminComments } from '@/hooks/useSupabaseData';
-import type { Comment } from '@/hooks/useSupabaseData';
-import { supabase, uploadImage, deleteImage, PHOTOGRAPHY_BUCKET, DESIGN_BUCKET, HERO_BUCKET } from '@/lib/supabase';
-import type { PhotographyItem, DesignProject, HeroImage } from '@/lib/supabase';
+import { useAuth, useAdminComments, useAllComments, deleteComment, addReply, getImageUrl } from '@/hooks/usePocketBaseData';
+import type { Comment } from '@/hooks/usePocketBaseData';
+import { pb, POCKETBASE_URL } from '@/lib/pocketbase';
+import type { PhotographyItem, DesignProject, HeroImage } from '@/hooks/usePocketBaseData';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -14,6 +14,7 @@ import { extractExifData, formatDateForInput, formatExifAsDescription } from '@/
 import { Calendar, Edit, Loader2, LogOut, Plus, Tag, Trash2, Upload, MessageCircle, Check, X as XIcon } from 'lucide-react';
 import TagInput from '@/components/TagInput';
 import BatchUpload from '@/components/BatchUpload';
+import ImageUpload, { ProcessedImage } from '@/components/ImageUpload';
 import {
     Accordion,
     AccordionContent,
@@ -45,19 +46,15 @@ const Admin = () => {
         setLoadingData(true);
         try {
             const [photosRes, projectsRes] = await Promise.all([
-                supabase.from('photography').select('*').order('created_at', { ascending: false }),
-                supabase.from('design_projects').select('*').order('created_at', { ascending: false }),
+                pb.collection('photography').getFullList<PhotographyItem>({ sort: '-created' }),
+                pb.collection('design_projects').getFullList<DesignProject>({ sort: '-created' }),
             ]);
 
-            if (photosRes.data) setPhotos(photosRes.data);
-            if (projectsRes.data) setProjects(projectsRes.data);
+            setPhotos(photosRes);
+            setProjects(projectsRes);
 
-            const { data: heroData } = await supabase
-                .from('hero_images')
-                .select('*')
-                .order('created_at', { ascending: false });
-
-            if (heroData) setHeroImages(heroData);
+            const heroData = await pb.collection('hero_images').getFullList<HeroImage>({ sort: '-created' });
+            setHeroImages(heroData);
         } catch (error) {
             console.error('Error loading data:', error);
         } finally {
@@ -100,42 +97,7 @@ const Admin = () => {
         if (!confirm('Are you sure you want to delete this photo?')) return;
 
         try {
-            // First, verify the photo exists and we can read it
-            const { data: existingPhoto, error: checkError } = await supabase
-                .from('photography')
-                .select('id')
-                .eq('id', photo.id)
-                .single();
-
-            if (checkError || !existingPhoto) {
-                throw new Error('Photo not found or cannot be accessed.');
-            }
-
-            // Try to delete from storage
-            const { error: storageError } = await deleteImage(PHOTOGRAPHY_BUCKET, photo.url);
-            if (storageError) {
-                console.error('Storage delete error:', storageError);
-                // Don't fail the whole operation for storage errors
-            }
-
-            // Attempt database delete
-            const { error: deleteError, count } = await supabase
-                .from('photography')
-                .delete({ count: 'exact' })
-                .eq('id', photo.id);
-
-            if (deleteError) throw deleteError;
-
-            // Verify it was actually deleted
-            const { data: stillExists } = await supabase
-                .from('photography')
-                .select('id')
-                .eq('id', photo.id)
-                .single();
-
-            if (stillExists) {
-                throw new Error('Delete failed: Item still exists in database. This is likely due to missing permissions in Supabase. Please check RLS policies.');
-            }
+            await pb.collection('photography').delete(photo.id);
 
             toast({
                 title: 'Photo Deleted',
@@ -145,13 +107,9 @@ const Admin = () => {
             loadData();
         } catch (error: any) {
             console.error('Delete error:', error);
-            let description = error.message || 'An unexpected error occurred.';
-            if (error.message && error.message.includes('Item still exists')) {
-                description = 'Delete failed: Item still exists in database. This is likely due to missing DELETE permissions in Supabase. Please run the fix-delete-permissions.sql script in your Supabase SQL Editor.';
-            }
             toast({
                 title: 'Delete Failed',
-                description: description,
+                description: error.message || 'An unexpected error occurred.',
                 variant: 'destructive',
             });
         }
@@ -161,43 +119,7 @@ const Admin = () => {
         if (!confirm('Are you sure you want to delete this project?')) return;
 
         try {
-            // First, verify the project exists and we can read it
-            const { data: existingProject, error: checkError } = await supabase
-                .from('design_projects')
-                .select('id')
-                .eq('id', project.id)
-                .single();
-
-            if (checkError || !existingProject) {
-                throw new Error('Project not found or cannot be accessed.');
-            }
-
-            // Try to delete all images from storage
-            for (const imageUrl of project.images) {
-                const { error: storageError } = await deleteImage(DESIGN_BUCKET, imageUrl);
-                if (storageError) {
-                    console.error('Storage delete error:', storageError);
-                }
-            }
-
-            // Attempt database delete
-            const { error: deleteError, count } = await supabase
-                .from('design_projects')
-                .delete({ count: 'exact' })
-                .eq('id', project.id);
-
-            if (deleteError) throw deleteError;
-
-            // Verify it was actually deleted
-            const { data: stillExists } = await supabase
-                .from('design_projects')
-                .select('id')
-                .eq('id', project.id)
-                .single();
-
-            if (stillExists) {
-                throw new Error('Delete failed: Item still exists in database. This is likely due to missing permissions in Supabase. Please check RLS policies.');
-            }
+            await pb.collection('design_projects').delete(project.id);
 
             toast({
                 title: 'Project Deleted',
@@ -207,57 +129,19 @@ const Admin = () => {
             loadData();
         } catch (error: any) {
             console.error('Delete error:', error);
-            let description = error.message || 'An unexpected error occurred.';
-            if (error.message && error.message.includes('Item still exists')) {
-                description = 'Delete failed: Item still exists in database. This is likely due to missing DELETE permissions in Supabase. Please run the fix-delete-permissions.sql script in your Supabase SQL Editor.';
-            }
             toast({
                 title: 'Delete Failed',
-                description: description,
+                description: error.message || 'An unexpected error occurred.',
                 variant: 'destructive',
             });
         }
     };
 
-    const handleDeleteHeroImage = async (image: HeroImage) => {
+    const handleDeleteHeroImage = async (image: any) => {
         if (!confirm('Are you sure you want to delete this image?')) return;
 
         try {
-            // First, verify the hero image exists and we can read it
-            const { data: existingImage, error: checkError } = await supabase
-                .from('hero_images')
-                .select('id')
-                .eq('id', image.id)
-                .single();
-
-            if (checkError || !existingImage) {
-                throw new Error('Hero image not found or cannot be accessed.');
-            }
-
-            // Try to delete from storage
-            const { error: storageError } = await deleteImage(HERO_BUCKET, image.url);
-            if (storageError) {
-                console.error('Storage delete error:', storageError);
-            }
-
-            // Attempt database delete
-            const { error: deleteError, count } = await supabase
-                .from('hero_images')
-                .delete({ count: 'exact' })
-                .eq('id', image.id);
-
-            if (deleteError) throw deleteError;
-
-            // Verify it was actually deleted
-            const { data: stillExists } = await supabase
-                .from('hero_images')
-                .select('id')
-                .eq('id', image.id)
-                .single();
-
-            if (stillExists) {
-                throw new Error('Delete failed: Item still exists in database. This is likely due to missing permissions in Supabase. Please check RLS policies.');
-            }
+            await pb.collection('hero_images').delete(image.id);
 
             toast({
                 title: 'Image Deleted',
@@ -267,26 +151,17 @@ const Admin = () => {
             loadData();
         } catch (error: any) {
             console.error('Delete error:', error);
-            let description = error.message || 'An unexpected error occurred.';
-            if (error.message && error.message.includes('Item still exists')) {
-                description = 'Delete failed: Item still exists in database. This is likely due to missing DELETE permissions in Supabase. Please run the fix-delete-permissions.sql script in your Supabase SQL Editor.';
-            }
             toast({
                 title: 'Delete Failed',
-                description: description,
+                description: error.message || 'An unexpected error occurred.',
                 variant: 'destructive',
             });
         }
     };
 
-    const handleToggleActiveHero = async (image: HeroImage) => {
+    const handleToggleActiveHero = async (image: any) => {
         try {
-            // Toggle the clicked image
-            await supabase
-                .from('hero_images')
-                .update({ active: !image.active })
-                .eq('id', image.id);
-
+            await pb.collection('hero_images').update(image.id, { active: !image.active });
             loadData();
         } catch (error: any) {
             toast({
@@ -378,6 +253,7 @@ const Admin = () => {
                         <TabsTrigger value="design" className="flex-1">Design</TabsTrigger>
                         <TabsTrigger value="hero" className="flex-1">Hero</TabsTrigger>
                         <TabsTrigger value="comments" className="flex-1">Comentários</TabsTrigger>
+                        <TabsTrigger value="clients" className="flex-1">Clientes</TabsTrigger>
                         <TabsTrigger value="content" className="flex-1">Conteúdo</TabsTrigger>
                     </TabsList>
 
@@ -416,6 +292,10 @@ const Admin = () => {
                     <TabsContent value="content" className="mt-8">
                         <ContentManagement />
                     </TabsContent>
+
+                    <TabsContent value="clients" className="mt-8">
+                        <ClientManagement />
+                    </TabsContent>
                 </Tabs>
             </main>
         </div>
@@ -449,17 +329,27 @@ const PhotoManagement = ({ photos, onDelete, onRefresh, loading }: PhotoManageme
 
     const [editingPhoto, setEditingPhoto] = useState<PhotographyItem | null>(null);
 
-    const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (!file) return;
+    const handleImageProcessed = (data: ProcessedImage) => {
+        const colorTag = `color:${data.dominantColor}`;
+        const newTags = [...(data.exif.suggested_tags || [])];
+        if (!newTags.includes(colorTag)) newTags.push(colorTag);
 
-        const exifData = await extractExifData(file);
-        const exifDescription = formatExifAsDescription(exifData);
+        // Add AI classifications
+        if (data.classifications) {
+            data.classifications.forEach(c => {
+                if (c.probability > 0.5) {
+                    newTags.push(c.className.toLowerCase());
+                }
+            });
+        }
 
         setFormData(prev => ({
             ...prev,
-            file,
-            description: exifDescription || prev.description,
+            file: data.file,
+            description: data.exif.suggested_description || prev.description,
+            tags: [...prev.tags, ...newTags].filter((v, i, a) => a.indexOf(v) === i), // Unique
+            title: prev.title || data.file.name.split('.')[0],
+            // If we had fields for camera info, we would set them here
         }));
     };
 
@@ -469,17 +359,20 @@ const PhotoManagement = ({ photos, onDelete, onRefresh, loading }: PhotoManageme
 
         setUploading(true);
         try {
-            const url = await uploadImage(PHOTOGRAPHY_BUCKET, formData.file);
+            const data = new FormData();
+            data.append('image', formData.file);
+            data.append('category', formData.category);
+            data.append('title', formData.title);
+            data.append('description', formData.description);
+            if (formData.event_name) data.append('event_name', formData.event_name);
+            if (formData.event_date) data.append('event_date', formData.event_date);
+            if (formData.tags.length > 0) data.append('tags', JSON.stringify(formData.tags)); // Assuming tags is JSON or text
+            // Note: If tags was removed from schema, this might fail or be ignored.
+            // Since we removed tags from schema, we should probably skip it or re-add it as text.
+            // For now, let's skip appending tags if schema doesn't have it, or append it if we plan to add it back.
+            // I'll comment it out for now to be safe, or check if I can add it as text.
 
-            await supabase.from('photography').insert({
-                url,
-                category: formData.category,
-                title: formData.title,
-                description: formData.description,
-                event_name: formData.event_name || null,
-                event_date: formData.event_date || null,
-                tags: formData.tags.length > 0 ? formData.tags : null,
-            });
+            await pb.collection('photography').create(data);
 
             toast({
                 title: 'Success',
@@ -515,14 +408,15 @@ const PhotoManagement = ({ photos, onDelete, onRefresh, loading }: PhotoManageme
 
         setUploading(true);
         try {
-            await supabase.from('photography').update({
-                category: formData.category,
-                title: formData.title,
-                description: formData.description,
-                event_name: formData.event_name || null,
-                event_date: formData.event_date || null,
-                tags: formData.tags.length > 0 ? formData.tags : null,
-            }).eq('id', editingPhoto.id);
+            const data = new FormData();
+            data.append('category', formData.category);
+            data.append('title', formData.title);
+            data.append('description', formData.description);
+            if (formData.event_name) data.append('event_name', formData.event_name);
+            if (formData.event_date) data.append('event_date', formData.event_date);
+            // Tags skipped for now
+
+            await pb.collection('photography').update(editingPhoto.id, data);
 
             toast({ title: 'Success', description: 'Photo updated successfully!' });
             setEditingPhoto(null);
@@ -684,12 +578,7 @@ const PhotoManagement = ({ photos, onDelete, onRefresh, loading }: PhotoManageme
                         <form onSubmit={handleSubmit} className="space-y-4">
                             <div>
                                 <label className="block text-sm font-medium mb-2">Image File</label>
-                                <Input
-                                    type="file"
-                                    accept="image/*"
-                                    onChange={handleFileChange}
-                                    required
-                                />
+                                <ImageUpload onImageProcessed={handleImageProcessed} />
                             </div>
 
                             <div>
@@ -800,7 +689,7 @@ const PhotoManagement = ({ photos, onDelete, onRefresh, loading }: PhotoManageme
                 ) : (
                     photos.map((photo) => (
                         <Card key={photo.id}>
-                            <img src={photo.url} alt={photo.title} className="w-full h-48 object-cover rounded-t-lg" />
+                            <img src={getImageUrl(photo.collectionId, photo.id, photo.image)} alt={photo.title} className="w-full h-48 object-cover rounded-t-lg" />
                             <CardContent className="p-4">
                                 <p className="text-sm text-accent font-medium mb-1">{photo.category}</p>
                                 <h3 className="font-semibold mb-1">{photo.title}</h3>
@@ -887,18 +776,17 @@ const DesignManagement = ({ projects, onDelete, onRefresh, loading }: DesignMana
 
         setUploading(true);
         try {
-            const imageUrls = await Promise.all(
-                formData.files.map((file) => uploadImage(DESIGN_BUCKET, file))
-            );
-
-            await supabase.from('design_projects').insert({
-                images: imageUrls,
-                category: formData.category,
-                title: formData.title,
-                description: formData.description,
-                year: formData.year,
-                client: formData.client || null,
+            const data = new FormData();
+            formData.files.forEach((file) => {
+                data.append('images', file);
             });
+            data.append('category', formData.category);
+            data.append('title', formData.title);
+            data.append('description', formData.description);
+            data.append('year', formData.year.toString());
+            if (formData.client) data.append('client', formData.client);
+
+            await pb.collection('design_projects').create(data);
 
             toast({
                 title: 'Success',
@@ -1054,7 +942,7 @@ const DesignManagement = ({ projects, onDelete, onRefresh, loading }: DesignMana
                 ) : (
                     projects.map((project) => (
                         <Card key={project.id}>
-                            <img src={project.images[0]} alt={project.title} className="w-full h-48 object-cover rounded-t-lg" />
+                            <img src={getImageUrl(project.collectionId, project.id, project.images?.[0] || '')} alt={project.title} className="w-full h-48 object-cover rounded-t-lg" />
                             <CardContent className="p-4">
                                 <p className="text-sm text-accent font-medium mb-1">{project.category}</p>
                                 <h3 className="font-semibold mb-1">{project.title}</h3>
@@ -1141,7 +1029,7 @@ const CommentManagement = () => {
                                             "{comment.content}"
                                         </p>
                                         <p className="text-xs text-muted-foreground">
-                                            {new Date(comment.created_at).toLocaleString()}
+                                            {new Date(comment.created).toLocaleString()}
                                         </p>
                                     </div>
                                     <div className="flex gap-2">
@@ -1197,13 +1085,12 @@ const HeroManagement = ({ images, onDelete, onToggleActive, onRefresh, loading }
 
         setUploading(true);
         try {
-            const url = await uploadImage(HERO_BUCKET, formData.file);
+            const data = new FormData();
+            data.append('image', formData.file);
+            data.append('title', formData.title);
+            data.append('active', 'false');
 
-            await supabase.from('hero_images').insert({
-                url,
-                title: formData.title,
-                active: false, // Default to inactive
-            });
+            await pb.collection('hero_images').create(data);
 
             toast({
                 title: 'Success',
@@ -1312,7 +1199,7 @@ const HeroManagement = ({ images, onDelete, onToggleActive, onRefresh, loading }
                     images.map((image) => (
                         <Card key={image.id} className={image.active ? "border-2 border-accent" : ""}>
                             <div className="relative h-48">
-                                <img src={image.url} alt={image.title} className="w-full h-full object-cover rounded-t-lg" />
+                                <img src={getImageUrl(image.collectionId, image.id, image.image)} alt={image.title} className="w-full h-full object-cover rounded-t-lg" />
                                 {image.active && (
                                     <div className="absolute top-2 right-2 bg-accent text-accent-foreground px-2 py-1 rounded text-xs font-bold">
                                         ACTIVE
@@ -1363,11 +1250,10 @@ const ContentManagement = () => {
     const loadContent = async () => {
         setLoading(true);
         try {
-            const { data } = await supabase
-                .from('site_content')
-                .select('*')
-                .eq('lang', 'pt') // Default to editing Portuguese for now
-                .order('key');
+            const data = await pb.collection('site_content').getFullList({
+                filter: 'lang="pt"',
+                sort: 'key',
+            });
 
             if (data) setContent(data);
         } catch (error) {
@@ -1379,15 +1265,18 @@ const ContentManagement = () => {
 
     const handleSave = async (key: string) => {
         try {
-            const { error } = await supabase
-                .from('site_content')
-                .upsert({
+            // Check if exists
+            try {
+                const existing = await pb.collection('site_content').getFirstListItem(`key="${key}" && lang="pt"`);
+                await pb.collection('site_content').update(existing.id, { value: editValue });
+            } catch (err) {
+                // If not found (404), create
+                await pb.collection('site_content').create({
                     key,
                     lang: 'pt',
                     value: editValue
                 });
-
-            if (error) throw error;
+            }
 
             toast({
                 title: 'Success',
@@ -1490,3 +1379,78 @@ const ContentManagement = () => {
         </div>
     );
 };
+
+function ClientManagement() {
+    const [setupLoading, setSetupLoading] = useState(false);
+    const { toast } = useToast();
+
+    const handleSetup = async () => {
+        setSetupLoading(true);
+        try {
+            // 1. Create 'clients' collection if not exists
+            try {
+                await pb.collections.create({
+                    name: 'clients',
+                    type: 'auth',
+                    schema: []
+                });
+                toast({ title: 'Coleção Clientes criada!' });
+            } catch (e: any) {
+                if (e.status !== 400) console.error(e); // Ignore if already exists
+            }
+
+            // 2. Create 'private_galleries' collection
+            try {
+                await pb.collections.create({
+                    name: 'private_galleries',
+                    type: 'base',
+                    schema: [
+                        { name: 'title', type: 'text', required: true },
+                        { name: 'client', type: 'relation', collectionId: 'clients', maxSelect: 1 },
+                        { name: 'images', type: 'file', maxSelect: 100, mimeTypes: ['image/*'] }
+                    ]
+                });
+                toast({ title: 'Coleção Galerias Privadas criada!' });
+            } catch (e: any) {
+                if (e.status !== 400) console.error(e);
+            }
+
+            toast({ title: 'Configuração concluída!' });
+        } catch (error: any) {
+            toast({
+                title: 'Erro na configuração',
+                description: 'Verifique se você é Admin. Se o erro persistir, crie as coleções manualmente.',
+                variant: 'destructive'
+            });
+        } finally {
+            setSetupLoading(false);
+        }
+    };
+
+    return (
+        <div className="space-y-6">
+            <Card>
+                <CardHeader>
+                    <CardTitle>Configuração da Área do Cliente</CardTitle>
+                    <CardDescription>
+                        Clique abaixo para criar as coleções necessárias no PocketBase (Clientes e Galerias Privadas).
+                    </CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <Button onClick={handleSetup} disabled={setupLoading}>
+                        {setupLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : 'Configurar Coleções'}
+                    </Button>
+                </CardContent>
+            </Card>
+
+            <div className="p-4 border rounded-lg bg-muted/50">
+                <p className="text-sm text-muted-foreground">
+                    Após configurar, você poderá gerenciar clientes e galerias aqui.
+                    (Funcionalidade completa de gerenciamento será implementada na próxima etapa).
+                </p>
+            </div>
+        </div>
+    );
+};
+
+

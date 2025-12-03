@@ -118,7 +118,7 @@ const Favorites = () => {
                                         </div>
 
                                         <p className="text-xs text-gray-400 mt-2">
-                                            Adicionado em {new Date(favorite.created_at).toLocaleDateString('pt-BR')}
+                                            Adicionado em {new Date(favorite.created).toLocaleDateString('pt-BR')}
                                         </p>
                                     </CardContent>
                                 </Link>

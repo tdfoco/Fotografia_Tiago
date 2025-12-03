@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { supabase } from '@/lib/supabase';
+import { pb } from '@/lib/pocketbase';
 import ptTranslations from './translations/pt.json';
 import enTranslations from './translations/en.json';
 import esTranslations from './translations/es.json';
@@ -44,13 +44,12 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
     useEffect(() => {
         const fetchTranslations = async () => {
             try {
-                const { data } = await supabase
-                    .from('site_content')
-                    .select('key, value')
-                    .eq('lang', language);
+                const data = await pb.collection('site_content').getFullList({
+                    filter: `lang="${language}"`,
+                });
 
                 if (data) {
-                    const translationsMap = data.reduce((acc, item) => {
+                    const translationsMap = data.reduce((acc: any, item: any) => {
                         acc[item.key] = item.value;
                         return acc;
                     }, {} as Record<string, string>);
@@ -64,24 +63,14 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
         fetchTranslations();
 
         // Subscribe to changes
-        const channel = supabase
-            .channel('schema-db-changes')
-            .on(
-                'postgres_changes',
-                {
-                    event: '*',
-                    schema: 'public',
-                    table: 'site_content',
-                    filter: `lang=eq.${language}`,
-                },
-                (payload) => {
-                    fetchTranslations();
-                }
-            )
-            .subscribe();
+        pb.collection('site_content').subscribe('*', (e) => {
+            if (e.record.lang === language) {
+                fetchTranslations();
+            }
+        });
 
         return () => {
-            supabase.removeChannel(channel);
+            pb.collection('site_content').unsubscribe('*');
         };
     }, [language]);
 

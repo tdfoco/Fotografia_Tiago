@@ -15,6 +15,10 @@ import Admin from "./pages/Admin";
 import Ranking from "./pages/Ranking";
 import Favorites from "./pages/Favorites";
 import NotFound from "./pages/NotFound";
+import ClientLogin from "./pages/ClientLogin";
+import ClientGallery from "./pages/ClientGallery";
+
+import Chatbot from "@/components/Chatbot";
 
 const queryClient = new QueryClient();
 
@@ -28,6 +32,7 @@ const App = () => {
         <TooltipProvider>
           <Toaster />
           <Sonner />
+          <Chatbot />
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<Index />} />
@@ -39,6 +44,8 @@ const App = () => {
               <Route path="/ranking" element={<Ranking />} />
               <Route path="/favorites" element={<Favorites />} />
               <Route path="/admin" element={<Admin />} />
+              <Route path="/client" element={<ClientLogin />} />
+              <Route path="/client/gallery" element={<ClientGallery />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>

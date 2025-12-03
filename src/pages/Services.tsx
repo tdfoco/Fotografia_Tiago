@@ -3,8 +3,10 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Camera, Palette, Users, Building, Sparkles, Package } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { supabase } from "@/lib/supabase";
+import { pb } from "@/lib/pocketbase";
+import { getImageUrl } from "@/hooks/usePocketBaseData";
 import { SEO } from "@/components/SEO";
+import BudgetCalculator from "@/components/BudgetCalculator";
 
 const Services = () => {
     const { t } = useLanguage();
@@ -12,17 +14,16 @@ const Services = () => {
 
     useEffect(() => {
         const fetchHeroImage = async () => {
-            const { data } = await supabase
-                .from('hero_images')
-                .select('url')
-                .eq('page', 'services')
-                .eq('active', true)
-                .order('created_at', { ascending: false })
-                .limit(1)
-                .single();
+            try {
+                const record = await pb.collection('hero_images').getFirstListItem('page="services" && active=true', {
+                    sort: '-created',
+                });
 
-            if (data) {
-                setHeroImage(data.url);
+                if (record) {
+                    setHeroImage(getImageUrl(record.collectionId, record.id, record.image));
+                }
+            } catch (error) {
+                console.error('Error fetching hero image:', error);
             }
         };
 
@@ -217,6 +218,11 @@ const Services = () => {
                             ))}
                         </div>
                     </div>
+                </section>
+
+                {/* Budget Calculator */}
+                <section className="py-24 px-4 md:px-8">
+                    <BudgetCalculator />
                 </section>
 
                 {/* CTA Section */}

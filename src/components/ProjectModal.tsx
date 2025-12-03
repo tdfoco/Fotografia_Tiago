@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { X, ChevronLeft, ChevronRight } from 'lucide-react';
-import { DesignProject } from '@/lib/supabase';
+import { DesignProject } from '@/hooks/usePocketBaseData';
 import ProtectedImage from './ProtectedImage';
 import InteractionBar from './InteractionBar';
 import CommentsSection from './CommentsSection';

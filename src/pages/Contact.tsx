@@ -7,7 +7,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { supabase } from "@/lib/supabase";
+import { pb } from "@/lib/pocketbase";
+import { getImageUrl } from "@/hooks/usePocketBaseData";
 import { SEO } from "@/components/SEO";
 
 const Contact = () => {
@@ -16,17 +17,16 @@ const Contact = () => {
 
     useEffect(() => {
         const fetchHeroImage = async () => {
-            const { data } = await supabase
-                .from('hero_images')
-                .select('url')
-                .eq('page', 'contact')
-                .eq('active', true)
-                .order('created_at', { ascending: false })
-                .limit(1)
-                .single();
+            try {
+                const record = await pb.collection('hero_images').getFirstListItem('page="contact" && active=true', {
+                    sort: '-created',
+                });
 
-            if (data) {
-                setHeroImage(data.url);
+                if (record) {
+                    setHeroImage(getImageUrl(record.collectionId, record.id, record.image));
+                }
+            } catch (error) {
+                console.error('Error fetching hero image:', error);
             }
         };
 

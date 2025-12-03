@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
-import { uploadImage, PHOTOGRAPHY_BUCKET, DESIGN_BUCKET, HERO_BUCKET, supabase } from '@/lib/supabase';
+import { pb } from '@/lib/pocketbase';
 import { Loader2, Upload, X, Calendar, Tag } from 'lucide-react';
 import TagInput from '@/components/TagInput';
 
@@ -88,44 +88,37 @@ const BatchUpload = ({ type, onComplete, onCancel }: BatchUploadProps) => {
 
         for (let i = 0; i < files.length; i++) {
             const file = files[i];
-            const url = await uploadImage(PHOTOGRAPHY_BUCKET, file);
+            const data = new FormData();
+            data.append('image', file);
+            data.append('title', file.name.replace(/\.[^/.]+$/, ''));
+            data.append('category', category);
+            data.append('description', `Evento: ${eventName || 'N/A'}`);
+            if (eventName) data.append('event_name', eventName);
+            if (eventDate) data.append('event_date', eventDate);
+            if (tags.length > 0) data.append('tags', JSON.stringify(tags));
+            data.append('year', eventDate ? new Date(eventDate).getFullYear().toString() : new Date().getFullYear().toString());
 
-            await supabase.from('photography').insert({
-                url,
-                title: file.name.replace(/\.[^/.]+$/, ''), // Remove extension
-                category,
-                description: `Evento: ${eventName || 'N/A'}`,
-                event_name: eventName || null,
-                event_date: eventDate || null,
-                tags: tags.length > 0 ? tags : null,
-                year: eventDate ? new Date(eventDate).getFullYear() : new Date().getFullYear(),
-            });
-
+            await pb.collection('photography').create(data);
             setUploadProgress(((i + 1) / total) * 100);
         }
     };
 
     const uploadDesignBatch = async () => {
         // For design, upload all files as a single project
-        const imageUrls = [];
-        const total = files.length;
-
-        for (let i = 0; i < files.length; i++) {
-            const url = await uploadImage(DESIGN_BUCKET, files[i]);
-            imageUrls.push(url);
-            setUploadProgress(((i + 1) / total) * 100);
-        }
-
-        await supabase.from('design_projects').insert({
-            images: imageUrls,
-            category: designCategory,
-            title: projectTitle,
-            description: projectDescription + (eventName ? `\nEvento: ${eventName}` : ''),
-            year: projectYear,
-            client: client || null,
-            event_name: eventName || null,
-            event_date: eventDate || null,
+        const data = new FormData();
+        files.forEach((file) => {
+            data.append('images', file);
         });
+        data.append('category', designCategory);
+        data.append('title', projectTitle);
+        data.append('description', projectDescription + (eventName ? `\nEvento: ${eventName}` : ''));
+        data.append('year', projectYear.toString());
+        if (client) data.append('client', client);
+        if (eventName) data.append('event_name', eventName);
+        if (eventDate) data.append('event_date', eventDate);
+
+        await pb.collection('design_projects').create(data);
+        setUploadProgress(100);
     };
 
     const uploadHeroBatch = async () => {
@@ -133,16 +126,14 @@ const BatchUpload = ({ type, onComplete, onCancel }: BatchUploadProps) => {
 
         for (let i = 0; i < files.length; i++) {
             const file = files[i];
-            const url = await uploadImage(HERO_BUCKET, file);
+            const data = new FormData();
+            data.append('image', file);
+            data.append('page', heroPage);
+            data.append('active', heroActive.toString());
+            if (eventName) data.append('event_name', eventName);
+            if (eventDate) data.append('event_date', eventDate);
 
-            await supabase.from('hero_images').insert({
-                url,
-                page: heroPage,
-                active: heroActive,
-                event_name: eventName || null,
-                event_date: eventDate || null,
-            });
-
+            await pb.collection('hero_images').create(data);
             setUploadProgress(((i + 1) / total) * 100);
         }
     };

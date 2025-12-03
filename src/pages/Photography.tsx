@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
 import Navigation from "@/components/Navigation";
-import PhotoGrid from "@/components/PhotoGrid";
+import PhotoGridModern from "@/components/PhotoGridModern";
 import RankingSection from "@/components/RankingSection";
 import Footer from "@/components/Footer";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { supabase } from "@/lib/supabase";
+import { pb } from "@/lib/pocketbase";
+import { getImageUrl } from "@/hooks/usePocketBaseData";
 import { SEO } from "@/components/SEO";
 
 const Photography = () => {
@@ -13,17 +14,16 @@ const Photography = () => {
 
     useEffect(() => {
         const fetchHeroImage = async () => {
-            const { data } = await supabase
-                .from('hero_images')
-                .select('url')
-                .eq('page', 'photography')
-                .eq('active', true)
-                .order('created_at', { ascending: false })
-                .limit(1)
-                .single();
+            try {
+                const record = await pb.collection('hero_images').getFirstListItem('page="photography" && active=true', {
+                    sort: '-created',
+                });
 
-            if (data) {
-                setHeroImage(data.url);
+                if (record) {
+                    setHeroImage(getImageUrl(record.collectionId, record.id, record.image));
+                }
+            } catch (error) {
+                console.error('Error fetching hero image:', error);
             }
         };
 
@@ -52,15 +52,15 @@ const Photography = () => {
                         <h1 className="text-5xl md:text-7xl font-display font-bold tracking-tight mb-8 animate-fade-in bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/70">
                             {t('portfolio.title')}
                         </h1>
-                        <div className="w-32 h-1.5 bg-gradient-to-r from-accent to-purple-500 mx-auto mb-10 rounded-full shadow-[0_0_20px_rgba(0,163,255,0.5)]" />
+                        <div className="w-32 h-1.5 bg-gradient-to-r from-accent to-purple-500 mx-auto mb-10 rounded-full shadow-[0_0_20px_rgba(58,139,253,0.5)]" />
                         <p className="text-xl md:text-2xl text-muted-foreground font-light leading-relaxed max-w-2xl mx-auto">
                             {t('portfolio.description')}
                         </p>
                     </div>
                 </section>
 
-                {/* Photo Grid */}
-                <PhotoGrid showHeader={false} />
+                {/* Modern Photo Grid with Masonry */}
+                <PhotoGridModern showHeader={false} />
                 <RankingSection />
             </main>
             <Footer />

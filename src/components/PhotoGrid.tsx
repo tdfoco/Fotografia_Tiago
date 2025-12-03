@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { usePhotography } from "@/hooks/useSupabaseData";
+import { usePhotography, getImageUrl } from "@/hooks/usePocketBaseData";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useImageProtection } from "@/hooks/useImageProtection";
 import ProtectedImage from "./ProtectedImage";
@@ -21,7 +21,7 @@ const PhotoGrid = ({ showHeader = true, showFilters = true, limit }: PhotoGridPr
   // Enable image protection
   useImageProtection();
 
-  const { photos: supabasePhotos, loading } = usePhotography(filter === "all" ? undefined : filter);
+  const { photos: pbPhotos, loading } = usePhotography(filter === "all" ? undefined : filter);
 
   const categories = [
     { key: "all", label: t('portfolio.categories.all') },
@@ -32,13 +32,13 @@ const PhotoGrid = ({ showHeader = true, showFilters = true, limit }: PhotoGridPr
     { key: "events", label: t('portfolio.categories.events') }
   ];
 
-  // Transform Supabase photos to Photo format
-  const photos: Photo[] = supabasePhotos.map(photo => ({
+  // Transform PocketBase photos to Photo format
+  const photos: Photo[] = pbPhotos.map(photo => ({
     id: photo.id,
-    src: photo.url,
+    src: getImageUrl(photo.collectionId, photo.id, photo.image),
     alt: photo.title,
     category: photo.category.charAt(0).toUpperCase() + photo.category.slice(1),
-    description: photo.description,
+    description: photo.description || '',
     camera_model: photo.camera_model,
     lens_model: photo.lens_model,
     iso: photo.iso,

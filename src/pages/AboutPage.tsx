@@ -3,30 +3,36 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Camera, Palette, Heart, Award, Users, Lightbulb } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { supabase } from "@/lib/supabase";
+import { pb } from "@/lib/pocketbase";
+import { getImageUrl } from "@/hooks/usePocketBaseData";
 import { SEO } from "@/components/SEO";
 
 const AboutPage = () => {
     const { t } = useLanguage();
     const [heroImage, setHeroImage] = useState<string | null>(null);
+    const [profilePhoto, setProfilePhoto] = useState<string | null>(null);
+    const [videoUrl, setVideoUrl] = useState<string>("");
 
     useEffect(() => {
         const fetchHeroImage = async () => {
-            const { data } = await supabase
-                .from('hero_images')
-                .select('url')
-                .eq('page', 'about')
-                .eq('active', true)
-                .order('created_at', { ascending: false })
-                .limit(1)
-                .single();
+            try {
+                const record = await pb.collection('hero_images').getFirstListItem('page="about" && active=true', {
+                    sort: '-created',
+                });
 
-            if (data) {
-                setHeroImage(data.url);
+                if (record) {
+                    setHeroImage(getImageUrl(record.collectionId, record.id, record.image));
+                }
+            } catch (error) {
+                console.error('Error fetching hero image:', error);
             }
         };
 
         fetchHeroImage();
+
+        // For now, using placeholder. Admin can later upload via a 'about' collection
+        setProfilePhoto('/placeholder-profile.jpg');
+        setVideoUrl('https://www.youtube.com/embed/dQw4w9WgXcQ'); // Admin should update this
     }, []);
 
     return (
@@ -52,6 +58,49 @@ const AboutPage = () => {
                             {t('about.title')}
                         </h1>
                         <div className="w-32 h-1.5 bg-gradient-to-r from-accent to-purple-500 mx-auto mb-10 rounded-full shadow-[0_0_20px_rgba(0,163,255,0.5)]" />
+                    </div>
+                </section>
+
+                {/* Profile Section */}
+                <section className="py-20 px-4 md:px-8 bg-secondary/20">
+                    <div className="max-w-5xl mx-auto">
+                        <div className="grid md:grid-cols-2 gap-12 items-center">
+                            <div className="space-y-6">
+                                <h2 className="text-3xl md:text-4xl font-display font-bold">Conheça o Fotógrafo</h2>
+                                <p className="text-muted-foreground leading-relaxed">
+                                    Olá! Sou Tiago Damasceno, fotógrafo e designer apaixonado por capturar momentos únicos e criar identidades visuais marcantes.
+                                </p>
+                                <p className="text-muted-foreground leading-relaxed">
+                                    Com anos de experiência, meu objetivo é transformar suas histórias em arte visual que emociona e conecta.
+                                </p>
+                            </div>
+                            <div className="space-y-4">
+                                {profilePhoto && (
+                                    <div className="relative aspect-square rounded-2xl overflow-hidden shadow-2xl border border-primary/20">
+                                        <img
+                                            src={profilePhoto}
+                                            alt="Tiago Damasceno"
+                                            className="w-full h-full object-cover"
+                                            onError={(e) => {
+                                                (e.target as HTMLImageElement).src = 'https://ui-avatars.com/api/?name=Tiago+Damasceno&size=500&background=00a3ff&color=fff';
+                                            }}
+                                        />
+                                    </div>
+                                )}
+                                {videoUrl && (
+                                    <div className="text-center">
+                                        <a
+                                            href={videoUrl.replace('/embed/', '/watch?v=')}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="text-sm text-primary hover:underline"
+                                        >
+                                            Assista meu vídeo de apresentação →
+                                        </a>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
                     </div>
                 </section>
 

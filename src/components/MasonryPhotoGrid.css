@@ -1,0 +1,63 @@
+/**
+ * Estilos CSS para Masonry Grid
+ */
+
+.masonry-grid {
+    display: flex;
+    margin-left: -24px;
+    width: auto;
+}
+
+.masonry-grid_column {
+    padding-left: 24px;
+    background-clip: padding-box;
+}
+
+.masonry-grid_column>div {
+    margin-bottom: 24px;
+}
+
+/* Photo Card com Glassmorphism */
+.photo-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.photo-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow:
+        0 20px 60px rgba(58, 139, 253, 0.3),
+        0 0 0 1px rgba(58, 139, 253, 0.5);
+    border-color: rgba(58, 139, 253, 0.5);
+}
+
+.dark .photo-card {
+    background: rgba(255, 255, 255, 0.03);
+    border-color: rgba(255, 255, 255, 0.05);
+}
+
+.dark .photo-card:hover {
+    box-shadow:
+        0 20px 60px rgba(58, 139, 253, 0.4),
+        0 0 0 1px rgba(58, 139, 253, 0.6);
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+    .masonry-grid {
+        margin-left: -16px;
+    }
+
+    .masonry-grid_column {
+        padding-left: 16px;
+    }
+
+    .masonry-grid_column>div {
+        margin-bottom: 16px;
+    }
+}

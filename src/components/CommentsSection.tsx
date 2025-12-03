@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useComments, useAuth } from '@/hooks/useSupabaseData';
+import { useComments, useAuth } from '@/hooks/usePocketBaseData';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Loader2, Send, User, Reply, BadgeCheck } from 'lucide-react';
@@ -138,7 +138,7 @@ const CommentsSection = ({ itemId, type, className }: CommentsSectionProps) => {
                                             )}
                                         </div>
                                         <span className="text-xs text-muted-foreground">
-                                            {formatDistanceToNow(new Date(comment.created_at), {
+                                            {formatDistanceToNow(new Date(comment.created), {
                                                 addSuffix: true,
                                                 locale: ptBR
                                             })}
@@ -212,7 +212,7 @@ const CommentsSection = ({ itemId, type, className }: CommentsSectionProps) => {
                                                         </span>
                                                     </div>
                                                     <span className="text-xs text-muted-foreground">
-                                                        {formatDistanceToNow(new Date(reply.created_at), {
+                                                        {formatDistanceToNow(new Date(reply.created), {
                                                             addSuffix: true,
                                                             locale: ptBR
                                                         })}

@@ -2,16 +2,19 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Masonry Grid Styles */
+@import './components/MasonryPhotoGrid.css';
+
 /* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
 All colors MUST be HSL.
 */
 
 @layer base {
   :root {
-    --background: 0 0% 95%;
-    /* Ice White #F2F2F2 */
-    --foreground: 0 0% 0%;
-    /* Deep Black #000000 */
+    --background: 0 0% 98%;
+    /* Ice White - mais claro */
+    --foreground: 0 0% 2%;
+    /* Deep Black - mais profundo */
 
     --card: 0 0% 98%;
     --card-foreground: 0 0% 5%;
@@ -19,45 +22,55 @@ All colors MUST be HSL.
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 0%;
 
-    --primary: 0 0% 0%;
+    --primary: 0 0% 2%;
     /* Deep Black */
-    --primary-foreground: 0 0% 95%;
+    --primary-foreground: 0 0% 98%;
     /* Ice White */
 
-    --secondary: 0 0% 90%;
+    --secondary: 0 0% 92%;
     --secondary-foreground: 0 0% 0%;
 
-    --muted: 0 0% 88%;
+    --muted: 0 0% 92%;
     --muted-foreground: 0 0% 40%;
 
-    --accent: 199 100% 50%;
-    /* Electric Blue #00A3FF */
+    --accent: 210 100% 56%;
+    /* Electric Blue - tom mais suave #3A8BFD */
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 0 0% 85%;
-    --input: 0 0% 85%;
-    --ring: 199 100% 50%;
+    --border: 0 0% 88%;
+    --input: 0 0% 92%;
+    --ring: 210 100% 56%;
     /* Electric Blue */
 
-    --radius: 0.5rem;
+    --radius: 0.75rem;
 
-    /* Custom hybrid portfolio tokens */
-    --electric-blue: 199 100% 50%;
-    /* #00A3FF */
-    --vibrant-purple: 260 100% 62%;
-    /* #7A3FFF */
-    --deep-black: 0 0% 0%;
-    /* #000000 */
-    --ice-white: 0 0% 95%;
-    /* #F2F2F2 */
+    /* Custom modern portfolio tokens */
+    --electric-blue: 210 100% 56%;
+    /* #3A8BFD - mais suave */
+    --vibrant-purple: 260 80% 60%;
+    /* #8A4AF3 - menos saturado */
+    --neon-cyan: 180 100% 50%;
+    /* #00FFFF - destaques */
+    --deep-black: 0 0% 2%;
+    /* #050505 */
+    --ice-white: 0 0% 98%;
+    /* #FAFAFA */
+
+    /* Neutral Grays */
+    --gray-50: 0 0% 96%;
+    --gray-100: 0 0% 92%;
+    --gray-200: 0 0% 84%;
+    --gray-700: 0 0% 30%;
+    --gray-800: 0 0% 15%;
+    --gray-900: 0 0% 8%;
 
     --photo-overlay: 0 0% 0%;
-    --photo-glow: 199 100% 50%;
+    --photo-glow: 210 100% 56%;
     --hero-gradient-start: 0 0% 5%;
-    --hero-gradient-end: 260 100% 62%;
+    --hero-gradient-end: 260 80% 60%;
 
     /* Transitions */
     --transition-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -65,38 +78,38 @@ All colors MUST be HSL.
   }
 
   .dark {
-    --background: 0 0% 0%;
-    /* Deep Black #000000 */
-    --foreground: 0 0% 95%;
-    /* Ice White #F2F2F2 */
+    --background: 0 0% 2%;
+    /* Deep Black #050505 */
+    --foreground: 0 0% 98%;
+    /* Ice White #FAFAFA */
 
     --card: 0 0% 5%;
-    --card-foreground: 0 0% 95%;
+    --card-foreground: 0 0% 98%;
 
     --popover: 0 0% 5%;
-    --popover-foreground: 0 0% 95%;
+    --popover-foreground: 0 0% 98%;
 
-    --primary: 0 0% 95%;
+    --primary: 0 0% 98%;
     /* Ice White */
-    --primary-foreground: 0 0% 0%;
+    --primary-foreground: 0 0% 2%;
     /* Deep Black */
 
     --secondary: 0 0% 10%;
-    --secondary-foreground: 0 0% 95%;
+    --secondary-foreground: 0 0% 98%;
 
     --muted: 0 0% 12%;
     --muted-foreground: 0 0% 65%;
 
-    --accent: 199 100% 50%;
-    /* Electric Blue */
-    --accent-foreground: 0 0% 0%;
+    --accent: 210 100% 56%;
+    /* Electric Blue - tom mais suave */
+    --accent-foreground: 0 0% 100%;
 
     --destructive: 0 62.8% 50%;
-    --destructive-foreground: 0 0% 95%;
+    --destructive-foreground: 0 0% 98%;
 
     --border: 0 0% 15%;
     --input: 0 0% 15%;
-    --ring: 199 100% 50%;
+    --ring: 210 100% 56%;
   }
 }
 

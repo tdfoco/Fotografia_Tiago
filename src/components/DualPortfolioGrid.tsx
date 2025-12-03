@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { usePhotography, useDesignProjects } from "@/hooks/useSupabaseData";
+import { usePhotography, useDesignProjects, getImageUrl } from "@/hooks/usePocketBaseData";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useImageProtection } from "@/hooks/useImageProtection";
 import ProtectedImage from "./ProtectedImage";
-import type { PhotographyItem, DesignProject } from "@/lib/supabase";
+import type { PhotographyItem, DesignProject } from "@/hooks/usePocketBaseData";
 
 const DualPortfolioGrid = () => {
     const { t } = useLanguage();
@@ -61,8 +61,8 @@ const DualPortfolioGrid = () => {
                                         key={category.key}
                                         onClick={() => setPhotoFilter(category.key)}
                                         className={`px-4 py-2 rounded-full text-xs md:text-sm font-medium tracking-wide transition-all duration-300 ${photoFilter === category.key
-                                                ? "bg-accent text-accent-foreground shadow-lg shadow-accent/30"
-                                                : "bg-secondary text-secondary-foreground hover:bg-accent/20"
+                                            ? "bg-accent text-accent-foreground shadow-lg shadow-accent/30"
+                                            : "bg-secondary text-secondary-foreground hover:bg-accent/20"
                                             }`}
                                     >
                                         {category.label}
@@ -85,7 +85,7 @@ const DualPortfolioGrid = () => {
                                         style={{ animationDelay: `${index * 50}ms` }}
                                     >
                                         <ProtectedImage
-                                            src={photo.url}
+                                            src={getImageUrl(photo.collectionId, photo.id, photo.image)}
                                             alt={photo.title}
                                             loading="lazy"
                                             className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
@@ -130,8 +130,8 @@ const DualPortfolioGrid = () => {
                                         key={category.key}
                                         onClick={() => setDesignFilter(category.key)}
                                         className={`px-4 py-2 rounded-full text-xs md:text-sm font-medium tracking-wide transition-all duration-300 ${designFilter === category.key
-                                                ? "bg-accent text-accent-foreground shadow-lg shadow-accent/30"
-                                                : "bg-secondary text-secondary-foreground hover:bg-accent/20"
+                                            ? "bg-accent text-accent-foreground shadow-lg shadow-accent/30"
+                                            : "bg-secondary text-secondary-foreground hover:bg-accent/20"
                                             }`}
                                     >
                                         {category.label}
@@ -154,7 +154,7 @@ const DualPortfolioGrid = () => {
                                         style={{ animationDelay: `${index * 50}ms` }}
                                     >
                                         <ProtectedImage
-                                            src={project.images[0]}
+                                            src={project.images && project.images.length > 0 ? getImageUrl(project.collectionId, project.id, project.images[0]) : ''}
                                             alt={project.title}
                                             loading="lazy"
                                             className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"

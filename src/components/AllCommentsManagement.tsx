@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth, useAdminComments, useAllComments, deleteComment as deleteCommentFn, addReply } from '@/hooks/useSupabaseData';
-import type { Comment } from '@/hooks/useSupabaseData';
-import { supabase, uploadImage, deleteImage, PHOTOGRAPHY_BUCKET, DESIGN_BUCKET, HERO_BUCKET } from '@/lib/supabase';
-import type { PhotographyItem, DesignProject, HeroImage } from '@/lib/supabase';
+import { useAuth, useAdminComments, useAllComments, deleteComment as deleteCommentFn, addReply } from '@/hooks/usePocketBaseData';
+import type { Comment } from '@/hooks/usePocketBaseData';
+import { pb } from '@/lib/pocketbase';
+import type { PhotographyItem, DesignProject, HeroImage } from '@/hooks/usePocketBaseData';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -41,7 +41,7 @@ const AllCommentsManagement = () => {
             console.error('Delete error:', error);
             toast({
                 title: 'Erro ao Deletar',
-                description: error.message || 'Falha ao deletar comentário. Verifique as permissões no Supabase.',
+                description: error.message || 'Falha ao deletar comentário. Verifique as permissões.',
                 variant: 'destructive'
             });
         }
@@ -152,7 +152,7 @@ const AllCommentsManagement = () => {
                                                     )}
                                                 </div>
                                                 <p className="text-sm text-muted-foreground">
-                                                    {new Date(comment.created_at).toLocaleString('pt-BR')}
+                                                    {new Date(comment.created).toLocaleString('pt-BR')}
                                                 </p>
                                             </div>
                                         </div>

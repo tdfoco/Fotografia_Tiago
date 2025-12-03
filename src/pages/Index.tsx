@@ -4,6 +4,7 @@ import UnifiedPortfolioGrid from "@/components/UnifiedPortfolioGrid";
 import RankingSection from "@/components/RankingSection";
 import About from "@/components/About";
 import Footer from "@/components/Footer";
+import Testimonials from "@/components/Testimonials";
 
 import { SEO } from "@/components/SEO";
 
@@ -16,6 +17,7 @@ const Index = () => {
         <Hero page="home" />
         <UnifiedPortfolioGrid />
         <RankingSection />
+        <Testimonials />
         <About />
         <Footer />
       </main>

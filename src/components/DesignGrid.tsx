@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { useDesignProjects } from "@/hooks/useSupabaseData";
-import type { DesignProject } from "@/lib/supabase";
+import { useDesignProjects, getImageUrl } from "@/hooks/usePocketBaseData";
+import type { DesignProject } from "@/hooks/usePocketBaseData";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useImageProtection } from "@/hooks/useImageProtection";
 import ProtectedImage from "./ProtectedImage";
@@ -22,7 +22,7 @@ const DesignGrid = ({ showHeader = true, showFilters = true, limit }: DesignGrid
     const [selectedProject, setSelectedProject] = useState<DesignProject | null>(null);
     const [filter, setFilter] = useState("Todos");
 
-    // Fetch projects using Supabase hook
+    // Fetch projects using PocketBase hook
     const { projects, loading } = useDesignProjects(
         filter === "Todos" ? undefined : filter
     );
@@ -109,7 +109,7 @@ const DesignGrid = ({ showHeader = true, showFilters = true, limit }: DesignGrid
                             >
                                 <div className="relative aspect-[4/3] overflow-hidden rounded-lg bg-secondary">
                                     <ProtectedImage
-                                        src={project.images[0]}
+                                        src={project.images && project.images.length > 0 ? getImageUrl(project.collectionId, project.id, project.images[0]) : ''}
                                         alt={project.title}
                                         loading="lazy"
                                         className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"

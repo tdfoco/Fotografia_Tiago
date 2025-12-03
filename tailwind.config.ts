@@ -59,9 +59,14 @@ export default {
         },
       },
       fontFamily: {
-        sans: ["Lato", "system-ui", "sans-serif"],
-        heading: ["Lato", "system-ui", "sans-serif"],
-        display: ["Lato", "system-ui", "sans-serif"],
+        sans: ['Inter', 'system-ui', 'sans-serif'],
+        heading: ['DM Sans', 'Inter', 'sans-serif'],
+        display: ['DM Sans', 'sans-serif'],
+      },
+      spacing: {
+        '18': '4.5rem',   // 72px
+        '88': '22rem',    // 352px
+        '128': '32rem',   // 512px
       },
       borderRadius: {
         lg: "var(--radius)",

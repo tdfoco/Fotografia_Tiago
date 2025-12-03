@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { ArrowDown } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { supabase } from "@/lib/supabase";
-import type { HeroImage } from "@/lib/supabase";
+import { pb } from "@/lib/pocketbase";
+import { HeroImage, getImageUrl } from "@/hooks/usePocketBaseData";
 
 // Fisher-Yates shuffle algorithm for randomizing arrays
 function shuffleArray<T>(array: T[]): T[] {
@@ -25,30 +25,28 @@ const Hero = ({ page = 'home' }: HeroProps) => {
 
   useEffect(() => {
     const fetchHeroImages = async () => {
-      // Fetch all active hero images
-      const { data, error } = await supabase
-        .from('hero_images')
-        .select('*')
-        .eq('active', true);
+      try {
+        // Fetch all active hero images
+        const records = await pb.collection('hero_images').getFullList<HeroImage>({
+          filter: 'active = true',
+        });
 
-      if (error) {
-        console.error('Error fetching hero images:', error);
-        return;
-      }
+        if (records && records.length > 0) {
+          // Filter on the client side to handle null values properly
+          let filtered;
+          if (page === 'home') {
+            // For home page, include images with page='home' OR page=null/empty
+            filtered = records.filter(img => !img.page || img.page === 'home');
+          } else {
+            // For other pages, only include exact matches
+            filtered = records.filter(img => img.page === page);
+          }
 
-      if (data && data.length > 0) {
-        // Filter on the client side to handle null values properly
-        let filtered;
-        if (page === 'home') {
-          // For home page, include images with page='home' OR page=null
-          filtered = data.filter(img => !img.page || img.page === 'home');
-        } else {
-          // For other pages, only include exact matches
-          filtered = data.filter(img => img.page === page);
+          // Randomize the filtered images
+          setHeroImages(shuffleArray(filtered));
         }
-
-        // Randomize the filtered images
-        setHeroImages(shuffleArray(filtered));
+      } catch (error) {
+        console.error('Error fetching hero images:', error);
       }
     };
 
@@ -78,7 +76,7 @@ const Hero = ({ page = 'home' }: HeroProps) => {
           key={image.id}
           className={`absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat transition-opacity duration-1000 ${index === currentImageIndex ? 'opacity-100' : 'opacity-0'
             }`}
-          style={{ backgroundImage: `url(${image.url})` }}
+          style={{ backgroundImage: `url(${getImageUrl(image.collectionId, image.id, image.image)})` }}
         />
       ))}
 

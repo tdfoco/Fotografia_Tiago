@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { usePhotography, useDesignProjects } from "@/hooks/useSupabaseData";
+import { usePhotography, useDesignProjects, getImageUrl } from "@/hooks/usePocketBaseData";
 import { useImageProtection } from "@/hooks/useImageProtection";
 import ProtectedImage from "./ProtectedImage";
 import InteractionBar from "./InteractionBar";
 import Lightbox, { Photo } from "./Lightbox";
 import ProjectModal from "./ProjectModal";
-import type { DesignProject } from "@/lib/supabase";
+import type { DesignProject } from "@/hooks/usePocketBaseData";
 
 type UnifiedItem = {
     id: string;
@@ -54,7 +54,7 @@ const UnifiedPortfolioGrid = () => {
     const unifiedItems: UnifiedItem[] = [
         ...photos.map(photo => ({
             id: `photo-${photo.id}`,
-            src: photo.url,
+            src: getImageUrl(photo.collectionId, photo.id, photo.image),
             alt: photo.title,
             type: 'photography' as const,
             category: photo.category,
@@ -65,7 +65,7 @@ const UnifiedPortfolioGrid = () => {
         })),
         ...projects.map(project => ({
             id: `design-${project.id}`,
-            src: project.images[0],
+            src: project.images && project.images.length > 0 ? getImageUrl(project.collectionId, project.id, project.images[0]) : '',
             alt: project.title,
             type: 'design' as const,
             category: project.category,
@@ -171,7 +171,7 @@ const UnifiedPortfolioGrid = () => {
                                                 if (photo) {
                                                     setSelectedPhoto({
                                                         id: photo.id,
-                                                        src: photo.url,
+                                                        src: getImageUrl(photo.collectionId, photo.id, photo.image),
                                                         alt: photo.title,
                                                         category: photo.category,
                                                         description: photo.description,
@@ -215,7 +215,7 @@ const UnifiedPortfolioGrid = () => {
                     photo={selectedPhoto}
                     photos={photos.map(p => ({
                         id: p.id,
-                        src: p.url,
+                        src: getImageUrl(p.collectionId, p.id, p.image),
                         alt: p.title,
                         category: p.category,
                         description: p.description,
@@ -232,7 +232,6 @@ const UnifiedPortfolioGrid = () => {
             {selectedProject && (
                 <ProjectModal
                     project={selectedProject}
-                    isOpen={!!selectedProject}
                     onClose={() => setSelectedProject(null)}
                 />
             )}

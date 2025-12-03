@@ -3,7 +3,8 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import DesignGrid from "@/components/DesignGrid";
 import RankingSection from "@/components/RankingSection";
-import { supabase } from "@/lib/supabase";
+import { pb } from "@/lib/pocketbase";
+import { getImageUrl } from "@/hooks/usePocketBaseData";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { SEO } from "@/components/SEO";
 
@@ -13,17 +14,16 @@ const GraphicDesign = () => {
 
     useEffect(() => {
         const fetchHeroImage = async () => {
-            const { data } = await supabase
-                .from('hero_images')
-                .select('url')
-                .eq('page', 'design')
-                .eq('active', true)
-                .order('created_at', { ascending: false })
-                .limit(1)
-                .single();
+            try {
+                const record = await pb.collection('hero_images').getFirstListItem('page="design" && active=true', {
+                    sort: '-created',
+                });
 
-            if (data) {
-                setHeroImage(data.url);
+                if (record) {
+                    setHeroImage(getImageUrl(record.collectionId, record.id, record.image));
+                }
+            } catch (error) {
+                console.error('Error fetching hero image:', error);
             }
         };
 
