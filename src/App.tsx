@@ -17,6 +17,12 @@ import Favorites from "./pages/Favorites";
 import NotFound from "./pages/NotFound";
 import ClientLogin from "./pages/ClientLogin";
 import ClientGallery from "./pages/ClientGallery";
+import AdminLayout from "./features/admin/layouts/AdminLayout";
+import DashboardPage from "./features/admin/pages/DashboardPage";
+import PhotosPage from "./features/admin/pages/PhotosPage";
+import DesignPage from "./features/admin/pages/DesignPage";
+import ClientsPage from "./features/admin/pages/ClientsPage";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 import Chatbot from "@/components/Chatbot";
 
@@ -44,6 +50,16 @@ const App = () => {
               <Route path="/ranking" element={<Ranking />} />
               <Route path="/favorites" element={<Favorites />} />
               <Route path="/admin" element={<Admin />} />
+
+              {/* New Modular Admin Panel */}
+              <Route path="/admin" element={<ProtectedRoute><AdminLayout /></ProtectedRoute>}>
+                <Route path="dashboard" element={<DashboardPage />} />
+                <Route path="photos" element={<PhotosPage />} />
+                <Route path="design" element={<DesignPage />} />
+                <Route path="clients" element={<ClientsPage />} />
+                <Route path="settings" element={<div>Settings (Coming Soon)</div>} />
+                <Route path="ai" element={<div>AI Assistant (Coming Soon)</div>} />
+              </Route>
               <Route path="/client" element={<ClientLogin />} />
               <Route path="/client/gallery" element={<ClientGallery />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
