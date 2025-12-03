@@ -1,24 +1,28 @@
 #!/bin/bash
-# Script para corrigir certificado SSL
-# Execute no VPS como root
+set -e
 
-echo "=== Parando Nginx ==="
+echo "🔧 Iniciando Correção Robusta do SSL..."
+
+# 1. Parar Nginx para liberar a porta 80
+echo "🛑 Parando Nginx..."
 systemctl stop nginx
 
-echo "=== Renovando Certificado SSL (Forçado) ==="
+# 2. Obter certificado no modo Standalone (sem depender do Nginx)
+echo "🔒 Gerando certificado (Modo Standalone)..."
 certbot certonly --standalone -d db.tdfoco.cloud --non-interactive --agree-tos --email td.foco@gmail.com --force-renewal
 
-echo "=== Atualizando Configuração Nginx ==="
-# Garantir que o caminho do certificado está correto
-cat > /etc/nginx/sites-available/pocketbase << 'EOF'
+# 3. Criar configuração do Nginx JÁ com SSL (para não depender do instalador)
+echo "📝 Escrevendo configuração final do Nginx..."
+cat > /etc/nginx/sites-available/pocketbase <<'EOF'
 server {
     listen 80;
     server_name db.tdfoco.cloud;
+    # Redirecionar tudo para HTTPS
     return 301 https://$host$request_uri;
 }
 
 server {
-    listen 443 ssl http2;
+    listen 443 ssl;
     server_name db.tdfoco.cloud;
 
     ssl_certificate /etc/letsencrypt/live/db.tdfoco.cloud/fullchain.pem;
@@ -33,18 +37,20 @@ server {
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
-        
         client_max_body_size 50M;
     }
 }
 EOF
 
-echo "=== Reiniciando Nginx ==="
+# 4. Garantir links e permissões
+rm -f /etc/nginx/sites-enabled/default
+ln -sf /etc/nginx/sites-available/pocketbase /etc/nginx/sites-enabled/
+
+# 5. Iniciar Nginx
+echo "🚀 Iniciando Nginx..."
 systemctl start nginx
-systemctl status nginx
 
-echo "=== Verificando Certificado ==="
-certbot certificates
-
-echo ""
-echo "✅ Correção SSL Concluída!"
+echo "---------------------------------------------------"
+echo "✅ CORREÇÃO CONCLUÍDA!"
+echo "Teste agora: https://db.tdfoco.cloud/_/"
+echo "---------------------------------------------------"
