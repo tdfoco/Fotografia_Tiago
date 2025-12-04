@@ -53,18 +53,18 @@ export function MasonryPhotoGrid({
                     key={photo.id}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.05, duration: 0.4 }}
-                    className="group relative cursor-pointer"
+                    transition={{ delay: index * 0.05, duration: 0.5, ease: "easeOut" }}
+                    className="group relative cursor-pointer mb-6"
                     onMouseEnter={() => setHoveredId(photo.id)}
                     onMouseLeave={() => setHoveredId(null)}
                 >
-                    <div className="photo-card relative overflow-hidden rounded-2xl">
+                    <div className="photo-card relative overflow-hidden rounded-xl transition-all duration-300 group-hover:shadow-[0_0_20px_rgba(58,139,253,0.5)] group-hover:ring-1 group-hover:ring-electric-blue/50">
                         {/* Image */}
                         <LazyPhoto
                             src={photo.url}
                             thumbnail={photo.thumbnail}
                             alt={photo.title}
-                            className="w-full h-auto transition-transform duration-700 group-hover:scale-110"
+                            className="w-full h-auto transition-transform duration-700 group-hover:scale-110 will-change-transform"
                             onClick={() => onPhotoClick(photo)}
                         />
 
@@ -76,15 +76,15 @@ export function MasonryPhotoGrid({
                                     animate={{ opacity: 1 }}
                                     exit={{ opacity: 0 }}
                                     transition={{ duration: 0.3 }}
-                                    className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent"
+                                    className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent backdrop-blur-[2px]"
                                 >
                                     {/* Conteúdo do overlay */}
-                                    <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
+                                    <div className="absolute bottom-0 left-0 right-0 p-5 text-white">
                                         <motion.h3
                                             initial={{ y: 20, opacity: 0 }}
                                             animate={{ y: 0, opacity: 1 }}
                                             transition={{ delay: 0.1 }}
-                                            className="text-xl font-heading font-semibold mb-2"
+                                            className="text-lg font-display font-bold mb-1 tracking-wide"
                                         >
                                             {photo.title}
                                         </motion.h3>
@@ -93,7 +93,7 @@ export function MasonryPhotoGrid({
                                             initial={{ y: 20, opacity: 0 }}
                                             animate={{ y: 0, opacity: 1 }}
                                             transition={{ delay: 0.15 }}
-                                            className="text-sm text-white/80 mb-3"
+                                            className="text-xs text-electric-blue font-medium uppercase tracking-wider mb-3"
                                         >
                                             {photo.category}
                                         </motion.p>
@@ -108,7 +108,7 @@ export function MasonryPhotoGrid({
                                             {photo.tags.slice(0, 3).map(tag => (
                                                 <span
                                                     key={tag}
-                                                    className="px-2 py-1 text-xs rounded-full bg-white/20 backdrop-blur-sm"
+                                                    className="px-2 py-0.5 text-[10px] rounded-full bg-white/10 border border-white/10 backdrop-blur-md text-gray-200"
                                                 >
                                                     {tag}
                                                 </span>
@@ -120,7 +120,7 @@ export function MasonryPhotoGrid({
                                             initial={{ y: 20, opacity: 0 }}
                                             animate={{ y: 0, opacity: 1 }}
                                             transition={{ delay: 0.25 }}
-                                            className="flex items-center gap-4"
+                                            className="flex items-center gap-4 pt-3 border-t border-white/10"
                                         >
                                             {onLike && (
                                                 <button
@@ -128,17 +128,17 @@ export function MasonryPhotoGrid({
                                                         e.stopPropagation();
                                                         onLike(photo.id);
                                                     }}
-                                                    className="flex items-center gap-1 hover:text-accent transition-colors"
+                                                    className="flex items-center gap-1.5 text-gray-300 hover:text-red-500 transition-colors group/btn"
                                                 >
-                                                    <Heart size={18} />
-                                                    {photo.likes && <span className="text-sm">{photo.likes}</span>}
+                                                    <Heart size={16} className="group-hover/btn:fill-current transition-all" />
+                                                    {photo.likes && <span className="text-xs font-medium">{photo.likes}</span>}
                                                 </button>
                                             )}
 
                                             {photo.views !== undefined && (
-                                                <div className="flex items-center gap-1">
-                                                    <Eye size={18} />
-                                                    <span className="text-sm">{photo.views}</span>
+                                                <div className="flex items-center gap-1.5 text-gray-300">
+                                                    <Eye size={16} />
+                                                    <span className="text-xs font-medium">{photo.views}</span>
                                                 </div>
                                             )}
 
@@ -148,9 +148,9 @@ export function MasonryPhotoGrid({
                                                         e.stopPropagation();
                                                         onShare(photo.id);
                                                     }}
-                                                    className="flex items-center gap-1 hover:text-accent transition-colors"
+                                                    className="flex items-center gap-1.5 text-gray-300 hover:text-electric-blue transition-colors ml-auto"
                                                 >
-                                                    <Share2 size={18} />
+                                                    <Share2 size={16} />
                                                 </button>
                                             )}
                                         </motion.div>

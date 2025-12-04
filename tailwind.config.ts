@@ -57,6 +57,11 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        "electric-blue": "hsl(var(--electric-blue))",
+        "vibrant-purple": "hsl(var(--vibrant-purple))",
+        "neon-cyan": "hsl(var(--neon-cyan))",
+        "deep-black": "hsl(var(--deep-black))",
+        "ice-white": "hsl(var(--ice-white))",
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],

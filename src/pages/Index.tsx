@@ -1,9 +1,7 @@
-import Navigation from "@/components/Navigation";
-import Hero from "@/components/Hero";
+import HeroModern from "@/components/HeroModern";
 import UnifiedPortfolioGrid from "@/components/UnifiedPortfolioGrid";
 import RankingSection from "@/components/RankingSection";
 import About from "@/components/About";
-import Footer from "@/components/Footer";
 import Testimonials from "@/components/Testimonials";
 
 import { SEO } from "@/components/SEO";
@@ -12,14 +10,12 @@ const Index = () => {
   return (
     <>
       <SEO />
-      <Navigation />
       <main className="min-h-screen">
-        <Hero page="home" />
+        <HeroModern page="home" />
         <UnifiedPortfolioGrid />
         <RankingSection />
         <Testimonials />
         <About />
-        <Footer />
       </main>
     </>
   );

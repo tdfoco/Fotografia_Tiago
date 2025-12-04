@@ -1,22 +1,20 @@
 import { Mail, Instagram, Camera } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { NewsletterSignup } from "./NewsletterSignup";
 
 const Footer = () => {
   const { t } = useLanguage();
 
   return (
-    <footer className="bg-primary text-primary-foreground py-16 px-4 md:px-8">
-      <div className="max-w-7xl mx-auto">
-        <div className="grid md:grid-cols-3 gap-12 mb-12">
-          {/* Brand */}
-          <div>
-            <div className="flex items-center gap-2 mb-4">
-              <Camera size={24} strokeWidth={1.5} />
-              <span className="text-xl font-light tracking-wide">{t('footer.brand')}</span>
-            </div>
-            <p className="text-primary-foreground/70 font-light leading-relaxed">
-              {t('footer.tagline')}
+    <footer className="bg-black border-t border-white/10 pt-16 pb-8">
+      <div className="container mx-auto px-4">
+        <div className="grid md:grid-cols-4 gap-12 mb-12">
+          <div className="col-span-1 md:col-span-2">
+            <h2 className="text-2xl font-display font-bold text-white mb-4">TD FOCO</h2>
+            <p className="text-gray-400 max-w-sm mb-6">
+              Transformando visões em realidade através da fotografia e design de alta performance.
             </p>
+            <NewsletterSignup />
           </div>
 
           {/* Contact */}

@@ -9,6 +9,7 @@ import { useImageProtection } from "@/hooks/useImageProtection";
 import { MasonryPhotoGrid } from "./MasonryPhotoGrid";
 import Lightbox, { Photo } from "./Lightbox";
 import { toast } from "sonner";
+import FilterBar from "./FilterBar";
 
 interface PhotoGridModernProps {
     showHeader?: boolean;
@@ -124,20 +125,12 @@ const PhotoGridModern = ({ showHeader = true, showFilters = true, limit }: Photo
 
                 {/* Category Filter */}
                 {showFilters && (
-                    <div className="flex flex-wrap justify-center gap-3 mb-16">
-                        {categories.map((category) => (
-                            <button
-                                key={category.key}
-                                onClick={() => setFilter(category.key)}
-                                className={`px-6 py-2.5 rounded-full text-sm font-medium tracking-wide transition-all duration-300 ${filter === category.key
-                                        ? "bg-accent text-accent-foreground shadow-lg shadow-accent/30 scale-105"
-                                        : "bg-secondary/50 text-secondary-foreground hover:bg-accent/20 hover:scale-105"
-                                    }`}
-                            >
-                                {category.label}
-                            </button>
-                        ))}
-                    </div>
+                    <FilterBar
+                        categories={categories}
+                        activeFilter={filter}
+                        onFilterChange={setFilter}
+                        className="mb-16"
+                    />
                 )}
 
                 {/* Photo Grid */}

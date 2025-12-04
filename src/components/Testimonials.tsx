@@ -73,75 +73,79 @@ const Testimonials = () => {
     const current = testimonials[currentIndex];
 
     return (
-        <section className="py-24 px-4 md:px-8 bg-secondary/20 relative overflow-hidden">
-            <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-[400px] h-[400px] bg-accent/5 blur-[100px] rounded-full pointer-events-none" />
+        <section className="py-24 px-4 md:px-8 bg-background relative overflow-hidden">
+            <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-[600px] h-[600px] bg-electric-blue/5 blur-[120px] rounded-full pointer-events-none" />
+            <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-vibrant-purple/5 blur-[120px] rounded-full pointer-events-none" />
 
-            <div className="max-w-4xl mx-auto relative z-10">
-                <div className="text-center mb-12">
-                    <h2 className="text-3xl md:text-5xl font-display font-bold mb-4">
+            <div className="max-w-5xl mx-auto relative z-10">
+                <div className="text-center mb-16">
+                    <h2 className="text-4xl md:text-6xl font-display font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/70">
                         O Que Dizem Nossos Clientes
                     </h2>
-                    <p className="text-muted-foreground">
-                        Orgulho em cada projeto entregue
+                    <div className="w-24 h-1 bg-gradient-to-r from-electric-blue to-vibrant-purple mx-auto mb-8 rounded-full shadow-[0_0_15px_rgba(58,139,253,0.5)]" />
+                    <p className="text-xl text-muted-foreground font-light max-w-2xl mx-auto">
+                        Orgulho em cada projeto entregue e em cada história contada
                     </p>
                 </div>
 
-                <Card className="relative border-primary/20">
-                    <div className="absolute -top-6 left-1/2 -translate-x-1/2 w-12 h-12 bg-primary rounded-full flex items-center justify-center">
-                        <Quote className="h-6 w-6 text-primary-foreground" />
-                    </div>
+                <div className="relative">
+                    <Card className="relative border-white/10 bg-secondary/30 backdrop-blur-md shadow-2xl overflow-visible mt-8">
+                        <div className="absolute -top-8 left-1/2 -translate-x-1/2 w-16 h-16 bg-gradient-to-br from-electric-blue to-vibrant-purple rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(58,139,253,0.4)]">
+                            <Quote className="h-8 w-8 text-white" />
+                        </div>
 
-                    <CardContent className="pt-12 pb-8 px-8 md:px-12">
-                        <div className="text-center space-y-6">
-                            {current.rating && (
-                                <div className="flex justify-center gap-1">
-                                    {[...Array(5)].map((_, i) => (
-                                        <Star
-                                            key={i}
-                                            className={`h-5 w-5 ${i < current.rating! ? 'fill-yellow-500 text-yellow-500' : 'text-muted'}`}
-                                        />
-                                    ))}
-                                </div>
-                            )}
-
-                            <blockquote className="text-lg md:text-xl text-foreground/90 leading-relaxed italic">
-                                "{current.content}"
-                            </blockquote>
-
-                            <div className="pt-4">
-                                <p className="font-semibold text-lg">{current.name}</p>
-                                {current.role && (
-                                    <p className="text-sm text-muted-foreground">{current.role}</p>
+                        <CardContent className="pt-16 pb-12 px-8 md:px-16">
+                            <div className="text-center space-y-8">
+                                {current.rating && (
+                                    <div className="flex justify-center gap-1.5">
+                                        {[...Array(5)].map((_, i) => (
+                                            <Star
+                                                key={i}
+                                                className={`h-6 w-6 ${i < current.rating! ? 'fill-yellow-500 text-yellow-500 drop-shadow-[0_0_8px_rgba(234,179,8,0.4)]' : 'text-muted/30'}`}
+                                            />
+                                        ))}
+                                    </div>
                                 )}
+
+                                <blockquote className="text-xl md:text-3xl text-foreground font-light leading-relaxed italic font-display">
+                                    "{current.content}"
+                                </blockquote>
+
+                                <div className="pt-6 border-t border-white/5">
+                                    <p className="font-bold text-xl text-electric-blue">{current.name}</p>
+                                    {current.role && (
+                                        <p className="text-base text-muted-foreground mt-1">{current.role}</p>
+                                    )}
+                                </div>
                             </div>
+                        </CardContent>
+                    </Card>
+
+                    {testimonials.length > 1 && (
+                        <div className="flex items-center justify-center gap-6 mt-12">
+                            <Button onClick={prev} variant="outline" size="icon" className="rounded-full w-12 h-12 border-white/10 hover:bg-electric-blue/10 hover:text-electric-blue hover:border-electric-blue/50 transition-all duration-300">
+                                <ChevronLeft className="h-5 w-5" />
+                            </Button>
+
+                            <div className="flex gap-3">
+                                {testimonials.map((_, index) => (
+                                    <button
+                                        key={index}
+                                        onClick={() => setCurrentIndex(index)}
+                                        className={`h-2 rounded-full transition-all duration-500 ${index === currentIndex
+                                            ? 'bg-electric-blue w-12 shadow-[0_0_10px_rgba(58,139,253,0.5)]'
+                                            : 'bg-white/20 w-2 hover:bg-white/40'
+                                            }`}
+                                    />
+                                ))}
+                            </div>
+
+                            <Button onClick={next} variant="outline" size="icon" className="rounded-full w-12 h-12 border-white/10 hover:bg-electric-blue/10 hover:text-electric-blue hover:border-electric-blue/50 transition-all duration-300">
+                                <ChevronRight className="h-5 w-5" />
+                            </Button>
                         </div>
-                    </CardContent>
-                </Card>
-
-                {testimonials.length > 1 && (
-                    <div className="flex items-center justify-center gap-4 mt-8">
-                        <Button onClick={prev} variant="outline" size="icon" className="rounded-full">
-                            <ChevronLeft className="h-4 w-4" />
-                        </Button>
-
-                        <div className="flex gap-2">
-                            {testimonials.map((_, index) => (
-                                <button
-                                    key={index}
-                                    onClick={() => setCurrentIndex(index)}
-                                    className={`w-2 h-2 rounded-full transition-all ${index === currentIndex
-                                            ? 'bg-primary w-8'
-                                            : 'bg-primary/30 hover:bg-primary/50'
-                                        }`}
-                                />
-                            ))}
-                        </div>
-
-                        <Button onClick={next} variant="outline" size="icon" className="rounded-full">
-                            <ChevronRight className="h-4 w-4" />
-                        </Button>
-                    </div>
-                )}
+                    )}
+                </div>
             </div>
         </section>
     );

@@ -1,6 +1,4 @@
 import { useState, useEffect } from "react";
-import Navigation from "@/components/Navigation";
-import Footer from "@/components/Footer";
 import { Camera, Palette, Users, Building, Sparkles, Package } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { pb } from "@/lib/pocketbase";
@@ -87,7 +85,6 @@ const Services = () => {
     return (
         <>
             <SEO title="Serviços" />
-            <Navigation />
             <main className="min-h-screen pt-20 bg-background">
                 {/* Hero Section */}
                 <section className="relative py-32 px-4 overflow-hidden">
@@ -245,7 +242,6 @@ const Services = () => {
                     </div>
                 </section>
             </main>
-            <Footer />
         </>
     );
 };

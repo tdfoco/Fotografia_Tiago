@@ -1,5 +1,3 @@
-import Navigation from "@/components/Navigation";
-import Footer from "@/components/Footer";
 import { useTopRated } from '@/hooks/usePocketBaseData';
 import { useLanguage } from '@/contexts/LanguageContext';
 import ProtectedImage from '@/components/ProtectedImage';
@@ -33,7 +31,6 @@ const Ranking = () => {
     return (
         <>
             <SEO title="Ranking" description="Os trabalhos mais populares do portfólio" />
-            <Navigation />
             <main className="min-h-screen pt-20 bg-background">
                 <section className="py-20 px-4 md:px-8">
                     <div className="max-w-7xl mx-auto">
@@ -186,7 +183,6 @@ const Ranking = () => {
                     </div>
                 </section>
             </main>
-            <Footer />
 
             {selectedPhoto && (
                 <Lightbox
@@ -197,12 +193,14 @@ const Ranking = () => {
                 />
             )}
 
-            {selectedProject && (
-                <ProjectModal
-                    project={selectedProject}
-                    onClose={() => setSelectedProject(null)}
-                />
-            )}
+            {
+                selectedProject && (
+                    <ProjectModal
+                        project={selectedProject}
+                        onClose={() => setSelectedProject(null)}
+                    />
+                )
+            }
         </>
     );
 };
