@@ -79,6 +79,9 @@ const App = () => {
                   <Route path="/blog/:slug" element={<BlogPost />} />
                 </Route>
 
+                {/* Admin Login (Public) */}
+                <Route path="/admin/login" element={<Admin />} />
+
                 {/* New Modular Admin Panel with Futuristic Layout */}
                 <Route path="/admin" element={<ProtectedRoute><AdminLayout /></ProtectedRoute>}>
                   <Route index element={<DashboardPage />} />
