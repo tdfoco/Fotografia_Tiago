@@ -9,7 +9,8 @@ import {
     Sparkles,
     Upload,
     CheckSquare,
-    Square
+    Square,
+    X
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -19,6 +20,20 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+} from '@/components/ui/dialog';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
 import { pb } from '@/lib/pocketbase';
@@ -36,6 +51,10 @@ const PhotosPage = () => {
     const [categoryFilter, setCategoryFilter] = useState<string>('all');
     const [selectedPhotos, setSelectedPhotos] = useState<string[]>([]);
     const [isAnalyzing, setIsAnalyzing] = useState(false);
+    const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
+    const [uploadFiles, setUploadFiles] = useState<File[]>([]);
+    const [uploadCategory, setUploadCategory] = useState('portraits');
+    const [uploading, setUploading] = useState(false);
     const { toast } = useToast();
 
     useEffect(() => {
@@ -95,6 +114,53 @@ const PhotosPage = () => {
         }
     };
 
+    const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files) {
+            setUploadFiles(Array.from(e.target.files));
+        }
+    };
+
+    const handleUpload = async () => {
+        if (uploadFiles.length === 0) {
+            toast({ title: "Erro", description: "Selecione pelo menos uma imagem", variant: "destructive" });
+            return;
+        }
+
+        setUploading(true);
+        let successCount = 0;
+
+        try {
+            for (const file of uploadFiles) {
+                const formData = new FormData();
+                formData.append('image', file);
+                formData.append('title', file.name.split('.')[0]);
+                formData.append('category', uploadCategory);
+                formData.append('description', `Uploaded via admin panel`);
+                formData.append('featured', 'false');
+
+                await pb.collection('photography').create(formData);
+                successCount++;
+            }
+
+            toast({
+                title: "Sucesso!",
+                description: `${successCount} foto(s) enviada(s) com sucesso!`
+            });
+
+            setUploadDialogOpen(false);
+            setUploadFiles([]);
+            loadPhotos();
+        } catch (error: any) {
+            toast({
+                title: "Erro",
+                description: `Falha no upload: ${error.message}`,
+                variant: "destructive"
+            });
+        } finally {
+            setUploading(false);
+        }
+    };
+
     const filteredPhotos = photos.filter(photo => {
         const matchesSearch = photo.title.toLowerCase().includes(search.toLowerCase()) ||
             photo.tags?.some(tag => tag.toLowerCase().includes(search.toLowerCase()));
@@ -125,12 +191,80 @@ const PhotosPage = () => {
                             {isAnalyzing ? 'Analisando...' : 'Auto-Tag IA'}
                         </Button>
                     )}
-                    <Button>
+                    <Button onClick={() => setUploadDialogOpen(true)}>
                         <Upload className="mr-2 h-4 w-4" />
                         Upload
                     </Button>
                 </div>
             </div>
+
+            {/* Upload Dialog */}
+            <Dialog open={uploadDialogOpen} onOpenChange={setUploadDialogOpen}>
+                <DialogContent className="sm:max-w-md">
+                    <DialogHeader>
+                        <DialogTitle>Upload Múltiplo de Fotos</DialogTitle>
+                        <DialogDescription>
+                            Selecione uma ou mais imagens para enviar
+                        </DialogDescription>
+                    </DialogHeader>
+                    <div className="space-y-4">
+                        <div>
+                            <label className="block text-sm font-medium mb-2">Categoria</label>
+                            <Select value={uploadCategory} onValueChange={setUploadCategory}>
+                                <SelectTrigger>
+                                    <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="portraits">Retratos</SelectItem>
+                                    <SelectItem value="urban">Urbano</SelectItem>
+                                    <SelectItem value="nature">Natureza</SelectItem>
+                                    <SelectItem value="events">Eventos</SelectItem>
+                                    <SelectItem value="art">Arte</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-medium mb-2">Imagens</label>
+                            <Input
+                                type="file"
+                                accept="image/*"
+                                multiple
+                                onChange={handleFileSelect}
+                                className="cursor-pointer"
+                            />
+                        </div>
+
+                        {uploadFiles.length > 0 && (
+                            <div className="text-sm text-muted-foreground">
+                                {uploadFiles.length} arquivo(s) selecionado(s)
+                                <ul className="mt-2 space-y-1 max-h-32 overflow-y-auto">
+                                    {uploadFiles.map((file, idx) => (
+                                        <li key={idx} className="flex items-center justify-between gap-2 p-1 bg-secondary rounded">
+                                            <span className="truncate flex-1">{file.name}</span>
+                                            <button
+                                                onClick={() => setUploadFiles(uploadFiles.filter((_, i) => i !== idx))}
+                                                className="text-destructive hover:bg-destructive/10 rounded p-1"
+                                            >
+                                                <X size={14} />
+                                            </button>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        )}
+
+                        <div className="flex gap-2 justify-end">
+                            <Button variant="outline" onClick={() => setUploadDialogOpen(false)} disabled={uploading}>
+                                Cancelar
+                            </Button>
+                            <Button onClick={handleUpload} disabled={uploading || uploadFiles.length === 0}>
+                                {uploading ? 'Enviando...' : 'Enviar Fotos'}
+                            </Button>
+                        </div>
+                    </div>
+                </DialogContent>
+            </Dialog>
 
             {/* Filters */}
             <div className="flex flex-col sm:flex-row gap-4 items-center bg-card p-4 rounded-lg border border-border/50">
