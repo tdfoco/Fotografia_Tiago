@@ -144,10 +144,40 @@ const DualPortfolioGrid = () => {
                                             : "bg-secondary text-secondary-foreground hover:bg-accent/20"
                                             }`}
                                     >
-                                    </div>
+                                        {category.label}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* Design Grid - Pinterest Style */}
+                        {projectsLoading ? (
+                            <div className="text-center py-12">
+                                <p className="text-muted-foreground text-sm">Carregando...</p>
+                            </div>
+                        ) : (
+                            <div className="columns-2 md:columns-3 lg:columns-4 gap-3 space-y-3">
+                                {shuffleArray(projects).slice(0, 24).map((project, index) => (
+                                    <div
+                                        key={project.id}
+                                        className="group relative overflow-hidden rounded-md break-inside-avoid animate-fade-in mb-3"
+                                        style={{ animationDelay: `${index * 30}ms` }}
+                                    >
+                                        <ProtectedImage
+                                            src={project.images && project.images.length > 0 ? getImageUrl(project.collectionId, project.id, project.images[0]) : ''}
+                                            alt={project.title}
+                                            loading="lazy"
+                                            className="w-full h-auto object-cover transition-transform duration-700 group-hover:scale-110"
+                                            onImageClick={() => { }}
+                                        />
+                                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-all duration-500 flex items-center justify-center pointer-events-none">
+                                            <span className="text-white opacity-0 group-hover:opacity-100 transition-opacity duration-500 text-sm tracking-wider font-light">
+                                                {project.category}
+                                            </span>
+                                        </div>
                                     </div>
                                 ))}
-                        </div>
+                            </div>
                         )}
 
                         {/* View More Button */}
