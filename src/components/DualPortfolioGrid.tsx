@@ -83,15 +83,15 @@ const DualPortfolioGrid = () => {
 
                         {/* Photography Grid */}
                         {photosLoading ? (
-                            <div className="text-center py-20">
-                                <p className="text-muted-foreground">Carregando...</p>
+                            <div className="text-center py-12">
+                                <p className="text-muted-foreground text-sm">Carregando...</p>
                             </div>
                         ) : (
-                            <div className="grid grid-cols-2 gap-4">
+                            <div className="grid grid-cols-2 gap-3">
                                 {shuffleArray(photos).slice(0, 8).map((photo, index) => (
                                     <div
                                         key={photo.id}
-                                        className="group relative aspect-square overflow-hidden rounded-lg animate-fade-in"
+                                        className="group relative aspect-square overflow-hidden rounded-md animate-fade-in"
                                         style={{ animationDelay: `${index * 50}ms` }}
                                     >
                                         <ProtectedImage
@@ -152,15 +152,15 @@ const DualPortfolioGrid = () => {
 
                         {/* Design Grid */}
                         {projectsLoading ? (
-                            <div className="text-center py-20">
-                                <p className="text-muted-foreground">Carregando...</p>
+                            <div className="text-center py-12">
+                                <p className="text-muted-foreground text-sm">Carregando...</p>
                             </div>
                         ) : (
-                            <div className="grid grid-cols-2 gap-4">
+                            <div className="grid grid-cols-2 gap-3">
                                 {shuffleArray(projects).slice(0, 8).map((project, index) => (
                                     <div
                                         key={project.id}
-                                        className="group relative aspect-square overflow-hidden rounded-lg animate-fade-in"
+                                        className="group relative aspect-square overflow-hidden rounded-md animate-fade-in"
                                         style={{ animationDelay: `${index * 50}ms` }}
                                     >
                                         <ProtectedImage
