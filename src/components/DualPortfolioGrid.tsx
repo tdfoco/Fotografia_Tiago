@@ -5,6 +5,16 @@ import { useImageProtection } from "@/hooks/useImageProtection";
 import ProtectedImage from "./ProtectedImage";
 import type { PhotographyItem, DesignProject } from "@/hooks/usePocketBaseData";
 
+// Função para embaralhar array (shuffle)
+const shuffleArray = <T,>(array: T[]): T[] => {
+    const shuffled = [...array];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+};
+
 const DualPortfolioGrid = () => {
     const { t } = useLanguage();
     useImageProtection();
@@ -78,7 +88,7 @@ const DualPortfolioGrid = () => {
                             </div>
                         ) : (
                             <div className="grid grid-cols-2 gap-4">
-                                {photos.slice(0, 8).map((photo, index) => (
+                                {shuffleArray(photos).slice(0, 8).map((photo, index) => (
                                     <div
                                         key={photo.id}
                                         className="group relative aspect-square overflow-hidden rounded-lg animate-fade-in"
@@ -147,7 +157,7 @@ const DualPortfolioGrid = () => {
                             </div>
                         ) : (
                             <div className="grid grid-cols-2 gap-4">
-                                {projects.slice(0, 8).map((project, index) => (
+                                {shuffleArray(projects).slice(0, 8).map((project, index) => (
                                     <div
                                         key={project.id}
                                         className="group relative aspect-square overflow-hidden rounded-lg animate-fade-in"
