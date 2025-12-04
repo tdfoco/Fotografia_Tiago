@@ -78,7 +78,7 @@ const DualPortfolioGrid = () => {
                             </div>
                         ) : (
                             <div className="grid grid-cols-2 gap-4">
-                                {photos.slice(0, 12).map((photo, index) => (
+                                {photos.slice(0, 8).map((photo, index) => (
                                     <div
                                         key={photo.id}
                                         className="group relative aspect-square overflow-hidden rounded-lg animate-fade-in"
@@ -147,7 +147,7 @@ const DualPortfolioGrid = () => {
                             </div>
                         ) : (
                             <div className="grid grid-cols-2 gap-4">
-                                {projects.slice(0, 12).map((project, index) => (
+                                {projects.slice(0, 8).map((project, index) => (
                                     <div
                                         key={project.id}
                                         className="group relative aspect-square overflow-hidden rounded-lg animate-fade-in"
