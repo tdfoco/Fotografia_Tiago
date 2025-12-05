@@ -28,6 +28,12 @@ export function useDashboardData() {
                 const photos = await pb.collection('photography').getFullList();
                 const projects = await pb.collection('design_projects').getFullList();
 
+                // Fetch clients and comments
+                const clients = await pb.collection('clients').getFullList();
+                const pendingCommentsList = await pb.collection('comments').getFullList({
+                    filter: 'approved = false'
+                });
+
                 // Calculate stats
                 const totalViews = photos.reduce((sum, p) => sum + (p.views_count || 0), 0);
                 const totalLikes = photos.reduce((sum, p) => sum + (p.likes_count || 0), 0);
@@ -42,8 +48,8 @@ export function useDashboardData() {
                     totalProjects: projects.length,
                     totalViews,
                     avgEngagement: Math.round(avgEngagement),
-                    newClients: 0, // TODO: Implement clients tracking
-                    pendingComments: 0 // TODO: Fetch pending comments
+                    newClients: clients.length,
+                    pendingComments: pendingCommentsList.length
                 });
             } catch (error) {
                 console.error('Error fetching dashboard data:', error);
