@@ -20,6 +20,7 @@ export function useDashboardData() {
         pendingComments: 0
     });
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         async function fetchDashboardData() {
@@ -53,6 +54,7 @@ export function useDashboardData() {
                 });
             } catch (error) {
                 console.error('Error fetching dashboard data:', error);
+                setError('Failed to load dashboard data. Please try again later.');
             } finally {
                 setLoading(false);
             }
@@ -61,5 +63,5 @@ export function useDashboardData() {
         fetchDashboardData();
     }, []);
 
-    return { stats, loading };
+    return { stats, loading, error };
 }
