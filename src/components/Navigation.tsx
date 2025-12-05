@@ -30,6 +30,9 @@ const Navigation = () => {
         { name: t('nav.graphicDesign'), path: "/design" },
         { name: t('nav.about'), path: "/about" },
         { name: t('nav.services'), path: "/services" },
+        { name: "Bastidores", path: "/behind-the-scenes" },
+        { name: "Depoimentos", path: "/testimonials" },
+        { name: "Busca Visual", path: "/visual-search" },
         { name: "Ranking", path: "/ranking" },
         { name: t('nav.contact'), path: "/contact" },
     ];

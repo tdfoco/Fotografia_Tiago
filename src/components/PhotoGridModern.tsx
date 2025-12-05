@@ -2,7 +2,7 @@
  * Modern Photo Grid - Integra Masonry layout com sistema existente
  */
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { usePhotography, getImageUrl } from "@/hooks/usePocketBaseData";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useImageProtection } from "@/hooks/useImageProtection";
@@ -10,6 +10,7 @@ import { MasonryPhotoGrid } from "./MasonryPhotoGrid";
 import Lightbox, { Photo } from "./Lightbox";
 import { toast } from "sonner";
 import FilterBar from "./FilterBar";
+import { getRecommendations, trackPhotoView } from "@/lib/recommendation_engine";
 
 interface PhotoGridModernProps {
     showHeader?: boolean;
@@ -21,6 +22,7 @@ const PhotoGridModern = ({ showHeader = true, showFilters = true, limit }: Photo
     const { t } = useLanguage();
     const [selectedPhoto, setSelectedPhoto] = useState<Photo | null>(null);
     const [filter, setFilter] = useState<string>("all");
+    const [recommendations, setRecommendations] = useState<any[]>([]);
 
     // Enable image protection
     useImageProtection();
@@ -65,7 +67,18 @@ const PhotoGridModern = ({ showHeader = true, showFilters = true, limit }: Photo
     // Apply limit if specified
     const displayPhotos = limit ? filteredPhotos.slice(0, limit) : filteredPhotos;
 
+    // Generate recommendations when photos change
+    useEffect(() => {
+        if (photos.length > 0) {
+            const recs = getRecommendations(photos, 12);
+            setRecommendations(recs);
+        }
+    }, [photos.length]);
+
     const handlePhotoClick = (photo: any) => {
+        // Track view for recommendations
+        trackPhotoView(photo.id, 3, photo.category); // Assuming 3 seconds average view
+
         // Transform to Lightbox Photo format
         const lightboxPhoto: Photo = {
             id: photo.id,
@@ -133,6 +146,29 @@ const PhotoGridModern = ({ showHeader = true, showFilters = true, limit }: Photo
                     />
                 )}
 
+                {/* Recommendations Section */}
+                {!loading && recommendations.length > 0 && filter === "all" && (
+                    <div className="mb-20">
+                        <div className="flex items-center justify-between mb-8">
+                            <div>
+                                <h3 className="text-2xl md:text-3xl font-display font-semibold mb-2 bg-clip-text text-transparent bg-gradient-to-r from-accent to-purple-500">
+                                    Recomendado para Você
+                                </h3>
+                                <p className="text-muted-foreground text-sm">
+                                    Baseado no seu histórico de visualizações
+                                </p>
+                            </div>
+                        </div>
+                        <MasonryPhotoGrid
+                            photos={recommendations}
+                            onPhotoClick={handlePhotoClick}
+                            onLike={handleLike}
+                            onShare={handleShare}
+                        />
+                        <div className="mt-12 border-t border-border pt-12"></div>
+                    </div>
+                )}
+
                 {/* Photo Grid */}
                 {loading ? (
                     <div className="text-center py-32">
@@ -152,12 +188,17 @@ const PhotoGridModern = ({ showHeader = true, showFilters = true, limit }: Photo
                         </a>
                     </div>
                 ) : (
-                    <MasonryPhotoGrid
-                        photos={displayPhotos}
-                        onPhotoClick={handlePhotoClick}
-                        onLike={handleLike}
-                        onShare={handleShare}
-                    />
+                    <>
+                        <h3 className="text-2xl md:text-3xl font-display font-semibold mb-8">
+                            {filter === "all" ? "Todas as Fotos" : categories.find(c => c.key === filter)?.label}
+                        </h3>
+                        <MasonryPhotoGrid
+                            photos={displayPhotos}
+                            onPhotoClick={handlePhotoClick}
+                            onLike={handleLike}
+                            onShare={handleShare}
+                        />
+                    </>
                 )}
             </div>
 
