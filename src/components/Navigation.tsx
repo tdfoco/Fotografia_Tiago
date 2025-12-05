@@ -4,12 +4,16 @@ import { Link, useLocation } from "react-router-dom";
 import LanguageSelector from "./LanguageSelector";
 import { useLanguage } from "@/contexts/LanguageContext";
 import SearchBar from "./SearchBar";
+import { useActivePages } from "@/hooks/usePageVisibility";
 
 const Navigation = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [isScrolled, setIsScrolled] = useState(false);
     const location = useLocation();
     const { t } = useLanguage();
+
+    // Buscar páginas ativas do PocketBase
+    const { data: activePages } = useActivePages();
 
     useEffect(() => {
         const handleScroll = () => {
@@ -24,18 +28,23 @@ const Navigation = () => {
         setIsOpen(false);
     }, [location]);
 
-    const navLinks = [
-        { name: t('nav.home'), path: "/" },
-        { name: t('nav.photography'), path: "/photography" },
-        { name: t('nav.graphicDesign'), path: "/design" },
-        { name: t('nav.about'), path: "/about" },
-        { name: t('nav.services'), path: "/services" },
-        { name: "Bastidores", path: "/behind-the-scenes" },
-        { name: "Depoimentos", path: "/testimonials" },
-        { name: "Busca Visual", path: "/visual-search" },
-        { name: "Ranking", path: "/ranking" },
-        { name: t('nav.contact'), path: "/contact" },
-    ];
+    // Usar páginas do PocketBase ou fallback para páginas padrão
+    const navLinks = activePages?.map(page => ({
+        name: page.page_name,
+        path: page.page_path
+    })) || [
+            // Fallback caso PocketBase não esteja disponível
+            { name: t('nav.home'), path: "/" },
+            { name: t('nav.photography'), path: "/photography" },
+            { name: t('nav.graphicDesign'), path: "/design" },
+            { name: t('nav.about'), path: "/about" },
+            { name: t('nav.services'), path: "/services" },
+            { name: "Bastidores", path: "/behind-the-scenes" },
+            { name: "Depoimentos", path: "/testimonials" },
+            { name: "Busca Visual", path: "/visual-search" },
+            { name: "Ranking", path: "/ranking" },
+            { name: t('nav.contact'), path: "/contact" },
+        ];
 
     return (
         <nav
