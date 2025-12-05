@@ -5,6 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { LanguageProvider } from "@/contexts/LanguageContext";
+import { ThemeProvider } from "@/contexts/ThemeProvider";
 import { useImageProtection } from "@/hooks/useImageProtection";
 import { AdminLayout } from "./features/admin/shared/layouts/AdminLayout";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -27,6 +28,9 @@ const ClientLogin = lazy(() => import("./pages/ClientLogin"));
 const ClientGallery = lazy(() => import("./pages/ClientGallery"));
 const BlogIndex = lazy(() => import("./pages/BlogIndex"));
 const BlogPost = lazy(() => import("./pages/BlogPost"));
+const BehindTheScenes = lazy(() => import("./pages/BehindTheScenes"));
+const TestimonialsPage = lazy(() => import("./pages/TestimonialsPage"));
+const VisualSearchPage = lazy(() => import("./pages/VisualSearchPage"));
 
 // Lazy Load Admin Features
 const DashboardPage = lazy(() => import("./features/admin/dashboard/DashboardPage"));
@@ -40,7 +44,7 @@ const DesignPage = lazy(() => import("./features/admin/pages/DesignPage"));
 const ClientsPage = lazy(() => import("./features/admin/pages/ClientsPage"));
 const BlogPage = lazy(() => import("./features/admin/blog/BlogPage"));
 const PostEditor = lazy(() => import("./features/admin/blog/PostEditor"));
-const TestimonialsPage = lazy(() => import("./features/admin/pages/TestimonialsPage"));
+const AdminTestimonialsPage = lazy(() => import("./features/admin/pages/TestimonialsPage"));
 
 const queryClient = new QueryClient();
 
@@ -56,59 +60,64 @@ const App = () => {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <LanguageProvider>
-        <TooltipProvider>
-          <Toaster />
-          <Sonner />
-          <Chatbot />
-          <BrowserRouter>
-            <GoogleAnalytics measurementId="G-XXXXXXXXXX" />
-            <Suspense fallback={<LoadingFallback />}>
-              <Routes>
-                {/* Public Routes with Modern Layout */}
-                <Route element={<ModernLayout />}>
-                  <Route path="/" element={<Index />} />
-                  <Route path="/photography" element={<Photography />} />
-                  <Route path="/design" element={<GraphicDesign />} />
-                  <Route path="/about" element={<AboutPage />} />
-                  <Route path="/services" element={<Services />} />
-                  <Route path="/contact" element={<Contact />} />
-                  <Route path="/ranking" element={<Ranking />} />
-                  <Route path="/favorites" element={<Favorites />} />
-                  <Route path="/blog" element={<BlogIndex />} />
-                  <Route path="/blog/:slug" element={<BlogPost />} />
-                </Route>
+      <ThemeProvider>
+        <LanguageProvider>
+          <TooltipProvider>
+            <Toaster />
+            <Sonner />
+            <Chatbot />
+            <BrowserRouter>
+              <GoogleAnalytics measurementId="G-XXXXXXXXXX" />
+              <Suspense fallback={<LoadingFallback />}>
+                <Routes>
+                  {/* Public Routes with Modern Layout */}
+                  <Route element={<ModernLayout />}>
+                    <Route path="/" element={<Index />} />
+                    <Route path="/photography" element={<Photography />} />
+                    <Route path="/design" element={<GraphicDesign />} />
+                    <Route path="/about" element={<AboutPage />} />
+                    <Route path="/services" element={<Services />} />
+                    <Route path="/contact" element={<Contact />} />
+                    <Route path="/ranking" element={<Ranking />} />
+                    <Route path="/favorites" element={<Favorites />} />
+                    <Route path="/blog" element={<BlogIndex />} />
+                    <Route path="/blog/:slug" element={<BlogPost />} />
+                    <Route path="/behind-the-scenes" element={<BehindTheScenes />} />
+                    <Route path="/testimonials" element={<TestimonialsPage />} />
+                    <Route path="/visual-search" element={<VisualSearchPage />} />
+                  </Route>
 
-                {/* Admin Login (Public) */}
-                <Route path="/admin/login" element={<Admin />} />
+                  {/* Admin Login (Public) */}
+                  <Route path="/admin/login" element={<Admin />} />
 
-                {/* New Modular Admin Panel with Futuristic Layout */}
-                <Route path="/admin" element={<ProtectedRoute><AdminLayout /></ProtectedRoute>}>
-                  <Route index element={<DashboardPage />} />
-                  <Route path="photography" element={<PhotosPage />} />
-                  <Route path="design" element={<DesignPage />} />
-                  <Route path="clients" element={<ClientsPage />} />
-                  <Route path="analytics" element={<AnalyticsPage />} />
-                  <Route path="ai-lab" element={<AILabPage />} />
-                  <Route path="heroes" element={<HeroImagesPage />} />
-                  <Route path="comments" element={<CommentsPage />} />
-                  <Route path="blog" element={<BlogPage />} />
-                  <Route path="blog/new" element={<PostEditor />} />
-                  <Route path="blog/edit/:id" element={<PostEditor />} />
-                  <Route path="testimonials" element={<TestimonialsPage />} />
-                  <Route path="content" element={<div className="p-6">Conteúdo (Em Desenvolvimento)</div>} />
-                  <Route path="security" element={<SecurityPage />} />
-                  <Route path="settings" element={<div className="p-6">Configurações (Em Desenvolvimento)</div>} />
-                </Route>
-                <Route path="/client" element={<ClientLogin />} />
-                <Route path="/client/gallery" element={<ClientGallery />} />
-                {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </Suspense>
-          </BrowserRouter>
-        </TooltipProvider>
-      </LanguageProvider>
+                  {/* New Modular Admin Panel with Futuristic Layout */}
+                  <Route path="/admin" element={<ProtectedRoute><AdminLayout /></ProtectedRoute>}>
+                    <Route index element={<DashboardPage />} />
+                    <Route path="photography" element={<PhotosPage />} />
+                    <Route path="design" element={<DesignPage />} />
+                    <Route path="clients" element={<ClientsPage />} />
+                    <Route path="analytics" element={<AnalyticsPage />} />
+                    <Route path="ai-lab" element={<AILabPage />} />
+                    <Route path="heroes" element={<HeroImagesPage />} />
+                    <Route path="comments" element={<CommentsPage />} />
+                    <Route path="blog" element={<BlogPage />} />
+                    <Route path="blog/new" element={<PostEditor />} />
+                    <Route path="blog/edit/:id" element={<PostEditor />} />
+                    <Route path="testimonials" element={<AdminTestimonialsPage />} />
+                    <Route path="content" element={<div className="p-6">Conteúdo (Em Desenvolvimento)</div>} />
+                    <Route path="security" element={<SecurityPage />} />
+                    <Route path="settings" element={<div className="p-6">Configurações (Em Desenvolvimento)</div>} />
+                  </Route>
+                  <Route path="/client" element={<ClientLogin />} />
+                  <Route path="/client/gallery" element={<ClientGallery />} />
+                  {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </Suspense>
+            </BrowserRouter>
+          </TooltipProvider>
+        </LanguageProvider>
+      </ThemeProvider>
     </QueryClientProvider>
   );
 };

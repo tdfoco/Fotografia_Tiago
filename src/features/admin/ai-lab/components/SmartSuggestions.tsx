@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Sparkles, TrendingUp, Image as ImageIcon, Type, Tag } from 'lucide-react';
+import { Sparkles, TrendingUp, Image as ImageIcon, Type, Tag, Check } from 'lucide-react';
 import { pb } from '@/lib/pocketbase';
 import { smartSortPhotos } from '@/lib/ai_services';
+import { toast } from 'sonner';
 
 interface Suggestion {
     type: 'homepage' | 'banner' | 'promotion' | 'similar';
@@ -18,6 +19,8 @@ interface Suggestion {
 export function SmartSuggestions() {
     const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+    const [applying, setApplying] = useState<string | null>(null);
 
     useEffect(() => {
         async function generateSuggestions() {
@@ -77,8 +80,12 @@ export function SmartSuggestions() {
                 }
 
                 setSuggestions(newSuggestions);
-            } catch (error) {
+            } catch (error: any) {
                 console.error('Error generating suggestions:', error);
+                setError(error?.message || 'Falha ao carregar sugestões');
+                toast.error('Erro ao gerar sugestões', {
+                    description: 'Não foi possível carregar as sugestões da IA. Tente recarregar a página.',
+                });
             } finally {
                 setLoading(false);
             }
@@ -86,6 +93,74 @@ export function SmartSuggestions() {
 
         generateSuggestions();
     }, []);
+
+    const applySuggestion = async (suggestion: Suggestion) => {
+        setApplying(suggestion.photoId);
+
+        try {
+            let updateData: any = {};
+            let actionDescription = '';
+
+            switch (suggestion.type) {
+                case 'homepage':
+                    // Set as featured/priority photo for homepage
+                    updateData = {
+                        featured: true,
+                        priority: 10
+                    };
+                    actionDescription = 'marcada como destaque na homepage com prioridade máxima';
+                    break;
+                case 'banner':
+                    // Mark for banner usage
+                    updateData = {
+                        use_as_banner: true,
+                        featured: true,
+                        priority: 8
+                    };
+                    actionDescription = 'configurada como banner e destaque';
+                    break;
+                case 'promotion':
+                    // Boost this photo
+                    updateData = {
+                        promoted: true,
+                        priority: 7
+                    };
+                    actionDescription = 'promovida com alta prioridade';
+                    break;
+                case 'similar':
+                    // Add to recommended collection
+                    updateData = {
+                        recommended: true
+                    };
+                    actionDescription = 'adicionada às recomendações';
+                    break;
+            }
+
+            // Apply the update to PocketBase
+            await pb.collection('photography').update(suggestion.photoId, updateData);
+
+            // Show success toast with details
+            toast.success('Sugestão aplicada com sucesso!', {
+                description: `"${suggestion.photoTitle}" foi ${actionDescription}.`,
+                duration: 4000,
+            });
+
+            // Remove the applied suggestion from the list with animation
+            setSuggestions(prev => prev.filter(s => s.photoId !== suggestion.photoId));
+
+        } catch (error: any) {
+            console.error('Error applying suggestion:', error);
+
+            // Show error toast with helpful message
+            const errorMessage = error?.message || 'Erro desconhecido';
+            toast.error('Falha ao aplicar sugestão', {
+                description: `Não foi possível atualizar a foto. ${errorMessage}`,
+                duration: 5000,
+            });
+        } finally {
+            setApplying(null);
+        }
+    };
 
     if (loading) {
         return (
@@ -104,10 +179,26 @@ export function SmartSuggestions() {
                 <h3 className="text-xl font-bold">Sugestões Inteligentes da IA</h3>
             </div>
 
-            {suggestions.length === 0 ? (
-                <p className="text-muted-foreground text-center py-8">
-                    Adicione fotos para receber sugestões da IA
-                </p>
+            {error ? (
+                <div className="text-center py-8">
+                    <p className="text-destructive mb-2">⚠️ Erro ao carregar sugestões</p>
+                    <p className="text-sm text-muted-foreground">{error}</p>
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        className="mt-4"
+                        onClick={() => window.location.reload()}
+                    >
+                        Recarregar
+                    </Button>
+                </div>
+            ) : suggestions.length === 0 ? (
+                <div className="text-center py-8">
+                    <Sparkles className="w-12 h-12 mx-auto mb-3 text-muted-foreground/50" />
+                    <p className="text-muted-foreground">
+                        Adicione fotos para receber sugestões da IA
+                    </p>
+                </div>
             ) : (
                 <div className="space-y-4">
                     {suggestions.map((suggestion) => (
@@ -133,8 +224,10 @@ export function SmartSuggestions() {
                             <Button
                                 size="sm"
                                 className="bg-electric-blue hover:bg-electric-blue/90 text-white"
+                                onClick={() => applySuggestion(suggestion)}
+                                disabled={applying === suggestion.photoId}
                             >
-                                Aplicar
+                                {applying === suggestion.photoId ? 'Aplicando...' : 'Aplicar'}
                             </Button>
                         </div>
                     ))}

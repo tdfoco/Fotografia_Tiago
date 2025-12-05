@@ -4,6 +4,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { pb } from "@/lib/pocketbase";
 import { getImageUrl } from "@/hooks/usePocketBaseData";
 import { SEO } from "@/components/SEO";
+import { VideoPresentation } from "@/components/VideoPresentation";
 
 const AboutPage = () => {
     const { t } = useLanguage();
@@ -101,20 +102,17 @@ const AboutPage = () => {
                                         />
                                     </div>
                                 )}
+
+                                {/* Vídeo de Apresentação */}
                                 {videoUrl && (
-                                    <div className="text-center">
-                                        <a
-                                            href={videoUrl.replace('/embed/', '/watch?v=')}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="inline-flex items-center gap-2 text-sm text-electric-blue hover:text-electric-blue/80 transition-colors group"
-                                        >
-                                            <span className="w-8 h-8 rounded-full bg-electric-blue/10 flex items-center justify-center group-hover:bg-electric-blue group-hover:text-white transition-all">
-                                                <svg className="w-3 h-3 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
-                                            </span>
-                                            Assista meu vídeo de apresentação
-                                        </a>
-                                    </div>
+                                    <VideoPresentation
+                                        videoUrl={videoUrl}
+                                        title="Vídeo de Apresentação - Tiago Damasceno"
+                                        thumbnailUrl={profilePhoto || undefined}
+                                        autoplay={false}
+                                        controls={true}
+                                        className="mt-6"
+                                    />
                                 )}
                             </div>
                         </div>
