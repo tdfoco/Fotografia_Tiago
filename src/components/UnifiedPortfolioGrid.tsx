@@ -1,5 +1,4 @@
 import { useState, useMemo } from "react";
-import Masonry from "react-masonry-css";
 import { motion, AnimatePresence } from "framer-motion";
 import { usePhotography, useDesignProjects, getImageUrl } from "@/hooks/usePocketBaseData";
 import { useImageProtection } from "@/hooks/useImageProtection";
@@ -132,7 +131,7 @@ const UnifiedPortfolioGrid = () => {
 
     return (
         <section id="portfolio" className="min-h-screen bg-background py-20 px-4 md:px-8">
-            <div className="max-w-[1600px] mx-auto">
+            <div className="max-w-7xl mx-auto">
                 {/* Main Title */}
                 <div className="text-center mb-12">
                     <h1 className="text-5xl md:text-7xl font-display font-bold tracking-tight mb-6 bg-clip-text text-transparent bg-gradient-to-r from-foreground via-electric-blue to-foreground">
@@ -197,13 +196,9 @@ const UnifiedPortfolioGrid = () => {
                     </div>
                 ) : (
                     <>
-                        <Masonry
-                            breakpointCols={breakpointColumns}
-                            className="masonry-grid"
-                            columnClassName="masonry-grid_column"
-                        >
+                        <div className="columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-4 space-y-4">
                             {visibleItems.map((item, index) => (
-                                <div key={item.id} className="mb-6">
+                                <div key={item.id} className="break-inside-avoid mb-4">
                                     {item.type === 'design' ? (
                                         <ProjectCard
                                             project={item.data}
@@ -266,7 +261,7 @@ const UnifiedPortfolioGrid = () => {
                                     )}
                                 </div>
                             ))}
-                        </Masonry>
+                        </div>
 
                         {/* Load More Button */}
                         {hasMore && (
