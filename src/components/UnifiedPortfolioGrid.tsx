@@ -33,7 +33,7 @@ const UnifiedPortfolioGrid = () => {
 
     const [activeTab, setActiveTab] = useState<'all' | 'photography' | 'design'>('all');
     const [subCategory, setSubCategory] = useState<string>("all");
-    const [displayCount, setDisplayCount] = useState(12);
+    const [displayCount, setDisplayCount] = useState(20);
     const [selectedPhoto, setSelectedPhoto] = useState<Photo | null>(null);
     const [selectedProject, setSelectedProject] = useState<DesignProject | null>(null);
 
@@ -115,22 +115,15 @@ const UnifiedPortfolioGrid = () => {
     const handleTabChange = (tab: 'all' | 'photography' | 'design') => {
         setActiveTab(tab);
         setSubCategory('all');
-        setDisplayCount(12);
+        setDisplayCount(20);
     };
 
     const handleLoadMore = () => {
-        setDisplayCount(prev => prev + 12);
-    };
-
-    const breakpointColumns = {
-        default: 4,
-        1536: 3,
-        1024: 2,
-        640: 1
+        setDisplayCount(prev => prev + 20);
     };
 
     return (
-        <section id="portfolio" className="min-h-screen bg-background py-20 px-4 md:px-8">
+        <section id="portfolio" className="min-h-screen bg-background py-20 px-6">
             <div className="max-w-7xl mx-auto">
                 {/* Main Title */}
                 <div className="text-center mb-12">
@@ -196,72 +189,89 @@ const UnifiedPortfolioGrid = () => {
                     </div>
                 ) : (
                     <>
-                        <div className="columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-4 space-y-4">
-                            {visibleItems.map((item, index) => (
-                                <div key={item.id} className="break-inside-avoid mb-4">
-                                    {item.type === 'design' ? (
+                        {/* Conditional Layout */}
+                        {activeTab === 'design' ? (
+                            /* Design Grid Layout */
+                            <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-3 gap-4">
+                                {visibleItems.map((item, index) => (
+                                    <div key={item.id}>
                                         <ProjectCard
                                             project={item.data}
                                             index={index}
                                             onClick={setSelectedProject}
                                         />
-                                    ) : (
-                                        <motion.div
-                                            initial={{ opacity: 0, y: 20 }}
-                                            animate={{ opacity: 1, y: 0 }}
-                                            transition={{ delay: index * 0.05, duration: 0.5 }}
-                                            className="group relative cursor-pointer"
-                                            onClick={() => {
-                                                const photo = photos.find(p => p.id === item.originalId);
-                                                if (photo) {
-                                                    setSelectedPhoto({
-                                                        id: photo.id,
-                                                        src: getImageUrl(photo.collectionId, photo.id, photo.image),
-                                                        alt: photo.title,
-                                                        category: photo.category,
-                                                        description: photo.description,
-                                                        likes_count: photo.likes_count,
-                                                        comments_count: photo.comments_count,
-                                                        shares_count: photo.shares_count,
-                                                    });
-                                                }
-                                            }}
-                                        >
-                                            <div className="relative overflow-hidden rounded-xl transition-all duration-300 group-hover:shadow-[0_0_20px_rgba(58,139,253,0.4)] group-hover:ring-1 group-hover:ring-electric-blue/50">
-                                                <LazyPhoto
-                                                    src={item.src}
-                                                    alt={item.alt}
-                                                    className="w-full h-auto transition-transform duration-700 group-hover:scale-110"
-                                                />
+                                    </div>
+                                ))}
+                            </div>
+                        ) : (
+                            /* Photography Masonry Layout (also used for 'All') */
+                            <div className="columns-1 xs:columns-2 md:columns-3 lg:columns-4 gap-4 space-y-4">
+                                {visibleItems.map((item, index) => (
+                                    <div key={item.id} className="break-inside-avoid mb-4">
+                                        {item.type === 'design' ? (
+                                            <ProjectCard
+                                                project={item.data}
+                                                index={index}
+                                                onClick={setSelectedProject}
+                                            />
+                                        ) : (
+                                            <motion.div
+                                                initial={{ opacity: 0, y: 20 }}
+                                                animate={{ opacity: 1, y: 0 }}
+                                                transition={{ delay: index * 0.05, duration: 0.5 }}
+                                                className="group relative cursor-pointer"
+                                                onClick={() => {
+                                                    const photo = photos.find(p => p.id === item.originalId);
+                                                    if (photo) {
+                                                        setSelectedPhoto({
+                                                            id: photo.id,
+                                                            src: getImageUrl(photo.collectionId, photo.id, photo.image),
+                                                            alt: photo.title,
+                                                            category: photo.category,
+                                                            description: photo.description,
+                                                            likes_count: photo.likes_count,
+                                                            comments_count: photo.comments_count,
+                                                            shares_count: photo.shares_count,
+                                                        });
+                                                    }
+                                                }}
+                                            >
+                                                <div className="relative overflow-hidden rounded-xl transition-all duration-300 group-hover:shadow-[0_0_20px_rgba(58,139,253,0.4)] group-hover:ring-1 group-hover:ring-electric-blue/50">
+                                                    <LazyPhoto
+                                                        src={item.src}
+                                                        alt={item.alt}
+                                                        className="w-full h-auto transition-transform duration-700 group-hover:scale-110"
+                                                    />
 
-                                                {/* Overlay */}
-                                                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none backdrop-blur-[1px]">
-                                                    <div className="absolute bottom-0 left-0 right-0 p-5 text-white">
-                                                        <p className="text-xs font-medium text-electric-blue uppercase tracking-wider mb-1">
-                                                            {item.category}
-                                                        </p>
-                                                        <h3 className="text-lg font-display font-bold leading-tight mb-3">
-                                                            {item.alt}
-                                                        </h3>
+                                                    {/* Overlay */}
+                                                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none backdrop-blur-[1px]">
+                                                        <div className="absolute bottom-0 left-0 right-0 p-5 text-white">
+                                                            <p className="text-xs font-medium text-electric-blue uppercase tracking-wider mb-1">
+                                                                {item.category}
+                                                            </p>
+                                                            <h3 className="text-lg font-display font-bold leading-tight mb-3">
+                                                                {item.alt}
+                                                            </h3>
 
-                                                        <div className="flex items-center gap-4 pt-3 border-t border-white/10 text-gray-300">
-                                                            <div className="flex items-center gap-1.5">
-                                                                <Heart size={14} />
-                                                                <span className="text-xs">{item.likes_count || 0}</span>
-                                                            </div>
-                                                            <div className="flex items-center gap-1.5">
-                                                                <Eye size={14} />
-                                                                <span className="text-xs">View</span>
+                                                            <div className="flex items-center gap-4 pt-3 border-t border-white/10 text-gray-300">
+                                                                <div className="flex items-center gap-1.5">
+                                                                    <Heart size={14} />
+                                                                    <span className="text-xs">{item.likes_count || 0}</span>
+                                                                </div>
+                                                                <div className="flex items-center gap-1.5">
+                                                                    <Eye size={14} />
+                                                                    <span className="text-xs">View</span>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </motion.div>
-                                    )}
-                                </div>
-                            ))}
-                        </div>
+                                            </motion.div>
+                                        )}
+                                    </div>
+                                ))}
+                            </div>
+                        )}
 
                         {/* Load More Button */}
                         {hasMore && (
