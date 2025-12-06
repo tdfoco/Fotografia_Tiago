@@ -1,6 +1,5 @@
 import HeroModern from "@/components/HeroModern";
 import UnifiedPortfolioGrid from "@/components/UnifiedPortfolioGrid";
-import RankingSection from "@/components/RankingSection";
 import About from "@/components/About";
 import Testimonials from "@/components/Testimonials";
 
@@ -13,7 +12,6 @@ const Index = () => {
       <main className="min-h-screen">
         <HeroModern page="home" />
         <UnifiedPortfolioGrid />
-        <RankingSection />
         <Testimonials />
         <About />
       </main>
