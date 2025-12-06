@@ -30,6 +30,7 @@ interface EngagementMetrics {
 export function useEngagementMetrics() {
     const [metrics, setMetrics] = useState<EngagementMetrics | null>(null);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         async function fetchMetrics() {
@@ -94,13 +95,15 @@ export function useEngagementMetrics() {
                     totalLikes,
                     totalShares,
                     totalViews,
-                    avgTimeOnPage: 0, // TODO: Implement with real analytics
+                    // TODO: Implement with real analytics when available. For now defaulting to 0.
+                    avgTimeOnPage: 0,
                     byCategory,
                     topPhotos,
                     timeline
                 });
             } catch (error) {
                 console.error('Error fetching engagement metrics:', error);
+                setError('Failed to load engagement metrics.');
             } finally {
                 setLoading(false);
             }
@@ -109,5 +112,5 @@ export function useEngagementMetrics() {
         fetchMetrics();
     }, []);
 
-    return { metrics, loading };
+    return { metrics, loading, error };
 }

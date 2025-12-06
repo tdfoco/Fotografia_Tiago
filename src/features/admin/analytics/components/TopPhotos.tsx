@@ -25,9 +25,9 @@ export function TopPhotos({ photos }: TopPhotosProps) {
                     >
                         {/* Rank */}
                         <div className={`w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm ${index === 0 ? 'bg-yellow-500/20 text-yellow-500' :
-                                index === 1 ? 'bg-gray-400/20 text-gray-400' :
-                                    index === 2 ? 'bg-orange-500/20 text-orange-500' :
-                                        'bg-electric-blue/10 text-electric-blue'
+                            index === 1 ? 'bg-gray-400/20 text-gray-400' :
+                                index === 2 ? 'bg-orange-500/20 text-orange-500' :
+                                    'bg-electric-blue/10 text-electric-blue'
                             }`}>
                             {index + 1}
                         </div>

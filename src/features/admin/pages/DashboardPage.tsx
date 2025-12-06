@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
 import StatsCard from '../components/StatsCard';
 import { Button } from '@/components/ui/button';
+import { useDashboardData } from '../hooks/useDashboardData';
 
 const data = [
     { date: 'Jan', views: 400, photos: 24 },
@@ -26,6 +27,17 @@ const chartConfig = {
 };
 
 const DashboardPage = () => {
+    const { stats, loading, error } = useDashboardData();
+
+    if (error) {
+        return (
+            <div className="p-6 text-red-500">
+                <h2 className="text-2xl font-bold mb-4">Erro</h2>
+                <p>{error}</p>
+            </div>
+        );
+    }
+
     return (
         <div className="space-y-8">
             <div className="flex items-center justify-between">
@@ -43,27 +55,31 @@ const DashboardPage = () => {
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
                 <StatsCard
                     title="Total de Visualizações"
-                    value="12,345"
+                    value={stats.totalViews.toLocaleString()}
                     icon={Eye}
                     trend={{ value: 12, label: "vs mês anterior" }}
+                    loading={loading}
                 />
                 <StatsCard
                     title="Fotos Publicadas"
-                    value="142"
+                    value={stats.totalPhotos.toString()}
                     icon={ImageIcon}
                     trend={{ value: 4, label: "novas este mês" }}
+                    loading={loading}
                 />
                 <StatsCard
-                    title="Armazenamento"
-                    value="1.2 GB"
+                    title="Projetos"
+                    value={stats.totalProjects.toString()}
                     icon={HardDrive}
-                    description="45% de 5GB usados"
+                    description="Projetos de Design"
+                    loading={loading}
                 />
                 <StatsCard
                     title="Engajamento"
-                    value="8.5%"
+                    value={`${stats.avgEngagement}%`}
                     icon={TrendingUp}
                     trend={{ value: -2, label: "vs mês anterior" }}
+                    loading={loading}
                 />
             </div>
 

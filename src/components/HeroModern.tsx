@@ -117,7 +117,7 @@ const HeroModern = ({ page = 'home' }: HeroProps) => {
                 {/* Futuristic Decorative Elements */}
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-electric-blue/10 rounded-full blur-[100px] pointer-events-none animate-pulse-slow" />
 
-                <div className="space-y-6 max-w-5xl mx-auto">
+                <div className="space-y-6 max-w-7xl mx-auto">
                     <h1 className="text-5xl md:text-7xl lg:text-8xl font-display font-bold tracking-tight text-white animate-fade-in-up drop-shadow-2xl">
                         <span className="block bg-clip-text text-transparent bg-gradient-to-r from-white via-white to-white/70">
                             {t('hero.title')}

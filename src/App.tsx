@@ -45,6 +45,8 @@ const ClientsPage = lazy(() => import("./features/admin/pages/ClientsPage"));
 const BlogPage = lazy(() => import("./features/admin/blog/BlogPage"));
 const PostEditor = lazy(() => import("./features/admin/blog/PostEditor"));
 const AdminTestimonialsPage = lazy(() => import("./features/admin/pages/TestimonialsPage"));
+const PageManagerPage = lazy(() => import("./features/admin/pages/PageManagerPage"));
+const MenuManagementPage = lazy(() => import("./features/admin/pages/MenuManagementPage"));
 
 const queryClient = new QueryClient();
 
@@ -99,11 +101,13 @@ const App = () => {
                     <Route path="analytics" element={<AnalyticsPage />} />
                     <Route path="ai-lab" element={<AILabPage />} />
                     <Route path="heroes" element={<HeroImagesPage />} />
+                    <Route path="menu" element={<MenuManagementPage />} />
                     <Route path="comments" element={<CommentsPage />} />
                     <Route path="blog" element={<BlogPage />} />
                     <Route path="blog/new" element={<PostEditor />} />
                     <Route path="blog/edit/:id" element={<PostEditor />} />
                     <Route path="testimonials" element={<AdminTestimonialsPage />} />
+                    <Route path="pages" element={<PageManagerPage />} />
                     <Route path="content" element={<div className="p-6">Conteúdo (Em Desenvolvimento)</div>} />
                     <Route path="security" element={<SecurityPage />} />
                     <Route path="settings" element={<div className="p-6">Configurações (Em Desenvolvimento)</div>} />

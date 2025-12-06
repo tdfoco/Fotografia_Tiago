@@ -1,0 +1,110 @@
+[
+    {
+        "page_key": "home",
+        "page_name": "Home",
+        "page_path": "/",
+        "is_active": true,
+        "order": 1,
+        "is_system": true,
+        "icon": "home"
+    },
+    {
+        "page_key": "photography",
+        "page_name": "Fotografia",
+        "page_path": "/photography",
+        "is_active": true,
+        "order": 2,
+        "is_system": false,
+        "icon": "camera"
+    },
+    {
+        "page_key": "design",
+        "page_name": "Design Gráfico",
+        "page_path": "/design",
+        "is_active": true,
+        "order": 3,
+        "is_system": false,
+        "icon": "palette"
+    },
+    {
+        "page_key": "about",
+        "page_name": "Sobre",
+        "page_path": "/about",
+        "is_active": true,
+        "order": 4,
+        "is_system": false,
+        "icon": "user"
+    },
+    {
+        "page_key": "services",
+        "page_name": "Serviços",
+        "page_path": "/services",
+        "is_active": true,
+        "order": 5,
+        "is_system": false,
+        "icon": "briefcase"
+    },
+    {
+        "page_key": "behind_scenes",
+        "page_name": "Bastidores",
+        "page_path": "/behind-the-scenes",
+        "is_active": true,
+        "order": 6,
+        "is_system": false,
+        "icon": "film"
+    },
+    {
+        "page_key": "testimonials",
+        "page_name": "Depoimentos",
+        "page_path": "/testimonials",
+        "is_active": true,
+        "order": 7,
+        "is_system": false,
+        "icon": "message-square"
+    },
+    {
+        "page_key": "visual_search",
+        "page_name": "Busca Visual",
+        "page_path": "/visual-search",
+        "is_active": true,
+        "order": 8,
+        "is_system": false,
+        "icon": "search"
+    },
+    {
+        "page_key": "blog",
+        "page_name": "Blog",
+        "page_path": "/blog",
+        "is_active": true,
+        "order": 9,
+        "is_system": false,
+        "icon": "book-open"
+    },
+    {
+        "page_key": "ranking",
+        "page_name": "Ranking",
+        "page_path": "/ranking",
+        "is_active": true,
+        "order": 10,
+        "is_system": false,
+        "icon": "trophy"
+    },
+    {
+        "page_key": "favorites",
+        "page_name": "Favoritos",
+        "page_path": "/favorites",
+        "is_active": true,
+        "order": 11,
+        "is_system": false,
+        "icon": "heart"
+    },
+    {
+        "page_key": "contact",
+        "page_name": "Contato",
+        "page_path": "/contact",
+        "is_active": true,
+        "order": 12,
+        "is_system": false,
+        "icon": "mail"
+    }
+]

@@ -3,7 +3,7 @@
  */
 
 import { useState, useEffect } from "react";
-import { usePhotography, getImageUrl } from "@/hooks/usePocketBaseData";
+import { usePhotography, getImageUrl, incrementLikes } from "@/hooks/usePocketBaseData";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useImageProtection } from "@/hooks/useImageProtection";
 import { MasonryPhotoGrid } from "./MasonryPhotoGrid";
@@ -100,8 +100,13 @@ const PhotoGridModern = ({ showHeader = true, showFilters = true, limit }: Photo
     };
 
     const handleLike = async (photoId: string) => {
-        toast.success("Foto curtida!");
-        // TODO: Implement like functionality with PocketBase
+        try {
+            await incrementLikes(photoId, 'photography');
+            toast.success("Foto curtida!");
+        } catch (error) {
+            console.error("Error liking photo:", error);
+            toast.error("Erro ao curtir foto");
+        }
     };
 
     const handleShare = async (photoId: string) => {

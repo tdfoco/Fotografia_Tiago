@@ -22,13 +22,20 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { pb } from '@/lib/pocketbase';
 import { getImageUrl } from '@/hooks/usePocketBaseData';
 import type { DesignProject } from '@/hooks/usePocketBaseData';
+import { DesignProjectDialog } from '../components/DesignProjectDialog';
+import { useToast } from '@/hooks/use-toast';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const DesignPage = () => {
+    const { toast } = useToast();
     const [projects, setProjects] = useState<DesignProject[]>([]);
     const [loading, setLoading] = useState(true);
     const [search, setSearch] = useState('');
     const [categoryFilter, setCategoryFilter] = useState<string>('all');
+
+    // Dialog State
+    const [dialogOpen, setDialogOpen] = useState(false);
+    const [selectedProject, setSelectedProject] = useState<DesignProject | null>(null);
 
     useEffect(() => {
         loadProjects();
@@ -47,6 +54,32 @@ const DesignPage = () => {
         }
     };
 
+    const handleCreate = () => {
+        setSelectedProject(null);
+        setDialogOpen(true);
+    };
+
+    const handleEdit = (project: DesignProject) => {
+        setSelectedProject(project);
+        setDialogOpen(true);
+    };
+
+    const handleDelete = async (id: string) => {
+        if (!confirm('Tem certeza que deseja excluir este projeto?')) return;
+
+        try {
+            await pb.collection('design_projects').delete(id);
+            toast({ title: 'Projeto excluído com sucesso' });
+            loadProjects();
+        } catch (error) {
+            console.error('Error deleting project:', error);
+            toast({
+                title: 'Erro ao excluir',
+                variant: 'destructive'
+            });
+        }
+    };
+
     const filteredProjects = projects.filter(project => {
         const matchesSearch = project.title.toLowerCase().includes(search.toLowerCase());
         const matchesCategory = categoryFilter === 'all' || project.category === categoryFilter;
@@ -60,7 +93,7 @@ const DesignPage = () => {
                     <h2 className="text-3xl font-display font-bold tracking-tight">Projetos de Design</h2>
                     <p className="text-muted-foreground">Gerencie seus projetos de branding e design.</p>
                 </div>
-                <Button>
+                <Button onClick={handleCreate}>
                     <Upload className="mr-2 h-4 w-4" />
                     Novo Projeto
                 </Button>
@@ -119,7 +152,7 @@ const DesignPage = () => {
                                             </div>
                                         )}
                                         <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-                                            <Button variant="secondary" size="sm">
+                                            <Button variant="secondary" size="sm" onClick={() => handleEdit(project)}>
                                                 <Edit className="mr-2 h-4 w-4" /> Editar
                                             </Button>
                                         </div>
@@ -140,8 +173,8 @@ const DesignPage = () => {
                                                     </Button>
                                                 </DropdownMenuTrigger>
                                                 <DropdownMenuContent align="end">
-                                                    <DropdownMenuItem>Editar</DropdownMenuItem>
-                                                    <DropdownMenuItem className="text-destructive">Excluir</DropdownMenuItem>
+                                                    <DropdownMenuItem onClick={() => handleEdit(project)}>Editar</DropdownMenuItem>
+                                                    <DropdownMenuItem className="text-destructive" onClick={() => handleDelete(project.id)}>Excluir</DropdownMenuItem>
                                                 </DropdownMenuContent>
                                             </DropdownMenu>
                                         </div>
@@ -157,6 +190,13 @@ const DesignPage = () => {
                     </AnimatePresence>
                 </div>
             )}
+
+            <DesignProjectDialog
+                open={dialogOpen}
+                onOpenChange={setDialogOpen}
+                project={selectedProject}
+                onSuccess={loadProjects}
+            />
         </div>
     );
 };
