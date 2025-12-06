@@ -1,4 +1,4 @@
-import PhotoGridModern from "@/components/PhotoGridModern";
+import UnifiedPortfolioGrid from "@/components/UnifiedPortfolioGrid";
 import { SEO } from "@/components/SEO";
 
 const Photography = () => {
@@ -10,9 +10,7 @@ const Photography = () => {
                 url="https://tdfoco.cloud/photography"
             />
             <div className="min-h-screen bg-deep-black pt-20">
-                <div className="container mx-auto px-4 py-12">
-                    <PhotoGridModern showHeader={false} />
-                </div>
+                <UnifiedPortfolioGrid photographyOnly={true} showTitle={false} />
             </div>
         </>
     );

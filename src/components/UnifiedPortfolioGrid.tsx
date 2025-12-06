@@ -28,10 +28,15 @@ type UnifiedItem = {
     created: string;
 };
 
-const UnifiedPortfolioGrid = () => {
+interface UnifiedPortfolioGridProps {
+    photographyOnly?: boolean; // If true, shows only photography without tabs
+    showTitle?: boolean; // If false, hides the "Portfólio" title
+}
+
+const UnifiedPortfolioGrid = ({ photographyOnly = false, showTitle = true }: UnifiedPortfolioGridProps = {}) => {
     useImageProtection();
 
-    const [activeTab, setActiveTab] = useState<'all' | 'photography' | 'design'>('all');
+    const [activeTab, setActiveTab] = useState<'all' | 'photography' | 'design'>(photographyOnly ? 'photography' : 'all');
     const [subCategory, setSubCategory] = useState<string>("all");
     const [displayCount, setDisplayCount] = useState(20);
     const [selectedPhoto, setSelectedPhoto] = useState<Photo | null>(null);
@@ -126,40 +131,44 @@ const UnifiedPortfolioGrid = () => {
         <section id="portfolio" className="min-h-screen bg-background py-20 px-6">
             <div className="max-w-7xl mx-auto">
                 {/* Main Title */}
-                <div className="text-center mb-12">
-                    <h1 className="text-5xl md:text-7xl font-display font-bold tracking-tight mb-6 bg-clip-text text-transparent bg-gradient-to-r from-foreground via-electric-blue to-foreground">
-                        Portfólio
-                    </h1>
-                    <div className="w-24 h-1 bg-gradient-to-r from-electric-blue to-vibrant-purple mx-auto rounded-full shadow-[0_0_15px_rgba(58,139,253,0.8)]" />
-                </div>
+                {showTitle && (
+                    <div className="text-center mb-12">
+                        <h1 className="text-5xl md:text-7xl font-display font-bold tracking-tight mb-6 bg-clip-text text-transparent bg-gradient-to-r from-foreground via-electric-blue to-foreground">
+                            Portfólio
+                        </h1>
+                        <div className="w-24 h-1 bg-gradient-to-r from-electric-blue to-vibrant-purple mx-auto rounded-full shadow-[0_0_15px_rgba(58,139,253,0.8)]" />
+                    </div>
+                )}
 
                 {/* Tabs & Filters */}
                 <div className="flex flex-col items-center gap-8 mb-16">
                     {/* Main Tabs */}
-                    <div className="flex p-1 bg-secondary/30 backdrop-blur-sm rounded-full border border-white/5">
-                        {[
-                            { id: 'all', label: 'Todos' },
-                            { id: 'photography', label: 'Fotografia' },
-                            { id: 'design', label: 'Design' }
-                        ].map((tab) => (
-                            <button
-                                key={tab.id}
-                                onClick={() => handleTabChange(tab.id as any)}
-                                className={cn(
-                                    "px-8 py-3 rounded-full text-sm font-medium transition-all duration-300",
-                                    activeTab === tab.id
-                                        ? "bg-electric-blue text-white shadow-[0_0_20px_rgba(58,139,253,0.3)]"
-                                        : "text-muted-foreground hover:text-white hover:bg-white/5"
-                                )}
-                            >
-                                {tab.label}
-                            </button>
-                        ))}
-                    </div>
+                    {!photographyOnly && (
+                        <div className="flex p-1 bg-secondary/30 backdrop-blur-sm rounded-full border border-white/5">
+                            {[
+                                { id: 'all', label: 'Todos' },
+                                { id: 'photography', label: 'Fotografia' },
+                                { id: 'design', label: 'Design' }
+                            ].map((tab) => (
+                                <button
+                                    key={tab.id}
+                                    onClick={() => handleTabChange(tab.id as any)}
+                                    className={cn(
+                                        "px-8 py-3 rounded-full text-sm font-medium transition-all duration-300",
+                                        activeTab === tab.id
+                                            ? "bg-electric-blue text-white shadow-[0_0_20px_rgba(58,139,253,0.3)]"
+                                            : "text-muted-foreground hover:text-white hover:bg-white/5"
+                                    )}
+                                >
+                                    {tab.label}
+                                </button>
+                            ))}
+                        </div>
+                    )}
 
                     {/* Sub Filters */}
                     <AnimatePresence mode="wait">
-                        {activeTab !== 'all' && (
+                        {(photographyOnly || activeTab !== 'all') && (
                             <motion.div
                                 initial={{ opacity: 0, y: -10 }}
                                 animate={{ opacity: 1, y: 0 }}
@@ -167,7 +176,7 @@ const UnifiedPortfolioGrid = () => {
                                 className="w-full max-w-4xl"
                             >
                                 <FilterBar
-                                    categories={activeTab === 'photography' ? photoCategories : designCategories}
+                                    categories={photographyOnly || activeTab === 'photography' ? photoCategories : designCategories}
                                     activeFilter={subCategory}
                                     onFilterChange={setSubCategory}
                                     className="justify-center"
