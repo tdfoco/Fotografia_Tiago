@@ -6,10 +6,10 @@ import { useAuth } from '@/hooks/usePocketBaseData';
 
 export function AdminHeader() {
     const navigate = useNavigate();
-    const { logout } = useAuth();
+    const { signOut } = useAuth();
 
     const handleLogout = () => {
-        logout();
+        signOut();
         navigate('/');
     };
 

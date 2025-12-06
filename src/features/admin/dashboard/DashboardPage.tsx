@@ -4,6 +4,7 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Camera, Palette, Upload, TrendingUp } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import QuickMenuToggle from './components/QuickMenuToggle';
 
 export default function DashboardPage() {
     const { stats, loading } = useDashboardData();
@@ -114,6 +115,9 @@ export default function DashboardPage() {
                     Em breve: Feed de atividades em tempo real
                 </p>
             </Card>
+
+            {/* Quick Menu Toggle */}
+            <QuickMenuToggle />
         </div>
     );
 }

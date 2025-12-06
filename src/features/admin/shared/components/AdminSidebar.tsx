@@ -13,7 +13,8 @@ import {
     Users,
     Image as ImageIcon,
     Menu,
-    X
+    X,
+    List
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -31,6 +32,7 @@ const navItems: NavItem[] = [
     { to: '/admin/analytics', icon: BarChart3, label: 'Analytics' },
     { to: '/admin/ai-lab', icon: Sparkles, label: 'IA Lab', badge: 3 },
     { to: '/admin/heroes', icon: ImageIcon, label: 'Hero Images' },
+    { to: '/admin/menu', icon: List, label: 'Menu' },
     { to: '/admin/comments', icon: MessageSquare, label: 'Comentários' },
     { to: '/admin/clients', icon: Users, label: 'Clientes' },
     { to: '/admin/content', icon: FileText, label: 'Conteúdo' },

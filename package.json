@@ -9,7 +9,9 @@
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
     "preview": "vite preview",
-    "generate:sitemap": "node scripts/generate_sitemap.js"
+    "generate:sitemap": "node scripts/generate_sitemap.js",
+    "deploy:dev": "node scripts/deploy.mjs dev",
+    "deploy:prod": "node scripts/deploy.mjs prod"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",

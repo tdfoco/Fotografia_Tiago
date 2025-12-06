@@ -1,0 +1,54 @@
+========================================
+  Sincronizar Menu - Update ou Merge
+========================================
+
+­ƒöÉ Autenticando como admin...
+Ô£à Autenticado!
+
+­ƒôï Buscando registros existentes...
+   Encontrados: 12 registros
+
+­ƒöä Processando itens...
+
+ÔÅ¡´©Å  IGUAL:      1. Home
+ÔÅ¡´©Å  IGUAL:      2. Fotografia
+ÔÅ¡´©Å  IGUAL:      3. Design Gr├ífico
+ÔÅ¡´©Å  IGUAL:      4. Sobre
+ÔÅ¡´©Å  IGUAL:      5. Servi├ºos
+ÔÅ¡´©Å  IGUAL:      6. Bastidores
+ÔÅ¡´©Å  IGUAL:      7. Depoimentos
+ÔÅ¡´©Å  IGUAL:      8. Busca Visual
+ÔÅ¡´©Å  IGUAL:      9. Blog
+ÔÅ¡´©Å  IGUAL:      10. Ranking
+ÔÅ¡´©Å  IGUAL:      11. Favoritos
+ÔÅ¡´©Å  IGUAL:      12. Contato
+
+========================================
+­ƒôè Resumo da Sincroniza├º├úo:
+   Ô£¿ Criados:     0
+   ­ƒöä Atualizados: 0
+   ÔÅ¡´©Å  Inalterados: 12
+   ÔØî Erros:       0
+   ­ƒôª Total:       12
+========================================
+
+­ƒöì Estado final do banco...
+
+­ƒôî Total de registros: 12
+
+Registros atuais:
+  Ô¡É 1. Home                 ­ƒƒó ON 
+     2. Fotografia           ­ƒƒó ON 
+     3. Design Gr├ífico       ­ƒƒó ON 
+     4. Sobre                ­ƒƒó ON 
+     5. Servi├ºos             ­ƒƒó ON 
+     6. Bastidores           ­ƒƒó ON 
+     7. Depoimentos          ­ƒƒó ON 
+     8. Busca Visual         ­ƒƒó ON 
+     9. Blog                 ­ƒƒó ON 
+     10. Ranking              ­ƒƒó ON 
+     11. Favoritos            ­ƒƒó ON 
+     12. Contato              ­ƒƒó ON 
+
+Ô£¿ Sincroniza├º├úo conclu├¡da!
+
