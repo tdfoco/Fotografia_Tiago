@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import UnifiedPortfolioGrid from "@/components/UnifiedPortfolioGrid";
+import PhotoGridModern from "@/components/PhotoGridModern";
 import RankingSection from "@/components/RankingSection";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { pb } from "@/lib/pocketbase";
@@ -51,7 +51,7 @@ const Photography = () => {
 
                     <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
                         <h1 className="text-5xl md:text-7xl font-display font-bold tracking-tight mb-6 animate-fade-in bg-clip-text text-transparent bg-gradient-to-r from-white via-electric-blue to-white">
-                            {t('portfolio.title')}
+                            Fotografias
                         </h1>
                         <div className="w-24 h-1.5 bg-electric-blue mx-auto mb-8 rounded-full shadow-[0_0_15px_rgba(58,139,253,0.8)]" />
                         <p className="text-xl md:text-2xl text-gray-300 font-light max-w-2xl mx-auto leading-relaxed">
@@ -61,7 +61,7 @@ const Photography = () => {
                 </section>
 
                 <div className="container mx-auto px-4 py-12">
-                    <UnifiedPortfolioGrid />
+                    <PhotoGridModern showHeader={false} />
                 </div>
 
                 <RankingSection />
