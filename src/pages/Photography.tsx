@@ -1,5 +1,4 @@
 import PhotoGridModern from "@/components/PhotoGridModern";
-import RankingSection from "@/components/RankingSection";
 import { SEO } from "@/components/SEO";
 
 const Photography = () => {
@@ -14,8 +13,6 @@ const Photography = () => {
                 <div className="container mx-auto px-4 py-12">
                     <PhotoGridModern showHeader={false} />
                 </div>
-
-                <RankingSection />
             </div>
         </>
     );
