@@ -30,13 +30,16 @@ type UnifiedItem = {
 
 interface UnifiedPortfolioGridProps {
     photographyOnly?: boolean; // If true, shows only photography without tabs
+    designOnly?: boolean; // If true, shows only design without tabs
     showTitle?: boolean; // If false, hides the "Portfólio" title
 }
 
-const UnifiedPortfolioGrid = ({ photographyOnly = false, showTitle = true }: UnifiedPortfolioGridProps = {}) => {
+const UnifiedPortfolioGrid = ({ photographyOnly = false, designOnly = false, showTitle = true }: UnifiedPortfolioGridProps = {}) => {
     useImageProtection();
 
-    const [activeTab, setActiveTab] = useState<'all' | 'photography' | 'design'>(photographyOnly ? 'photography' : 'all');
+    const [activeTab, setActiveTab] = useState<'all' | 'photography' | 'design'>(
+        photographyOnly ? 'photography' : designOnly ? 'design' : 'all'
+    );
     const [subCategory, setSubCategory] = useState<string>("all");
     const [displayCount, setDisplayCount] = useState(20);
     const [selectedPhoto, setSelectedPhoto] = useState<Photo | null>(null);
@@ -143,7 +146,7 @@ const UnifiedPortfolioGrid = ({ photographyOnly = false, showTitle = true }: Uni
                 {/* Tabs & Filters */}
                 <div className="flex flex-col items-center gap-8 mb-16">
                     {/* Main Tabs */}
-                    {!photographyOnly && (
+                    {!photographyOnly && !designOnly && (
                         <div className="flex p-1 bg-secondary/30 backdrop-blur-sm rounded-full border border-white/5">
                             {[
                                 { id: 'all', label: 'Todos' },
@@ -168,7 +171,7 @@ const UnifiedPortfolioGrid = ({ photographyOnly = false, showTitle = true }: Uni
 
                     {/* Sub Filters */}
                     <AnimatePresence mode="wait">
-                        {(photographyOnly || activeTab !== 'all') && (
+                        {(photographyOnly || designOnly || activeTab !== 'all') && (
                             <motion.div
                                 initial={{ opacity: 0, y: -10 }}
                                 animate={{ opacity: 1, y: 0 }}
@@ -176,7 +179,13 @@ const UnifiedPortfolioGrid = ({ photographyOnly = false, showTitle = true }: Uni
                                 className="w-full max-w-4xl"
                             >
                                 <FilterBar
-                                    categories={photographyOnly || activeTab === 'photography' ? photoCategories : designCategories}
+                                    categories={
+                                        photographyOnly || activeTab === 'photography'
+                                            ? photoCategories
+                                            : designOnly || activeTab === 'design'
+                                                ? designCategories
+                                                : photoCategories
+                                    }
                                     activeFilter={subCategory}
                                     onFilterChange={setSubCategory}
                                     className="justify-center"
