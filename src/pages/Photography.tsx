@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import PhotoGridModern from "@/components/PhotoGridModern";
+import UnifiedPortfolioGrid from "@/components/UnifiedPortfolioGrid";
 import RankingSection from "@/components/RankingSection";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { pb } from "@/lib/pocketbase";
@@ -61,7 +61,7 @@ const Photography = () => {
                 </section>
 
                 <div className="container mx-auto px-4 py-12">
-                    <PhotoGridModern />
+                    <UnifiedPortfolioGrid />
                 </div>
 
                 <RankingSection />
