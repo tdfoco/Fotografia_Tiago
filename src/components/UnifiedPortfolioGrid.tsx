@@ -68,6 +68,16 @@ const UnifiedPortfolioGrid = ({ photographyOnly = false, designOnly = false, sho
         { key: "special", label: "Projetos Especiais" }
     ];
 
+    // Fisher-Yates shuffle algorithm for random selection
+    const shuffleArray = <T,>(array: T[]): T[] => {
+        const shuffled = [...array];
+        for (let i = shuffled.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+        return shuffled;
+    };
+
     // Combine both portfolios into unified items
     const allItems: UnifiedItem[] = useMemo(() => {
         const pItems = photos.map(photo => ({
@@ -98,7 +108,10 @@ const UnifiedPortfolioGrid = ({ photographyOnly = false, designOnly = false, sho
             created: project.created
         }));
 
-        return [...pItems, ...dItems].sort((a, b) => new Date(b.created).getTime() - new Date(a.created).getTime());
+        // Combine and shuffle, then limit to 40 items
+        const combined = [...pItems, ...dItems];
+        const shuffled = shuffleArray(combined);
+        return shuffled.slice(0, 40);
     }, [photos, projects]);
 
     const filteredItems = useMemo(() => {
